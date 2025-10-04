@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vedant Lalit Bhatt — Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home">Vedant Lalit Bhatt</a>
+      <nav id="primary-navigation" class="primary-nav">
+        <ul>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="resume.pdf" target="_blank">Resume</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-inner">
+        <h1>Hello! I'm <span>Vedant Lalit Bhatt</span></h1>
+        <p>An <strong>aspiring software engineer</strong> transforming ideas into.</p>
+        <a href="projects.html" class="btn">View My Work!</a>
+      </div>
+    </section>
+
+    <!-- New About Me section -->
+    <section class="about" id="about">
+      <div class="container">
+        <h2>About Me</h2>
+        <p>
+          Hi! I'm Vedant, a passionate software engineer who loves creating efficient and scalable solutions.
+          I enjoy working with cutting-edge technologies and continuously learning to improve my craft.
+        </p>
+      </div>
+    </section>
+
+    <!-- New Skills section -->
+    <section class="skills" id="skills">
+      <div class="container">
+        <h2>My Skills</h2>
+        <div class="skills-grid">
+          <!-- Example logos, update src with your preferred images -->
+          <img src="assets/skills/react.svg" alt="React" title="React" />
+          <img src="assets/skills/docker.svg" alt="Docker" title="Docker" />
+          <img src="assets/skills/mysql.svg" alt="MySQL" title="MySQL" />
+          <img src="assets/skills/javascript.svg" alt="JavaScript" title="JavaScript" />
+          <img src="assets/skills/nodejs.svg" alt="Node.js" title="Node.js" />
+          <img src="assets/skills/html5.svg" alt="HTML5" title="HTML5" />
+          <img src="assets/skills/css3.svg" alt="CSS3" title="CSS3" />
+          <img src="assets/skills/git.svg" alt="Git" title="Git" />
+          <img src="assets/skills/python.svg" alt="Python" title="Python" />
+          <img src="assets/skills/aws.svg" alt="AWS" title="AWS" />
+          <!-- Add more logos as you want -->
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container">
+        <h2>Contact Me</h2>
+        <form action="#" method="POST">
+          <input type="text" name="name" placeholder="Vedant Lalit Bhatt" required>
+          <input type="email" name="email" placeholder="Your Email" required>
+          <textarea name="message" placeholder="Your Message" required></textarea>
+          <button type="submit" class="btn">Send Message</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 Vedant Lalit Bhatt. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="scripts/main.js"></script>
+</body>
+</html>
