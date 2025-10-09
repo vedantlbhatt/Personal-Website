@@ -37,7 +37,7 @@
     .section-content { display: none; }
     .big-name {
       font-family: 'Poppins', sans-serif;
-      font-size: clamp(2.1rem, 7vw, 3.8rem);
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
       font-weight: 700;
       color: #ffffff;
       text-align: center;
@@ -114,6 +114,16 @@
       height: 22px;
       fill: #b7cfff;
       display: block;
+    }
+    .quick-link-btn-logo svg {
+      width: 22px;
+      height: 22px;
+      fill: #b7cfff;
+      display: block;
+    }
+    .quick-link-btn-logo:nth-child(2) svg {
+      width: 19px;
+      height: 19px;
     }
     .quick-link-btn-logo:hover, .quick-link-btn-logo:focus {
       background: #35387c;
@@ -406,11 +416,11 @@
   <canvas id="background-canvas"></canvas>
 
   <div class="quick-links">
-    <a href="resume.pdf" target="_blank" class="quick-link-btn-logo" aria-label="Resume">
-      <img src="assets/resum.png" alt="Resume" />
+    <a href="assets/Vedant Lalit Bhatt Resume.pdf" target="_blank" class="quick-link-btn-logo" aria-label="Resume">
+      <svg viewBox="0 0 20 20"><path d="M4 2h12a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1zm1 2v12h10V4H5zm2 2h6v1H7V6zm0 2h6v1H7V8zm0 2h4v1H7v-1z"/></svg>
     </a>
     <a href="https://www.linkedin.com/in/vedantlbhatt/" target="_blank" class="quick-link-btn-logo" aria-label="LinkedIn">
-      <img src="assets/big.png" alt="LinkedIn" width="100" height="0" />
+      <svg viewBox="0 0 20 20"><path d="M18.5 0h-17C.7 0 0 .7 0 1.5v17c0 .8.7 1.5 1.5 1.5h17c.8 0 1.5-.7 1.5-1.5v-17C20 .7 19.3 0 18.5 0zM6 17H3V7h3v10zM4.5 5.7c-1 0-1.7-.7-1.7-1.7s.7-1.7 1.7-1.7 1.7.7 1.7 1.7-.7 1.7-1.7 1.7zM17 17h-3v-4.5c0-1.1 0-2.5-1.5-2.5s-1.7 1.2-1.7 2.4V17H8V7h3v1.2c.5-.8 1.6-1.5 2.8-1.5 3 0 3.2 2 3.2 4.6V17z"/></svg>
     </a>
     <a href="https://github.com/vedantlbhatt" target="_blank" class="quick-link-btn-logo github" aria-label="GitHub">
       <svg viewBox="0 0 20 20"><path d="M10 .4a9.6 9.6 0 00-3 18.7c.47.09.65-.2.65-.44 0-.21 0-.9 0-1.7-2.65.57-3.21-1.28-3.21-1.28-.42-1.04-1.01-1.32-1.01-1.32-.82-.56.06-.55.06-.55.91.07 1.39.94 1.39.94.8 1.38 2.1.98 2.62.76.08-.58.31-.98.56-1.21-2.12-.24-4.36-1.06-4.36-4.7 0-1.04.37-1.88.97-2.54-.1-.25-.42-1.26.09-2.63 0 0 .8-.25 2.6.96a8.82 8.82 0 014.73 0c1.8-1.2 2.6-.96 2.6-.96.51 1.37.19 2.38.09 2.63.61.66.97 1.5.97 2.54 0 3.65-2.24 4.46-4.37 4.7.32.27.6.82.6 1.66 0 1.2 0 2.18 0 2.48 0 .24.17.53.66.43A9.6 9.6 0 0010 .4z"/></svg>
@@ -426,6 +436,7 @@
       <button class="nav-btn" data-target="about-section">About</button>
       <button class="nav-btn" data-target="experience-section">Experience</button>
       <button class="nav-btn" data-target="projects-section">Projects</button>
+      <button class="nav-btn" data-target="contact-section">Contact</button>
     </nav>
   </div>
 
@@ -610,7 +621,7 @@
       </div>
     </header>
   
-    <main style="padding:5.7rem 2rem 5rem 2rem; min-height:100vh; box-sizing:border-box; display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap: 3rem; max-width:900px; margin: auto;">
+    <main style="padding:8rem 2rem 5rem 2rem; min-height:100vh; box-sizing:border-box; display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap: 3rem; max-width:900px; margin: auto;">
       
       <!-- Main glass panel, paragraph left, large image right -->
       <div class="about-glass-strip" style="
@@ -714,23 +725,22 @@
       <li>Full-Stack Web Development</li>
       <li>API Integration & RESTful Services</li>
       <li>Mobile App Design (iOS, Android)</li>
-      <li>Machine Learning Systems</li>
+      <li>Automated & Machine Learning Systems</li>
       <li>Database Design (SQL/NoSQL)</li>
-      <li>Semantic Search & Vector Embeddings</li>
+      <li>Vector Embeddings % Representations</li>
       <li>Version Control with Git/GitHub</li>
       <li>Real-Time Data Processing</li>
-      <li>Rapid Prototyping & Deployment</li>
+      <li>AGILE Development & Practices</li>
       <li>Debugging & Performance Optimization</li>
       <li>UI/UX Prototyping with Figma</li>
-      <li>Cloud Integration & DevOps Basics</li>
+      <li>Cloud Integration & DevOps</li>
       <li>Competitive Programming & Algorithms</li>
     </ul>
   </div>
-
 </div>
 
-  
-  
+</div>
+  </div>
 
   <div class="section-content" id="experience-section" style="display:none;">
     <header class="glass-header">
@@ -745,7 +755,7 @@
       </div>
     </header>
   
-    <main style="width: 100vw; padding: 6rem 5vw 5rem 5vw; box-sizing: border-box; min-height: 100vh; overflow-y: auto;">
+    <main style="width: 100vw; padding: 8rem 5vw 5rem 5vw; box-sizing: border-box; min-height: 100vh; overflow-y: auto;">
   
       <!-- Quilly Experience -->
 <div class="experience-strip" style="
@@ -778,37 +788,6 @@ display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;
 
 </div>
 
-<!-- FishCast Experience -->
-<div class="experience-strip" style="
-background: rgba(28, 29, 45, 0.28);
-border-radius: 16px;
-box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
-backdrop-filter: blur(16px) saturate(160%);
--webkit-backdrop-filter: blur(16px) saturate(160%);
-border: 1.3px solid rgba(110, 130, 220, 0.18);
-background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%);
-padding: 2rem 3rem;
-margin-bottom: 3.2rem;
-color: #bcd0e0;
-font-family: 'Poppins', sans-serif;
-max-width: 1200px;
-margin-left: auto;
-margin-right: auto;
-display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;">
-<div style="flex: 2;">
-  <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">Big Data Big Impact - FishCast</h3>
-  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Data Engineer | August 2025 – Present</p>
-  <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
-    <li>Maintained data pipelines integrating large ecological datasets from NOAA and Fishbase for predictive modeling purposes</li>
-    <li>Researched and trained time series models &amp; LSTMS to accurately forecast Atlantic Cod habitat shifts due to climate change</li>
-    <li>Designed and developed interactive GIS maps and dashboards using visualization tools and GIS software for readability</li>
-  </ul>
-</div>
-<img src="assets/bdbib.png" alt="Quilly Logo"
-  style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
-
-</div>
-
 <!-- King of the Curve Experience -->
 <div class="experience-strip" style="
 background: rgba(28, 29, 45, 0.28);
@@ -836,6 +815,37 @@ display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;
   </ul>
 </div>
 <img src="assets/kotc.png" alt="Quilly Logo"
+  style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
+
+</div>
+
+<!-- FishCast Experience -->
+<div class="experience-strip" style="
+background: rgba(28, 29, 45, 0.28);
+border-radius: 16px;
+box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+backdrop-filter: blur(16px) saturate(160%);
+-webkit-backdrop-filter: blur(16px) saturate(160%);
+border: 1.3px solid rgba(110, 130, 220, 0.18);
+background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%);
+padding: 2rem 3rem;
+margin-bottom: 3.2rem;
+color: #bcd0e0;
+font-family: 'Poppins', sans-serif;
+max-width: 1200px;
+margin-left: auto;
+margin-right: auto;
+display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;">
+<div style="flex: 2;">
+  <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">Big Data Big Impact - FishCast</h3>
+  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Data Engineer | Feburary 2025 – Present</p>
+  <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
+    <li>Maintained data pipelines integrating large ecological datasets from NOAA and Fishbase for predictive modeling purposes</li>
+    <li>Researched and trained time series models &amp; LSTMS to accurately forecast Atlantic Cod habitat shifts due to climate change</li>
+    <li>Designed and developed interactive GIS maps and dashboards using visualization tools and GIS software for readability</li>
+  </ul>
+</div>
+<img src="assets/bdbib.png" alt="Quilly Logo"
   style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
 
 </div>
@@ -894,11 +904,81 @@ display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;
     <li>Collaborated with 15+ developers, utilizing Git for version control improving workflow efficiency and project management</li>
   </ul>
 </div>
-<img src="assets/iosclub.png" alt="Quilly Logo"
+<img src="assets/iosclub.png" alt="iOS Club Logo"
   style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
-
 </div>
 
+    </main>
+  </div>
+
+  <div class="section-content" id="contact-section" style="display:none;">
+    <header class="glass-header">
+      <div class="glass-header-content">
+        <span class="header-title">Contact</span>
+        <nav class="glass-nav">
+          <a href="#" class="glass-nav-btn nav-btn" data-target="home-section">Home</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="about-section">About</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="experience-section">Experience</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="projects-section">Projects</a>
+        </nav>
+      </div>
+    </header>
+  
+    <main style="padding:8rem 2rem 5rem 2rem; min-height:100vh; box-sizing:border-box; display:flex; flex-direction: column; align-items:center; justify-content:center; gap: 2rem; max-width:700px; margin: auto;">
+      
+      <!-- Contact glass panel -->
+      <div style="
+        background: rgba(28, 29, 45, 0.28);
+        border-radius: 20px;
+        box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+        backdrop-filter: blur(19px) saturate(170%);
+        -webkit-backdrop-filter: blur(19px) saturate(170%);
+        border: 1.7px solid rgba(110, 130, 220, 0.18);
+        background-image: linear-gradient(120deg, rgba(100,140,255,0.09) 0%, rgba(80,130,200,0.06) 80%);
+        padding: 3.5rem 4rem;
+        color: #cfd7f2;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        width: 100%;
+        max-width: 600px;">
+        
+        <h2 style="font-size: 2.5rem; font-weight: 800; color: #a8bbfc; margin-bottom: 1rem; letter-spacing: 0.04em;">Get In Touch</h2>
+        <p style="font-size: 1.15rem; color: #d8e2fa; line-height: 1.6; margin-bottom: 2rem;">
+          I'd love to hear from you! Whether you have a question, want to collaborate, or just want to say hi, feel free to reach out.
+        </p>
+        
+        <div style="
+          background: rgba(20, 22, 38, 0.45);
+          border-radius: 12px;
+          padding: 1.8rem 2rem;
+          border: 1.5px solid rgba(120, 140, 220, 0.25);
+          margin-bottom: 1.5rem;">
+          <div style="font-size: 0.95rem; color: #9fb5e8; margin-bottom: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Email</div>
+          <a href="mailto:vbhatt35@gatech.edu" style="
+            font-size: 1.4rem;
+            color: #b7cfff;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: color 0.2s;
+            display: inline-block;">vbhatt35@gatech.edu</a>
+        </div>
+        
+        <p style="font-size: 0.95rem; color: #a5b8dc; margin-top: 1.5rem;">
+          Or connect with me on <a href="https://www.linkedin.com/in/vedantlbhatt/" target="_blank" style="color: #7fa8ff; text-decoration: none; font-weight: 600;">LinkedIn</a> or <a href="https://github.com/vedantlbhatt" target="_blank" style="color: #7fa8ff; text-decoration: none; font-weight: 600;">GitHub</a>
+        </p>
+      </div>
+      
+    </main>
+  </div>
+
+  <!--
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 Vedant Lalit Bhatt. All rights reserved.</p>
+    </div>
+  </footer>
+  -->
   
   
 
@@ -919,6 +999,7 @@ display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;
   ];
   const typedText = document.getElementById('typed-text');
   let phraseIndex = 0, charIndex = 0, forward = true;
+  
   function tick() {
     const phrase = phrases[phraseIndex];
     if (forward) {
@@ -934,9 +1015,12 @@ display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;
       charIndex--;
       typedText.textContent = phrase.substring(0, charIndex);
       if (charIndex > 0) {
-        setTimeout(tick, 34);
+        setTimeout(tick, 60);
       } else {
-        forward = true; phraseIndex = (phraseIndex + 1) % phrases.length; setTimeout(tick, 350);
+        forward = true; 
+        phraseIndex = (phraseIndex + 1) % phrases.length; 
+        charIndex = 0; // Reset charIndex for the new phrase
+        setTimeout(tick, 350);
       }
     }
   }
