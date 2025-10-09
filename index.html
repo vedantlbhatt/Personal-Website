@@ -3,87 +3,1107 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vedant Lalit Bhatt — Portfolio</title>
+  <title>Vedant Lalit Bhatt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0; padding: 0; min-height: 100vh; width: 100vw;
+      background: #000000; color: #bcd0e0; font-family: 'Poppins','JetBrains Mono',monospace,sans-serif;
+      overflow: scroll;
+    }
+    #background-canvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      display: block;
+    }
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    .centered-content, .section-content {
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.2rem;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 2;
+      background: transparent;
+      will-change: transform, opacity;
+    }
+    .section-content { display: none; }
+    .big-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(2.1rem, 7vw, 3.8rem);
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      margin: 0;
+      margin-top: 1.5rem;
+      letter-spacing: 0.09em;
+      user-select: none;
+    }
+    .aspiring-line {
+      margin: 0.9rem 0 0 0;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace, 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.01rem,3vw,1.3rem);
+      color: #ffffff;
+      letter-spacing: 0.03em;
+      user-select: none;
+      min-height: 2.1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3em;
+    }
+    #typed-text {
+      font-family: inherit;
+      font-weight: 700;
+      font-size: inherit;
+      color: #ffffff;
+      border-right: 2px solid #a8bbff;
+      white-space: nowrap;
+      background: transparent;
+      display: inline-block;
+      min-width: 6ch;
+      letter-spacing: 0.001em;
+      padding-left: 0.3em;
+    }
+    .quick-links {
+      position: fixed;
+      top: 2.5rem;
+      right: 4vw;
+      z-index: 10;
+      display: flex;
+      gap: 1.1rem;
+    }
+    .quick-link-btn-logo {
+      width: 38px;
+      height: 38px;
+      background: #222650;
+      border-radius: 50%;
+      border: none;
+      outline: none;
+      box-shadow: 0 1px 3px #23224212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .19s, box-shadow .18s;
+      padding: 0;
+      user-select: none;
+    }
+    .quick-link-btn-logo img {
+      width: 21px;
+      height: 21px;
+      display: block;
+      object-fit: contain;
+      filter: brightness(1.15) contrast(1.1);
+    }
+    .quick-link-btn-logo.github {
+      background: #222650;
+      border-radius: 19px;
+    }
+    .quick-link-btn-logo.github svg {
+      width: 22px;
+      height: 22px;
+      fill: #b7cfff;
+      display: block;
+    }
+    .quick-link-btn-logo:hover, .quick-link-btn-logo:focus {
+      background: #35387c;
+      box-shadow: 0 0 17px 5px #688fff33, 0 2px 6px #a8bbfc33;
+      outline: 2px solid #70aaff33;
+    }
+    .main-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      margin-top: 2.2rem;
+      z-index: 3;
+    }
+    .nav-btn {
+      font-family: 'JetBrains Mono', monospace, 'Poppins', sans-serif;
+      color: #d6e2fc;
+      background: #232848;
+      border-radius: 11px;
+      font-size: 1.04rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      border: none;
+      outline: none;
+      padding: 0.56rem 1.30rem;
+      margin: 0;
+      transition: background .14s, color .14s, box-shadow .17s;
+      box-shadow: 0 1px 8px #1f6feb22;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      user-select: none;
+    }
+    .nav-btn:hover, .nav-btn:focus-visible {
+      background: #3957a8;
+      color: #fff;
+      outline: 2px solid #70aaff33;
+    }
+    .slide-out-left {
+      animation: slideOutLeft 0.68s cubic-bezier(0.8,0.11,0.91,0.45) forwards;
+    }
+    .slide-in-right {
+      animation: slideInRight 0.68s cubic-bezier(0.09,0.6,0.45,1) forwards;
+    }
+    @keyframes slideOutLeft {
+      100% {
+        transform: translateX(-110vw);
+        opacity: 0;
+        pointer-events:none;
+      }
+    }
+    @keyframes slideInRight {
+      0% {
+        transform: translateX(110vw);
+        opacity: 0;
+        pointer-events:none;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events:auto;
+      }
+    }
+    /*--------- Project Section Styles From projects.html -----------*/
+    main {
+      position: relative; z-index: 3;
+    }
+    .projects {
+      padding: 5.7rem 2rem 5rem 2rem;
+      position: relative;
+      min-height: 100vh;
+      background: transparent;
+      z-index: 5;
+      box-sizing: border-box;
+    }
+    .quick-links {
+  opacity: 1;
+  transition: opacity 0.5s cubic-bezier(.53,.03,.39,1.06);
+  pointer-events: auto;
+}
+.quick-links.fading {
+  opacity: 0;
+  pointer-events: none;
+}
 
-  <link rel="stylesheet" href="styles/styles.css">
+    .section-title {
+      font-size: 2.1rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      font-family: 'JetBrains Mono', monospace, sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #a4b4ff;
+    }
+    .project-grid {
+      display: grid;
+      margin-top: 7rem;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 2.3rem;
+    }
+    .project-card {
+  background: rgba(28, 29, 45, 0.28); /* semi-transparent, tweak alpha as needed */
+  border-radius: 16px;
+  box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+  border: 1.7px solid #23294ba8;
+  min-height: 490px;
+  padding-top: 2.3rem;
+  overflow: hidden;
+  /* Glassmorphism: */
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1.3px solid rgba(110, 130, 220, 0.18);
+  /* Optional: subtle gradient for glass highlight */
+  background-image: linear-gradient(
+    120deg, 
+    rgba(100,140,255,0.08) 0%, 
+    rgba(80,130,200,0.04) 80%
+  );
+}
+
+    .project-card:hover {
+      box-shadow: 0 10px 34px #2d2f4a22, 0 2px 12px #647be822;
+      border-color: #5d7cfb77;
+      transform: translateY(-6px);
+    }
+    .github-link {
+      display: block;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 0.95rem auto;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #28346f88;
+      box-shadow: none;
+      background: #222644;
+    }
+    .github-link img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .glass-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 20;
+  padding: 1.2rem 2vw;
+  background: rgba(26,28,44,0.35);
+  box-shadow: 0 2px 16px 0 rgba(56,80,150,0.08);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-bottom: 1.5px solid rgba(109,129,205,0.17);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-header-content {
+  display: flex;
+  width: 100%;
+  max-width: 1450px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #d0eaff;
+  letter-spacing: 0.1em;
+  margin-right: 2rem;
+}
+
+.glass-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+
+.glass-nav-btn {
+  font-family: 'JetBrains Mono', monospace, 'Poppins', sans-serif;
+  font-size: 1.05rem;
+  color: #f3f5ff;
+  background: rgba(42,54,95,0.22);
+  border-radius: 9px;
+  padding: 0.62rem 1.45rem;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  backdrop-filter: blur(9px);
+  box-shadow: 0 1px 7px #23305622;
+  transition: background .17s, color .17s, box-shadow .16s;
+}
+.glass-nav-btn:hover, .glass-nav-btn:focus {
+  background: #334bc7ee;
+  color: #fff;
+  box-shadow: 0 0 8px 1px #6eaadf22, 0 2px 8px #d8f2fc11;
+}
+
+    .project-content {
+      padding: 1.1rem 1.1rem 0.7rem 1.1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+    .project-content h3 {
+      font-size: 1.17rem;
+      margin-top: 0;
+      margin-bottom: 0.11rem;
+      color: #b9c7ef;
+      font-family: 'JetBrains Mono', monospace, sans-serif;
+      font-weight: 700;
+    }
+    .project-tech-stack {
+      font-style: italic;
+      color: #97abdc;
+      margin: 0 0 .72rem 0;
+      font-size: 0.92rem;
+      line-height: 1.2;
+    }
+    .project-content p {
+      font-size: 0.93rem;
+      line-height: 1.43;
+      margin-bottom: 1.06rem;
+      color: #b5bac2;
+      text-align: left;
+      font-family: 'Poppins', sans-serif;
+    }
+    .project-links {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1.04rem;
+      margin-bottom: 0.51rem;
+    }
+    .btn {
+      background: #232b49;
+      color: #dadbf9;
+      padding: 0.58rem 1.15rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      font-family: inherit;
+      box-shadow: none;
+      transition: background .15s, color .16s;
+    }
+    .btn:hover {
+      background: #405dc7;
+      color: #fff;
+    }
+    @media screen and (max-width: 760px) {
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+      .project-card {
+        min-height: 420px;
+      }
+      .github-link {
+        width: 90px;
+        height: 90px;
+      }
+    }
+    .site-footer {
+      text-align: center;
+      padding: 1.2rem 0 0.7rem 0;
+      background: #181924;
+      color: #7080b6;
+      font-size: 1rem;
+      font-family: 'JetBrains Mono', monospace, sans-serif;
+      border-radius: 11px 11px 0 0;
+      box-shadow: 0 -1px 5px #23294b11 inset;
+      margin-top: 2.7rem;
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#home">Vedant Lalit Bhatt</a>
-      <nav id="primary-navigation" class="primary-nav">
-        <ul>
-          <li><a href="projects.html">Projects</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="resume.pdf" target="_blank">Resume</a></li>
-        </ul>
-      </nav>
+  <canvas id="background-canvas"></canvas>
+
+  <div class="quick-links">
+    <a href="resume.pdf" target="_blank" class="quick-link-btn-logo" aria-label="Resume">
+      <img src="assets/resum.png" alt="Resume" />
+    </a>
+    <a href="https://www.linkedin.com/in/vedantlbhatt/" target="_blank" class="quick-link-btn-logo" aria-label="LinkedIn">
+      <img src="assets/big.png" alt="LinkedIn" width="100" height="0" />
+    </a>
+    <a href="https://github.com/vedantlbhatt" target="_blank" class="quick-link-btn-logo github" aria-label="GitHub">
+      <svg viewBox="0 0 20 20"><path d="M10 .4a9.6 9.6 0 00-3 18.7c.47.09.65-.2.65-.44 0-.21 0-.9 0-1.7-2.65.57-3.21-1.28-3.21-1.28-.42-1.04-1.01-1.32-1.01-1.32-.82-.56.06-.55.06-.55.91.07 1.39.94 1.39.94.8 1.38 2.1.98 2.62.76.08-.58.31-.98.56-1.21-2.12-.24-4.36-1.06-4.36-4.7 0-1.04.37-1.88.97-2.54-.1-.25-.42-1.26.09-2.63 0 0 .8-.25 2.6.96a8.82 8.82 0 014.73 0c1.8-1.2 2.6-.96 2.6-.96.51 1.37.19 2.38.09 2.63.61.66.97 1.5.97 2.54 0 3.65-2.24 4.46-4.37 4.7.32.27.6.82.6 1.66 0 1.2 0 2.18 0 2.48 0 .24.17.53.66.43A9.6 9.6 0 0010 .4z"/></svg>
+    </a>
+  </div>
+
+  <div class="centered-content" id="home-section">
+    <h1 class="big-name">VEDANT LALIT BHATT</h1>
+    <div class="aspiring-line">
+      I'm an aspiring <span id="typed-text" aria-live="polite" aria-atomic="true"></span>
     </div>
-  </header>
+    <nav class="main-nav">
+      <button class="nav-btn" data-target="about-section">About</button>
+      <button class="nav-btn" data-target="experience-section">Experience</button>
+      <button class="nav-btn" data-target="projects-section">Projects</button>
+    </nav>
+  </div>
 
-  <main>
-    <section class="hero" id="home">
-      <div class="container hero-inner">
-        <h1>Hello! I'm <span>Vedant Lalit Bhatt</span></h1>
-        <p>An <strong>aspiring software engineer</strong> transforming ideas into.</p>
-        <a href="projects.html" class="btn">View My Work!</a>
+  <div class="section-content" id="projects-section">
+    <header class="site-header">
+      <div class="container header-inner">
+        
       </div>
-    </section>
+    </header>
 
-    <!-- New About Me section -->
-    <section class="about" id="about">
-      <div class="container">
-        <h2>About Me</h2>
-        <p>
-          Hi! I'm Vedant, a passionate software engineer who loves creating efficient and scalable solutions.
-          I enjoy working with cutting-edge technologies and continuously learning to improve my craft.
-        </p>
+    <main>
+      <section class="projects" id="projects">
+        <div class="container">
+
+          <div class="project-grid">
+            <header class="glass-header">
+              <div class="glass-header-content">
+                <span class="header-title">Projects</span>
+                <nav class="glass-nav">
+                  <a href="#" class="glass-nav-btn nav-btn" data-target="home-section">Home</a>
+<a href="#" class="glass-nav-btn nav-btn" data-target="about-section">About</a>
+<a href="#" class="glass-nav-btn nav-btn" data-target="experience-section">Experience</a>
+<a href="#" class="glass-nav-btn nav-btn" data-target="projects-section">Projects</a>
+
+                </nav>
+              </div>
+            </header>
+            
+            
+<!-- Project 1: FileAI -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/FileAI" target="_blank" class="github-link" aria-label="FileAI Repository">
+    <img src="assets/fileai.png" alt="FileAI" />
+  </a>
+  <div class="project-content">
+    <h3>FileAI</h3>
+    <div class="project-tech-stack">
+      MySQL
+    </div>
+    <p>FileAI is a cross-platform file management companion with an interactive chatbot enabling natural language queries to create, delete, move, organize, compress, and unzip files and folders (.txt, .pdf, .docx, .png, .jpeg, .csv, and more). It uses Mastra Agent Framework and CedarOS, with OPENAI CLIP, FAISS, and HuggingFace Transformers powering semantic parsing.</p>
+    <div class="project-links">
+      <a href="https://github.com/vedantlbhatt/FileAI" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+
+<!-- Project 2: Track My -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/trackmy" target="_blank" class="github-link" aria-label="Track My Github Repository">
+    <img src="assets/trackmy.jpeg" alt="Track My Preview" />
+  </a>
+  <div class="project-content">
+    <h3>Track My</h3>
+    <div class="project-tech-stack">
+      JavaScript, React.js, Node.js, Python, FastAPI, MySQL, Docker, Git
+    </div>
+    <p>Track My is a community-driven React Native app designed to reconnect people with their lost belongings. Users can upload reports with photos, last-seen location, and an optional bounty. Equipped with ML-powered image similarity, it can compare lost and found reports to help recover items efficiently.</p>
+    <div class="project-links">
+      <a href="https://github.com/vedantlbhatt/trackmy" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+
+<!-- Project 3: Active Knockout -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/activeknockout" target="_blank" class="github-link" aria-label="Active Knockout GitHub Repository">
+    <img src="assets/active.png" alt="Active Knockout Preview" />
+  </a>
+  <div class="project-content">
+    <h3>Active Knockout</h3>
+    <div class="project-tech-stack">
+      C#, Unity, Blender
+    </div>
+    <p>I designed a VR fitness app featuring boxing simulations that blends physical activity with immersive Unity environments. Optimized for real-time performance in C#, it delivers smooth, responsive gameplay and engaging interaction. This project competed against over 200 teams nationally and earned seventh place at the Technology Student Association conference for its innovation and polish.</p>
+    <div class="project-links">
+      <a href="https://github.com/vedantlbhatt/activeknockout" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+
+<!-- Project 4: BuzzBus -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/BuzzBus" target="_blank" class="github-link" aria-label="BuzzBus GitHub Repository">
+    <img src="assets/buzzbus.png" alt="BuzzBus Preview" />
+  </a>
+  <div class="project-content">
+    <h3>BuzzBus</h3>
+    <div class="project-tech-stack">
+      Android Studio, Firebase, Git
+    </div>
+    <p>BuzzBus is a web app that aims to help students of the Georgia Institute of Technology navigate campus efficiently. It uses the Haversine formula to find the nearest stops considering Earth's curvature, and an algorithm to compute the fastest routes with one or more bus stops. Its modern interface offers multiple route options, simplifying campus transit without manually exploring maps.</p>
+    <div class="project-links">
+      <a href="https://github.com/vedantlbhatt/BuzzBus" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+
+<!-- Project 5: mysql-runner -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/mysql-runner" target="_blank" class="github-link" aria-label="MySQL Runner GitHub Repository">
+    <img src="assets/mysqlrunner.jpeg" alt="mysqlrunner picture" />
+  </a>
+  <div class="project-content">
+    <h3>MySQL - Runner</h3>
+    <div class="project-tech-stack">
+      TypeScript, Node.js, Python, Flask API, MySQL, Git, Ollama
+    </div>
+    <p>mysql-runner is a VS Code extension that lets developers connect directly to their databases and interact with them using natural language. Backed by a Flask API and the Ollama Llama 3.2 model, it translates plain English into SQL queries and executes them to fetch, modify, and alter data, streamlining database management and reducing context switching.</p>
+    <div class="project-links">
+      <a href="https://github.com/vedantlbhatt/mysql-runner" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+
+<!-- Project 6: WanderSync -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/wandersync" target="_blank" class="github-link" aria-label="WanderSync GitHub Repository">
+    <img src="assets/wandersync.jpeg" alt="WanderSync Preview" />
+  </a>
+  <div class="project-content">
+    <h3>WanderSync</h3>
+    <div class="project-tech-stack">
+      Android Studio, Firebase, Git
+    </div>
+    <p>WanderSync is a full-stack travel planner built in Android Studio, enabling users to organize trips including lodging, dining, and activities. Integrated with Firebase for secure authentication and real-time data storage, WanderSync provides intuitive tools to manage itineraries, streamlining trip planning into a simple, collaborative, and customizable mobile experience.</p>
+    <div class="project-links">
+      <a href="https://github.com/vedantlbhatt/wandersync" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+
+<!-- Project 6 -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/venture45xt" target="_blank" class="github-link" aria-label="Venture 45XT GitHub Repository">
+    <img src="assets/Venture45.png" alt="Venture 45XT Preview" />
+  </a>
+  <div class="project-content">
+    <h3>Venture 45XT</h3>
+    <div class="project-tech-stack">
+      Blender, Unity
+    </div>
+    <p>I created and animated a detailed 3-D commercial for a fictional fitness watch, combining advanced modeling techniques with impressive visual effects. Crafting the mesh and optimizing the polygon count achieved a seamless blend of quality and rendering efficiency. The final product was recognized at both state and national competitions, securing first place among over 150 teams in a business and technology team event.</p>
+    <div class="project-links">
+      <a href="#" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+<!-- Project 8: iPlay -->
+<div class="project-card">
+  <a href="https://github.com/vedantlbhatt/iplay" target="_blank" class="github-link" aria-label="iPlay GitHub Repository">
+    <img src="assets/iplay.jpeg" alt="iPlay Preview" />
+  </a>
+  <div class="project-content">
+    <h3>iPlay</h3>
+    <div class="project-tech-stack">
+      Swift, SwiftUI, GameKit, SpriteKit, SceneKit, Git
+    </div>
+    <p>iPlay is a multiplayer party game for iOS where players connect and compete in various minigames using peer-to-peer networking via Apple's Multipeer Connectivity framework. It enables seamless device connections and features custom algorithms powering diverse, competitive gameplay that blends dynamic multiplayer interactions, enhancing replayability and fun for all players.</p>
+    <div class="project-links">
+      <a href="https://github.com/vedantlbhatt/iplay" class="btn">Check it out!</a>
+    </div>
+  </div>
+</div>
+
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="section-content" id="about-section" style="display:none;">
+    <header class="glass-header">
+      <div class="glass-header-content">
+        <span class="header-title">About</span>
+        <nav class="glass-nav">
+          <a href="#" class="glass-nav-btn nav-btn" data-target="home-section">Home</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="about-section">About</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="experience-section">Experience</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="projects-section">Projects</a>
+        </nav>
       </div>
-    </section>
+    </header>
+  
+    <main style="padding:5.7rem 2rem 5rem 2rem; min-height:100vh; box-sizing:border-box; display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap: 3rem; max-width:900px; margin: auto;">
+      
+      <!-- Main glass panel, paragraph left, large image right -->
+      <div class="about-glass-strip" style="
+        background: rgba(28, 29, 45, 0.28);
+        border-radius: 20px;
+        box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+        backdrop-filter: blur(19px) saturate(170%);
+        -webkit-backdrop-filter: blur(19px) saturate(170%);
+        border: 1.7px solid rgba(110, 130, 220, 0.18);
+        background-image: linear-gradient(120deg, rgba(100,140,255,0.09) 0%, rgba(80,130,200,0.06) 80%);
+        padding: 3rem 4rem; color: #cfd7f2;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        max-width: 900px;
+        width: 100%;">
+        <div style="flex: 1; font-size: 1.1rem;">
+          <h2 style="font-weight: 800; color: #a8bbfc; margin-bottom: 0.5rem; letter-spacing: 0.04em;">About Me</h2>
+          <p style="color: #d8e2fa; line-height: 1.6; margin-bottom: 1.1rem;">
+            Hi! Thanks for visiting my website. I'm Vedant Lalit Bhatt, a junior at the Georgia Institute of Technology! I'm dedicated to bringing ideas to life using my passion for building and skills in computing.
+            I've been fortunate enough to be able to work with full-stack development, with diverse tech stacks powered by React, Flutter, Node, Supabase, AWS and more. I'm currently working on a cross-platform app connecting users to their lost items using community crowdsourcing and monetary incentives. I've also recently joined GT BrainLab, an organization dedicated to analyzing brain signals computationally to better understand those with "locked-in" syndrome. 
+          </p>
+        </div>
+        <img src="assets/headshot.png" alt="Vedant Lalit Bhatt Headshot" style="width:280px; height:280px; border-radius: 20px; object-fit: cover; box-shadow: 0 6px 26px #26305385, 0 1px 15px #23294b65 inset; background: #181924; border: 3px solid #90a3d7;">
+      </div>
+  
+      <!-- Bottom: Tech icon glass panel + blank panel -->
+      <div style="display: flex; gap: 2.5rem; width: 100%; margin-top: 2.7rem;">
+        
+        <div style="
+  flex: 1;
+  background: rgba(28,29,45,0.32);
+  border-radius: 28px;
+  box-shadow: 0 10px 34px #15192522, 0 2.5px 14px #7274ad18 inset;
+  backdrop-filter: blur(23px) saturate(190%);
+  border: 2.3px solid rgba(110,130,220,0.21);
+  padding: 3.2rem 2.5rem;
+  min-height: 340px;
+  max-width: 1180px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+">
 
-    <!-- New Skills section -->
-    <section class="skills" id="skills">
-      <div class="container">
-        <h2>My Skills</h2>
-        <div class="skills-grid">
-          <!-- Example logos, update src with your preferred images -->
-          <img src="assets/skills/react.svg" alt="React" title="React" />
-          <img src="assets/skills/docker.svg" alt="Docker" title="Docker" />
-          <img src="assets/skills/mysql.svg" alt="MySQL" title="MySQL" />
-          <img src="assets/skills/javascript.svg" alt="JavaScript" title="JavaScript" />
-          <img src="assets/skills/nodejs.svg" alt="Node.js" title="Node.js" />
-          <img src="assets/skills/html5.svg" alt="HTML5" title="HTML5" />
-          <img src="assets/skills/css3.svg" alt="CSS3" title="CSS3" />
-          <img src="assets/skills/git.svg" alt="Git" title="Git" />
-          <img src="assets/skills/python.svg" alt="Python" title="Python" />
-          <img src="assets/skills/aws.svg" alt="AWS" title="AWS" />
-          <!-- Add more logos as you want -->
+  <!-- Tech Stack Section -->
+  <div>
+    <h2 style="font-size:2.1rem;margin-bottom:1.2rem;font-weight:600;color:#bfc8ff;letter-spacing:1px;">Tech Stack</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:2.2rem;">
+      <!-- Frontend -->
+      <div>
+        <h3 style="font-size:1.3rem;margin-bottom:.5rem;color:#b3ffd4;font-weight:500;">Frontend</h3>
+        <div style="display:flex;gap:1.1rem;flex-wrap:wrap;">
+          <img src="assets/react.svg" alt="React" title="React" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/typescript.svg" alt="TypeScript" title="TypeScript" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/js1.svg" alt="JavaScript" title="JavaScript" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/html1.svg" alt="HTML5" title="HTML5" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/css1.svg" alt="CSS3" title="CSS3" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/flutter.svg" alt="Flutter" title="Flutter" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/figma.svg" alt="Figma" title="Figma" style="width:68px;height:68px;object-fit:contain;">
         </div>
       </div>
-    </section>
-
-    <section class="contact" id="contact">
-      <div class="container">
-        <h2>Contact Me</h2>
-        <form action="#" method="POST">
-          <input type="text" name="name" placeholder="Vedant Lalit Bhatt" required>
-          <input type="email" name="email" placeholder="Your Email" required>
-          <textarea name="message" placeholder="Your Message" required></textarea>
-          <button type="submit" class="btn">Send Message</button>
-        </form>
+      <!-- Backend & Infra -->
+      <div>
+        <h3 style="font-size:1.3rem;margin-bottom:.5rem;color:#ffdfbf;font-weight:500;">Backend & Infra</h3>
+        <div style="display:flex;gap:1.1rem;flex-wrap:wrap;">
+          <img src="assets/node1.svg" alt="Node.js" title="Node.js" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/python.svg" alt="Python" title="Python" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/fastapi.svg" alt="FastAPI" title="FastAPI" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/docker.svg" alt="Docker" title="Docker" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/mysql.svg" alt="MySQL" title="MySQL" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/firebase1.svg" alt="Firebase" title="Firebase" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/aws.svg" alt="AWS" title="AWS" style="width:68px;height:68px;object-fit:contain;">
+        </div>
       </div>
-    </section>
-  </main>
+      <!-- Tools -->
+      <div>
+        <h3 style="font-size:1.3rem;margin-bottom:.5rem;color:#aee6ff;font-weight:500;">Tools & Platforms</h3>
+        <div style="display:flex;gap:1.1rem;flex-wrap:wrap;">
+          <img src="assets/git1.svg" alt="Git" title="Git" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/github1.svg" alt="GitHub" title="GitHub" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/hf.svg" alt="GitHub" title="GitHub" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/vscode.svg" alt="VSCode" title="VSCode" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/androidstudio.svg" alt="Android Studio" title="Android Studio" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/xcode.svg" alt="Xcode" title="Xcode" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/mailchimp.svg" alt="Mailchimp" title="Mailchimp" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/unity.svg" alt="Unity" title="Unity" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/blender.svg" alt="Blender" title="Blender" style="width:68px;height:68px;object-fit:contain;">
+          <img src="assets/numpy.svg" alt="NumPy" title="NumPy" style="width:68px;height:68px;object-fit:contain;">
+        </div>
+      </div>
+     
+    </div>
+  </div>
+  
+  <!-- Skills Section -->
+  <div>
+    <h2 style="font-size:2rem;margin-bottom:1rem;font-weight:600;color:#ffcfb8;letter-spacing:1px;">Core Skills</h2>
+    <ul style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;font-size:1.12rem;color:#c3c7db;list-style-type:circle;margin:0;padding-left:1.5rem;">
+      <li>Full-Stack Web Development</li>
+      <li>API Integration & RESTful Services</li>
+      <li>Mobile App Design (iOS, Android)</li>
+      <li>Machine Learning Systems</li>
+      <li>Database Design (SQL/NoSQL)</li>
+      <li>Semantic Search & Vector Embeddings</li>
+      <li>Version Control with Git/GitHub</li>
+      <li>Real-Time Data Processing</li>
+      <li>Rapid Prototyping & Deployment</li>
+      <li>Debugging & Performance Optimization</li>
+      <li>UI/UX Prototyping with Figma</li>
+      <li>Cloud Integration & DevOps Basics</li>
+      <li>Competitive Programming & Algorithms</li>
+    </ul>
+  </div>
 
+</div>
+
+  
+  
+
+  <div class="section-content" id="experience-section" style="display:none;">
+    <header class="glass-header">
+      <div class="glass-header-content">
+        <span class="header-title">Experience</span>
+        <nav class="glass-nav">
+          <a href="#" class="glass-nav-btn nav-btn" data-target="home-section">Home</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="about-section">About</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="experience-section">Experience</a>
+          <a href="#" class="glass-nav-btn nav-btn" data-target="projects-section">Projects</a>
+        </nav>
+      </div>
+    </header>
+  
+    <main style="width: 100vw; padding: 6rem 5vw 5rem 5vw; box-sizing: border-box; min-height: 100vh; overflow-y: auto;">
+  
+      <!-- Quilly Experience -->
+<div class="experience-strip" style="
+background: rgba(28, 29, 45, 0.28);
+border-radius: 16px;
+box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+backdrop-filter: blur(16px) saturate(160%);
+-webkit-backdrop-filter: blur(16px) saturate(160%);
+border: 1.3px solid rgba(110, 130, 220, 0.18);
+background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%);
+padding: 2rem 3rem;
+margin-bottom: 3.2rem;
+color: #bcd0e0;
+font-family: 'Poppins', sans-serif;
+max-width: 1200px;
+margin-left: auto;
+margin-right: auto;
+display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;">
+<div style="flex: 2;">
+  <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">Quilly</h3>
+  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Full Stack Developer Intern | August 2025 – Present</p>
+  <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
+    <li>Working full-stack for Quilly, a platform fostering connection and community for college students, garnering 500+ users</li>
+    <li>Collaborated with cross-functional teams to debug and optimize platform performance with Redis caching and GraphQL APIs</li>
+    <li>Developed interactive community engagement features, driving average user session length by 60% based on web analytics</li>
+  </ul>
+</div>
+<img src="assets/quilly.png" alt="Quilly Logo"
+  style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
+
+</div>
+
+<!-- FishCast Experience -->
+<div class="experience-strip" style="
+background: rgba(28, 29, 45, 0.28);
+border-radius: 16px;
+box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+backdrop-filter: blur(16px) saturate(160%);
+-webkit-backdrop-filter: blur(16px) saturate(160%);
+border: 1.3px solid rgba(110, 130, 220, 0.18);
+background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%);
+padding: 2rem 3rem;
+margin-bottom: 3.2rem;
+color: #bcd0e0;
+font-family: 'Poppins', sans-serif;
+max-width: 1200px;
+margin-left: auto;
+margin-right: auto;
+display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;">
+<div style="flex: 2;">
+  <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">Big Data Big Impact - FishCast</h3>
+  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Data Engineer | August 2025 – Present</p>
+  <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
+    <li>Maintained data pipelines integrating large ecological datasets from NOAA and Fishbase for predictive modeling purposes</li>
+    <li>Researched and trained time series models &amp; LSTMS to accurately forecast Atlantic Cod habitat shifts due to climate change</li>
+    <li>Designed and developed interactive GIS maps and dashboards using visualization tools and GIS software for readability</li>
+  </ul>
+</div>
+<img src="assets/bdbib.png" alt="Quilly Logo"
+  style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
+
+</div>
+
+<!-- King of the Curve Experience -->
+<div class="experience-strip" style="
+background: rgba(28, 29, 45, 0.28);
+border-radius: 16px;
+box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+backdrop-filter: blur(16px) saturate(160%);
+-webkit-backdrop-filter: blur(16px) saturate(160%);
+border: 1.3px solid rgba(110, 130, 220, 0.18);
+background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%);
+padding: 2rem 3rem;
+margin-bottom: 3.2rem;
+color: #bcd0e0;
+font-family: 'Poppins', sans-serif;
+max-width: 1200px;
+margin-left: auto;
+margin-right: auto;
+display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;">
+<div style="flex: 2;">
+  <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">King of the Curve</h3>
+  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Front End Developer Intern | July 2025 – Present</p>
+  <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
+    <li>Leading the rebrand of the MCAT study app using Flutter and Dart, modernizing UI responsiveness and user experience</li>
+    <li>Working with Figma designs to create interactive flashcards, quizzes, and progress tracking features used by 100,000+ users</li>
+    <li>Integrating widgets and SDKs (graphs, charts, visualizations) to improve user tracking without impacting app performance</li>
+  </ul>
+</div>
+<img src="assets/kotc.png" alt="Quilly Logo"
+  style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
+
+</div>
+
+<div class="experience-strip" style="
+  background: rgba(28, 29, 45, 0.28);
+  border-radius: 16px;
+  box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1.3px solid rgba(110, 130, 220, 0.18);
+  background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%);
+  padding: 2rem 3rem;
+  margin-bottom: 3.2rem;
+  color: #bcd0e0;
+  font-family: 'Poppins', sans-serif;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;">
+  <div style="flex: 2;">
+    <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">Alpha Kappa Psi (Business Fraternity)</h3>
+    <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Cumming, GA | Director of Software Development | January 2025 – Present</p>
+    <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
+      <li>Developed a website used by the fraternity of 200+ members, streamlining the tracking of members and their performance</li>
+      <li>Implemented WebSockets for real-time group discussions and forums, enhancing collaboration among fraternity members</li>
+      <li>Utilized React and Firebase for front/back-end services, and Axios to handle API requests and data retrieval efficiently</li>
+    </ul>
+  </div>
+  <img src="assets/akpsi.png" alt="Alpha Kappa Psi Logo" style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
+</div>
+
+<!-- iOS Club Experience -->
+<div class="experience-strip" style="
+background: rgba(28, 29, 45, 0.28);
+border-radius: 16px;
+box-shadow: 0 7px 22px #15192522, 0 1px 7px #7274ad18 inset;
+backdrop-filter: blur(16px) saturate(160%);
+-webkit-backdrop-filter: blur(16px) saturate(160%);
+border: 1.3px solid rgba(110, 130, 220, 0.18);
+background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%);
+padding: 2rem 3rem;
+margin-bottom: 3.2rem;
+color: #bcd0e0;
+font-family: 'Poppins', sans-serif;
+max-width: 1200px;
+margin-left: auto;
+margin-right: auto;
+display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;">
+<div style="flex: 2;">
+  <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">iOS Club</h3>
+  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Junior Developer | August 2024 – May 2025</p>
+  <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
+    <li>Developed habit-tracking app with 10+ customizable features allowing users to track personal goals and daily routines</li>
+    <li>Implemented UI components and user-friendly interfaces using SwiftUI for a seamless experience with maintaining habits</li>
+    <li>Collaborated with 15+ developers, utilizing Git for version control improving workflow efficiency and project management</li>
+  </ul>
+</div>
+<img src="assets/iosclub.png" alt="Quilly Logo"
+  style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; box-shadow:0 2px 18px #222a; margin-left:1.6rem; background:transparent;">
+
+</div>
+
+  
+  
+
+
+  <!--
   <footer class="site-footer">
     <div class="container">
       <p>&copy; 2025 Vedant Lalit Bhatt. All rights reserved.</p>
     </div>
   </footer>
+  -->
 
-  <script src="scripts/main.js"></script>
+<script>
+  // Typing animation function
+  const phrases = [
+    'software engineer', 'full-stack developer', 'ML engineer', 'app developer',
+    'tech entrepreneur', 'solutions architect','web developer','data scientist'
+  ];
+  const typedText = document.getElementById('typed-text');
+  let phraseIndex = 0, charIndex = 0, forward = true;
+  function tick() {
+    const phrase = phrases[phraseIndex];
+    if (forward) {
+      charIndex++;
+      typedText.textContent = phrase.substring(0, charIndex);
+      if (charIndex < phrase.length) {
+        setTimeout(tick, 75);
+      } else {
+        forward = false;
+        setTimeout(tick, 1200);
+      }
+    } else {
+      charIndex--;
+      typedText.textContent = phrase.substring(0, charIndex);
+      if (charIndex > 0) {
+        setTimeout(tick, 34);
+      } else {
+        forward = true; phraseIndex = (phraseIndex + 1) % phrases.length; setTimeout(tick, 350);
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', tick);
+
+  function hideAllSections() {
+  document.querySelectorAll('.centered-content, .section-content').forEach(section => {
+    section.style.display = 'none';
+  });
+}
+
+  // Navigation animation and section handling
+  let navLocked = false;
+
+function handleNavClick(e) {
+  if (navLocked) return;
+  navLocked = true;
+
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+
+  const btn = e.currentTarget;
+  const targetId = btn.getAttribute('data-target');
+  const quickLinks = document.querySelector('.quick-links');
+  
+  // Find the currently visible section more reliably
+  const allSections = document.querySelectorAll('.centered-content, .section-content');
+  let showing = null;
+  
+  for (let section of allSections) {
+    const style = window.getComputedStyle(section);
+    if (style.display !== 'none' && !section.classList.contains('slide-out-left')) {
+      showing = section;
+      break;
+    }
+  }
+  
+  const next = document.getElementById(targetId);
+
+  if (quickLinks) {
+    if (targetId !== "home-section") {
+      quickLinks.classList.add('fading');
+    } else {
+      quickLinks.classList.remove('fading');
+    }
+  }
+
+  if (showing && next && showing !== next) {
+    showing.classList.add('slide-out-left');
+    setTimeout(() => {
+      showing.style.display = 'none';
+      showing.classList.remove('slide-out-left');
+      next.style.display = next.classList.contains('centered-content') ? 'flex' : 'block';
+      next.classList.add('slide-in-right');
+      setTimeout(() => {
+        next.classList.remove('slide-in-right');
+        navLocked = false;
+      }, 680);
+    }, 680);
+  } else {
+    // If clicking the already visible section or no target, unlock immediately
+    navLocked = false;
+  }
+}
+
+
+
+
+// Attach the handler
+document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', handleNavClick));
+
+
+
+  // Unified constellation background canvas
+  const canvas = document.getElementById('background-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let particles = [];
+
+  function spawnParticles() {
+    const area = width * height;
+    const numParticles = Math.max(56, Math.floor(area / 8900));
+    particles = [];
+    for (let i = 0; i < numParticles; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: Math.random() * 1.3 + 0.93
+      });
+    }
+  }
+
+  function resizeCanvas() {
+    width = window.innerWidth;
+    // For projects section, height is document body height to support scrolling
+    const projectsSection = document.getElementById('projects-section');
+    const isProjectsVisible = window.getComputedStyle(projectsSection).display !== 'none';
+    height = isProjectsVisible ? document.body.scrollHeight : window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    spawnParticles();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    let grad = ctx.createLinearGradient(0, 0, 0, height);
+    grad.addColorStop(0,   "rgba(21,22,34,1)");
+grad.addColorStop(0.0, "rgba(21,22,34,0.08)");
+grad.addColorStop(1,   "rgba(4,8,22,1)");
+
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, height);
+
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 160) {
+          const opacity = Math.pow(1 - dist / 160, 2.2) * .5;
+          if (opacity > 0.001) {
+            ctx.strokeStyle = `rgba(120, 180, 255, ${opacity})`;
+            ctx.lineWidth = 1.05;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+      ctx.fillStyle = 'rgba(180,210,255,.7)';
+      ctx.fill();
+    }
+  }
+
+  function update() {
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+    }
+  }
+
+  function animate() {
+    update();
+    draw();
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    resizeCanvas();
+    animate();
+    // Show home section initially
+    document.getElementById('home-section').style.display = 'flex';
+  });
+
+</script>
 </body>
 </html>

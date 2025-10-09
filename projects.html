@@ -3,13 +3,154 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Projects — Vedant Lalit Bhatt</title>
+  <title>Vedant Lalit Bhatt — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: 'Poppins', 'JetBrains Mono', monospace, sans-serif;
+      background: #171821;
+      color: #bbc6db;
+      letter-spacing: 0.014em;
+      scroll-behavior: smooth;
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="styles/styles.css">
+    a { text-decoration: none; color: #5d7cfb; transition: color 0.2s; }
+    a:hover { color: #8caaff; }
+    .container { width: 96%; max-width: 1200px; margin: 0 auto; position: relative; }
+
+    .site-header {
+      background: #181a22;
+      color: #ccd3e6;
+      box-shadow: 0 1px 10px #10101022;
+      padding: 1rem 0 0.7rem 0;
+      position: sticky; top: 0; z-index: 50;
+      font-family: 'JetBrains Mono', monospace, sans-serif;
+    }
+    .site-header .brand {
+      font-size: 2.2rem; font-weight: 800; color: #95acff; letter-spacing: 0.13em; user-select: none;
+    }
+    .primary-nav { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .primary-nav ul {
+      list-style: none; display: flex; gap: 2.1rem; margin: 0; padding: 0; font-size: 1.11rem;
+    }
+    .primary-nav a {
+      color: #bbc6db; font-weight: 600; padding: 0.19em 0.32em 0.37em 0.32em;
+      border-bottom: 2px solid transparent; font-family: inherit; text-transform: uppercase; border-radius: 4px 4px 0 0;
+      letter-spacing: 0.05em; transition: color 0.13s, border-bottom-color 0.17s;
+    }
+    .primary-nav a:hover, .primary-nav a:focus { color: #b8d1ff; border-bottom-color: #95acff; }
+    .header-buttons { display: flex; gap: 0.7rem; }
+    .btn.small-btn {
+      background: #232748; color: #c9d3e3; padding: 0.38rem 0.95rem;
+      border-radius: 7px; font-weight: 600; font-size: 0.98rem; border: 2px solid transparent; transition: background .19s, border-color .19s; user-select: none; cursor: pointer;
+    }
+    .btn.small-btn:hover, .btn.small-btn:focus { background: #2b3150; border-color: #95acff; color: #fff; }
+
+    .projects-bg {
+      position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+      z-index: 1; pointer-events: none; background: transparent;
+    }
+
+    main { position: relative; z-index: 3; }
+    .projects {
+      padding: 5.7rem 2rem 5rem 2rem;
+      position: relative;
+      min-height: 100vh;
+      background: transparent;
+      z-index: 5;
+      box-sizing: border-box;
+    }
+    .section-title {
+      font-size: 2.1rem; text-align: center; margin-bottom: 3rem;
+      font-family: 'JetBrains Mono', monospace, sans-serif;
+      font-weight: 800; letter-spacing: 0.08em; color: #a4b4ff;
+    }
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 2.3rem;
+    }
+
+    .project-card {
+      background: #181a28;
+      border-radius: 16px;
+      box-shadow: 0 7px 22px #15192522;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .22s, transform .21s;
+      position: relative;
+      z-index: 10;
+      border: 1.7px solid #23294b44;
+      min-height: 490px;
+      /* Extra spacing for bg under image */
+      padding-top: 2.3rem;
+    }
+    .project-card:hover {
+      box-shadow: 0 10px 34px #2d2f4a22, 0 2px 12px #647be822;
+      border-color: #5d7cfb77;
+      transform: translateY(-6px);
+    }
+    .github-link {
+      display: block;
+      width: 140px; height: 140px;
+      margin: 0 auto 0.95rem auto;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #28346f88;
+      box-shadow: none;
+      background: #222644;
+    }
+    .github-link img {
+      width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 10px; background: #fff;
+    }
+    .project-content {
+      padding: 1.1rem 1.1rem 0.7rem 1.1rem;
+      flex: 1; display: flex; flex-direction: column; justify-content: space-between; text-align: center;
+    }
+    .project-content h3 {
+      font-size: 1.17rem;
+      margin-top: 0; margin-bottom: 0.11rem; color: #b9c7ef;
+      font-family: 'JetBrains Mono', monospace, sans-serif; font-weight: 700;
+    }
+    .project-tech-stack {
+      font-style: italic; color: #97abdc; margin: 0 0 .72rem 0; font-size: 0.92rem; line-height: 1.2;
+    }
+    .project-content p {
+      font-size: 0.93rem; line-height: 1.43; margin-bottom: 1.06rem; color: #b5bac2; text-align: left;
+      font-family: 'Poppins', sans-serif;
+    }
+    .project-links { display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.04rem; margin-bottom: 0.51rem;}
+    .btn {
+      background: #232b49; color: #dadbf9; padding: 0.58rem 1.15rem;
+      border-radius: 6px; font-size: 0.9rem; font-weight: 600; text-decoration: none;
+      border: none; font-family: inherit; box-shadow: none;
+      transition: background .15s, color .16s;
+    }
+    .btn:hover { background: #405dc7; color: #fff; }
+    @media screen and (max-width: 760px) {
+      .project-grid { grid-template-columns: 1fr; }
+      .project-card{ min-height: 420px;}
+      .github-link{ width: 90px; height: 90px;}
+    }
+
+    .site-footer {
+      text-align: center; padding: 1.2rem 0 0.7rem 0; background: #181924; color: #7080b6; font-size: 1rem;
+      font-family: 'JetBrains Mono', monospace, sans-serif; border-radius: 11px 11px 0 0; box-shadow: 0 -1px 5px #23294b11 inset;
+      margin-top: 2.7rem;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Canvas particle/constellation background -->
+  <canvas id="projects-bg" class="projects-bg"></canvas>
+
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html">Vedant Lalit Bhatt</a>
@@ -27,22 +168,135 @@
   <main>
     <section class="projects" id="projects">
       <div class="container">
-        <h2>Projects</h2>
+        <h2 class="section-title">Projects</h2>
         <div class="project-grid">
+
+          <!-- Project 1 -->
           <div class="project-card">
-            <img src="assets/images/project1.jpg" alt="Project 1">
-            <h3>Project Title 1</h3>
-            <p>Short description of the project.</p>
-            <a href="#" class="btn">Live Demo</a>
-            <a href="#" class="btn">Code</a>
+            <a href="https://github.com/vedantlbhatt/mysql-runner" target="_blank" class="github-link" aria-label="MySQL Runner GitHub Repository">
+              <img src="assets/mysqlrunner.jpeg" alt="mysqlrunner picture" />
+            </a>
+            <div class="project-content">
+              <h3>MySQL - Runner</h3>
+              <div class="project-tech-stack">
+                TypeScript, Node.js, Python, Flask API, MySQL, Git, Ollama
+              </div>
+              <p>mysql-runner is a VS Code extension that lets developers connect directly to their databases and interact with them using natural language. Backed by a Flask API and the Ollama Llama 3.2 model, it translates plain English into SQL queries and executes them to fetch, modify, and alter data, streamlining database management and reducing context switching.</p>
+              <div class="project-links">
+                <a href="#" class="btn">Live Demo</a>
+                <a href="#" class="btn">Code</a>
+              </div>
+            </div>
           </div>
+
+          <!-- Project 2 -->
           <div class="project-card">
-            <img src="assets/images/project2.jpg" alt="Project 2">
-            <h3>Project Title 2</h3>
-            <p>Short description of the project.</p>
-            <a href="#" class="btn">Live Demo</a>
-            <a href="#" class="btn">Code</a>
+            <a href="https://github.com/vedantlbhatt/trackmy" target="_blank" class="github-link" aria-label="Track My Github Repository">
+              <img src="assets/trackmy.jpeg" alt="Track My Preview" />
+            </a>
+            <div class="project-content">
+              <h3>Track My</h3>
+              <div class="project-tech-stack">
+                JavaScript, React.js, Node.js, Python, FastAPI, MySQL, Docker, Git
+              </div>
+              <p>Track My is a community-driven React Native app designed to reconnect people with their lost belongings. Users can upload reports with photos, last-seen location, and an optional bounty. Equipped with ML-powered image similarity, it can compare lost and found reports to help recover items efficiently.</p>
+              <div class="project-links">
+                <a href="#" class="btn">Live Demo</a>
+                <a href="#" class="btn">Code</a>
+              </div>
+            </div>
           </div>
+
+          <!-- Project 3 -->
+          <div class="project-card">
+            <a href="https://github.com/vedantlbhatt/activeknockout" target="_blank" class="github-link" aria-label="Active Knockout GitHub Repository">
+              <img src="assets/activeknockout.jpeg" alt="Active Knockout Preview" />
+            </a>
+            <div class="project-content">
+              <h3>Active Knockout</h3>
+              <div class="project-tech-stack">
+                C#, Unity, Blender
+              </div>
+              <p>I designed a virtual reality fitness app focused on boxing practice simulations, combining physical activity with immersive digital environments. The experience was optimized for smooth interaction and real-time performance in Unity using C#, delivering responsive and engaging gameplay. Competing nationally against more than 200 teams, this project earned seventh place at the Technology Student Association conference for its innovation and refinement.</p>
+              <div class="project-links">
+                <a href="#" class="btn">Live Demo</a>
+                <a href="#" class="btn">Code</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 4 -->
+          <div class="project-card">
+            <a href="https://github.com/vedantlbhatt/iplay" target="_blank" class="github-link" aria-label="iPlay GitHub Repository">
+              <img src="assets/iplay.jpeg" alt="iPlay Preview" />
+            </a>
+            <div class="project-content">
+              <h3>iPlay</h3>
+              <div class="project-tech-stack">
+                Swift, SwiftUI, GameKit, SpriteKit, SceneKit, Git
+              </div>
+              <p>I was a developer for an engaging party game for iOS, where players connect and compete in a suite of minigames utilizing peer-to-peer multiplayer. Leveraging Apple’s Multipeer Connectivity framework, I enabled seamless connections between devices, while custom algorithms powered a range of diverse and competitive game mechanics. This interactive experience blends dynamic multiplayer interactions with varied gameplay, enhancing both replayability and competitive fun.</p>
+              <div class="project-links">
+                <a href="#" class="btn">Live Demo</a>
+                <a href="#" class="btn">Code</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 5 -->
+          <div class="project-card">
+            <a href="https://github.com/vedantlbhatt/logistics-relational-db" target="_blank" class="github-link" aria-label="Logistics Relational Mock Database GitHub Repository">
+              <img src="assets/logisticsdb.jpeg" alt="Logistics Relational Mock Database Preview" />
+            </a>
+            <div class="project-content">
+              <h3>Logistics Relational Mock Database</h3>
+              <div class="project-tech-stack">
+                MySQL
+              </div>
+              <p>I developed a robust MySQL schema tailored for logistics tracking, featuring over 21 stored procedures and multiple complex views. Drawing directly from EER diagrams, I addressed real-world constraints with targeted SQL design decisions, ensuring the database was both practical and scalable. By applying foundational relational concepts, I significantly improved schema normalization and data integrity, reducing redundancy and streamlining operations.</p>
+              <div class="project-links">
+                <a href="#" class="btn">Live Demo</a>
+                <a href="#" class="btn">Code</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 6 -->
+          <div class="project-card">
+            <a href="https://github.com/vedantlbhatt/venture45xt" target="_blank" class="github-link" aria-label="Venture 45XT GitHub Repository">
+              <img src="assets/venture45xt.jpeg" alt="Venture 45XT Preview" />
+            </a>
+            <div class="project-content">
+              <h3>Venture 45XT</h3>
+              <div class="project-tech-stack">
+                Blender, Unity
+              </div>
+              <p>I created and animated a detailed 3-D commercial for a fictional fitness watch, combining advanced modeling techniques with impressive visual effects. Crafting the mesh and optimizing the polygon count achieved a seamless blend of quality and rendering efficiency. The final product was recognized at both state and national competitions, securing first place among over 150 teams in a business and technology team event.</p>
+              <div class="project-links">
+                <a href="#" class="btn">Live Demo</a>
+                <a href="#" class="btn">Code</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 7 -->
+          <div class="project-card">
+            <a href="https://github.com/vedantlbhatt/wandersync" target="_blank" class="github-link" aria-label="WanderSync GitHub Repository">
+              <img src="assets/wandersync.jpeg" alt="WanderSync Preview" />
+            </a>
+            <div class="project-content">
+              <h3>WanderSync</h3>
+              <div class="project-tech-stack">
+                Android Studio, Firebase, Git
+              </div>
+              <p>WanderSync is a full-stack travel planning app developed in Android Studio, empowering users to organize every aspect of their trips, including lodging, dining, and activities. Integrated with Firebase, the app seamlessly handles secure user authentication and real-time data storage, enabling travelers to sort and customize their itinerary details. By providing intuitive tools for managing accommodations and experiences, Wandersync streamlines the complex process of trip planning into a single, easy-to-use mobile platform.</p>
+              <div class="project-links">
+                <a href="#" class="btn">Live Demo</a>
+                <a href="#" class="btn">Code</a>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -54,6 +308,85 @@
     </div>
   </footer>
 
-  <script src="scripts/main.js"></script>
+  <!-- Constellation Background JS -->
+  <script>
+    // Modern dark constellation particles with visible lines
+    function projectsConstellationInit() {
+      const canvas = document.getElementById('projects-bg');
+      if (!canvas) return;
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      function resize() {
+        width = window.innerWidth;
+        height = document.body.scrollHeight;
+        canvas.width = width;
+        canvas.height = height;
+        spawnParticles();
+      }
+      window.addEventListener('resize', resize);
+
+      let particles = [];
+      let numParticles = Math.floor(width / 42);
+      function spawnParticles() {
+        numParticles = Math.max(32, Math.floor(width / 42));
+        particles = [];
+        for (let i = 0; i < numParticles; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.12,
+            vy: (Math.random() - 0.5) * 0.12,
+            r: Math.random() * 1.6 + 0.9
+          });
+        }
+      }
+      spawnParticles();
+
+      function draw() {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, width, height);
+        // Lines
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = 'rgba(110,190,255,0.19)';
+              ctx.lineWidth = 1.08;
+              ctx.stroke();
+            }
+          }
+        }
+        // dots
+        for (let i = 0; i < particles.length; i++) {
+          ctx.beginPath();
+          ctx.arc(particles[i].x, particles[i].y, particles[i].r, 0, 2 * Math.PI);
+          ctx.fillStyle = 'rgba(155,195,255,0.78)';
+          ctx.fill();
+        }
+      }
+      function update() {
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].x += particles[i].vx;
+          particles[i].y += particles[i].vy;
+          if (particles[i].x < 0 || particles[i].x > width) particles[i].vx *= -1;
+          if (particles[i].y < 0 || particles[i].y > height) particles[i].vy *= -1;
+        }
+      }
+      function animate() {
+        update();
+        draw();
+        requestAnimationFrame(animate);
+      }
+      resize();
+      animate();
+    }
+    document.addEventListener('DOMContentLoaded', projectsConstellationInit);
+  </script>
+
 </body>
 </html>
