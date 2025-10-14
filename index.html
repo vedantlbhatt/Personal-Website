@@ -774,6 +774,21 @@
     </header>
   
     <main style="width: 100%; padding: 8rem 5vw 5rem 5vw; box-sizing: border-box; min-height: 100vh; overflow-y: auto;">
+
+      <div class="experience-strip" style="background: rgba(28, 29, 45, 0.28); border-radius: 16px; box-shadow: 0 7px 22px 15px rgba(25, 25, 82, 0.22), 0 1px 7px 7px rgba(114, 116, 209, 0.18) inset; backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%); border: 1.3px solid rgba(110, 130, 220, 0.18); background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%); padding: 2rem clamp(1rem, 3vw, 3rem); margin-bottom: 3.2rem; color: #bcd0e0; font-family: Poppins, sans-serif; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; align-items: center; justify-content: space-between; gap: 2.3rem; box-sizing: border-box;">
+        <div style="flex: 2;">
+          <h3 style="font-family: JetBrains Mono, monospace; font-weight: 700; margin-bottom: 0.3rem;">GT BrainLab</h3>
+          <p style="font-style: italic; margin-top: 0; margin-bottom: 0.7rem;">Atlanta, GA  | Undergraduate Researcher | September 2025 - Present</p>
+          <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
+            <li>Coded Python pipelines to preprocess and decode EEG data, and built interactive interfaces to visualize real-time signals</li>
+            <li>Worked with time series models to classify brain waves and SSVEP activity, achieving 89% accuracy via cross-validation</li>
+            <li>Applied adaptive noise cancellation to remove 60 Hz power line interference, improving signal fidelity with 28% SNR gain</li>
+          </ul>
+        </div>
+        <div style="display: flex; align-items: center; height: 100%;">
+          <img src="assets/gt.svg" alt="GT BrainLab Logo" style="max-width: 102px; min-width: 75px; width: 100px; height: auto; border-radius: 12px; object-fit: cover; margin-left: 1.6rem; background: transparent;">
+        </div>
+      </div>
   
       <!-- Quilly Experience -->
 <div class="experience-strip" style="
@@ -795,33 +810,16 @@ display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;
 box-sizing: border-box;">
 <div style="flex: 2;">
   <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">Quilly</h3>
-  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Full Stack Developer Intern | August 2025 – Present</p>
+  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Software Engineer Intern | August 2025 – Present</p>
   <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
-    <li>Working full-stack for Quilly, a platform fostering connection and community for college students, garnering 500+ users</li>
-    <li>Collaborated with cross-functional teams to debug and optimize platform performance with Redis caching and GraphQL APIs</li>
-    <li>Developed interactive community engagement features, driving average user session length by 60% based on web analytics</li>
+    <li>Migrated backend from Firebase to Supabase with PostgreSQL, achieving 75% faster read times and 60% faster write queries</li>
+    <li>Optimized platform performance by improving Redis cache hit rate by 40%, reducing data fetch latency and server load</li>
+    <li>Converted Figma designs into responsive, inline-styled HTML/CSS templates tailored for Mailchimp email campaigns</li>
   </ul>
 </div>
 <img src="assets/quilly.png" alt="Quilly Logo"
   style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover; margin-left:1.6rem; background:transparent;">
 </div>
-
-<div class="experience-strip" style="background: rgba(28, 29, 45, 0.28); border-radius: 16px; box-shadow: 0 7px 22px 15px rgba(25, 25, 82, 0.22), 0 1px 7px 7px rgba(114, 116, 209, 0.18) inset; backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%); border: 1.3px solid rgba(110, 130, 220, 0.18); background-image: linear-gradient(120deg, rgba(100,140,255,0.08) 0%, rgba(80,130,200,0.04) 80%); padding: 2rem clamp(1rem, 3vw, 3rem); margin-bottom: 3.2rem; color: #bcd0e0; font-family: Poppins, sans-serif; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; align-items: center; justify-content: space-between; gap: 2.3rem; box-sizing: border-box;">
-  <div style="flex: 2;">
-    <h3 style="font-family: JetBrains Mono, monospace; font-weight: 700; margin-bottom: 0.3rem;">GT BrainLab</h3>
-    <p style="font-style: italic; margin-top: 0; margin-bottom: 0.7rem;">Atlanta, GA  | Undergraduate Researcher | September 2025 - Present</p>
-    <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
-      <li>Coded Python pipelines to preprocess and decode EEG data, and built interactive interfaces to visualize real-time signals</li>
-      <li>Applied time series models to classify brain wave and SSVEP activity, decoding attended stimulus frequency for BCI control</li>
-      <li>Implemented adaptive noise cancellation using reference channels to reduce artifacts and improve neural signal fidelity</li>
-    </ul>
-  </div>
-  <div style="display: flex; align-items: center; height: 100%;">
-    <img src="assets/gt.svg" alt="GT BrainLab Logo" style="max-width: 102px; min-width: 75px; width: 100px; height: auto; border-radius: 12px; object-fit: cover; margin-left: 1.6rem; background: transparent;">
-  </div>
-</div>
-
-
 
 <!-- King of the Curve Experience -->
 <div class="experience-strip" style="
@@ -843,11 +841,11 @@ display: flex; align-items: center; justify-content: space-between; gap: 2.3rem;
 box-sizing: border-box;">
 <div style="flex: 2;">
   <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">King of the Curve</h3>
-  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Front End Developer Intern | July 2025 – Present</p>
+  <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Full Stack Developer Intern | July 2025 – Present</p>
   <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
-    <li>Leading the rebrand of the MCAT study app using Flutter and Dart, modernizing UI responsiveness and user experience</li>
-    <li>Working with Figma designs to create interactive flashcards, quizzes, and progress tracking features used by 100,000+ users</li>
-    <li>Integrating widgets and SDKs (graphs, charts, visualizations) to improve user tracking without impacting app performance</li>
+    <li>Spearheaded the rebrand for the MCAT study app with Flutter and Dart, modernizing user experience with Agile workflows</li>
+    <li>Worked with Figma designs to create interactive flashcards, quizzes, and progress tracking features used by 100,000+ users</li>
+    <li>Optimized Flutter app load times by 30% through image compression, lazy widget loading, and asynchronous data fetching</li>
   </ul>
 </div>
 <img src="assets/kotc.png" alt="Quilly Logo"
@@ -878,8 +876,8 @@ box-sizing: border-box;">
   <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Data Engineer | Feburary 2025 – Present</p>
   <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
     <li>Maintained data pipelines integrating large ecological datasets from NOAA and Fishbase for predictive modeling purposes</li>
-    <li>Researched and trained time series models &amp; LSTMS to accurately forecast Atlantic Cod habitat shifts due to climate change</li>
-    <li>Designed and developed interactive GIS maps and dashboards using visualization tools and GIS software for readability</li>
+    <li>Trained LSTM models on habitat data, achieving 87% accuracy with 5-fold cross-validation to forecast Atlantic Cod shifts</li>
+    <li>Designed and deployed GIS maps and dashboards on AWS S3, leveraging cloud computing for scalability and accessibility</li>
   </ul>
 </div>
 <img src="assets/bdbib.png" alt="Quilly Logo"
@@ -908,9 +906,9 @@ box-sizing: border-box;">
     <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.3rem;">Alpha Kappa Psi (Business Fraternity)</h3>
     <p style="font-style: italic; margin-top:0; margin-bottom: 0.7rem;">Atlanta, GA | Director of Software Development | January 2025 – Present</p>
     <ul style="padding-left: 1.5rem; list-style-type: disc; font-size: 1rem; color: #d6e2fc;">
-      <li>Developed a website used by the fraternity of 200+ members, streamlining the tracking of members and their performance</li>
+      <li>Developed a React website used by the fraternity of 200+ members, streamlining the tracking of members & performance</li>
       <li>Implemented WebSockets for real-time group discussions and forums, enhancing collaboration among fraternity members</li>
-      <li>Utilized React and Firebase for front/back-end services, and Axios to handle API requests and data retrieval efficiently</li>
+      <li>Utilized Firebase, Axios, Swagger, reducing API response time 25\% by identifying bottlenecks via profiling and load tests</li>
     </ul>
   </div>
   <img src="assets/akpsi.png" alt="Alpha Kappa Psi Logo" style="flex:1; max-width:102px; min-width:75px; height:102px; border-radius:12px; object-fit:cover;  margin-left:1.6rem; background:transparent;">
