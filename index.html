@@ -101,17 +101,21 @@
     }
 
     .intro {
-      max-width: 34rem;
+      max-width: 36rem;
       margin-left: auto;
       margin-bottom: clamp(2.5rem, 5vw, 3.75rem);
     }
 
     .intro p {
       font-size: clamp(0.98rem, 1.3vw, 1.08rem);
-      line-height: 1.55;
+      line-height: 1.65;
       font-weight: 400;
       color: #f2f2f2;
       letter-spacing: -0.01em;
+    }
+
+    .intro p + p {
+      margin-top: 1em;
     }
 
     .actions {
@@ -586,10 +590,16 @@
     <main class="main">
       <div class="intro" id="about">
         <p>
-          I design the screen, write the code, and stay through the tough parts.
-          Founders work with me when speed and taste both matter. I’ve created
-          companies, raised capital, built teams, and shipped world-class products.
-          Today I work with select clients and hack on apps.
+          Hey, I’m Vedant, a Computer Science student at Georgia Tech.<br />
+          I just wrapped a summer internship at Expedia in Seattle, where I built
+          scalable data pipelines to process, analyze, and triage flight booking failures.
+        </p>
+        <p>
+          I’ve also worked with startups, most notably AskTailr in fashion tech,
+          building a recommendation pipeline that helps users discover and buy real garments.
+          Outside of that, I’m usually at hackathons (I’ve won over $25,000 in prizes)
+          or shipping side projects. Across them, I’ve grown 2,000+ active users while
+          solving real pain points. Check them out below :)
         </p>
         <div class="actions">
           <a class="btn btn-primary" href="mailto:hello@vedantbhatt.com">Let’s talk</a>
@@ -618,7 +628,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>Expedia Group</h3>
-                    <p>Product engineering at scale</p>
+                    <p>Data pipelines at scale</p>
                   </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -671,69 +681,6 @@
             type="button"
             class="card flip-card"
             aria-pressed="false"
-            aria-label="Georgia Tech — click to flip"
-          >
-            <div class="flip-card-inner">
-              <div class="flip-face flip-front">
-                <div class="flip-front-visual">
-                  <img class="logo-gt" src="assets/rehaul/georgia-tech-white.png" alt="" />
-                </div>
-                <div class="flip-front-meta">
-                  <div class="flip-front-copy">
-                    <h3>Georgia Tech</h3>
-                    <p>Computer Science &amp; systems</p>
-                  </div>
-                  <span class="flip-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="m2 9 3-3 3 3" />
-                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
-                      <path d="m22 15-3 3-3-3" />
-                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <div class="flip-face flip-back">
-                <div class="flip-back-body">
-                  <div class="flip-back-copy">
-                    <h3>Georgia Tech</h3>
-                    <p>Studying computer science with a focus on building real products, systems, and research-minded software.</p>
-                  </div>
-                  <ul class="flip-features">
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Computer Science</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Systems Thinking</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Product Building</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Research Mindset</span>
-                    </li>
-                  </ul>
-                </div>
-                <div class="flip-cta-wrap">
-                  <span class="flip-cta" tabindex="-1">
-                    <span>Learn more</span>
-                    <span class="flip-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            class="card flip-card"
-            aria-pressed="false"
             aria-label="AskTailr — click to flip"
           >
             <div class="flip-card-inner">
@@ -747,7 +694,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>AskTailr</h3>
-                    <p>AI for pet parents</p>
+                    <p>Recommendation &amp; Interactive Experiences</p>
                   </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -781,6 +728,69 @@
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                       <span>Founder-built</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <span class="flip-cta" tabindex="-1">
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="Georgia Institute of Technology — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="logo-gt" src="assets/rehaul/georgia-tech-white.png" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <div class="flip-front-copy">
+                    <h3>Georgia Institute of Technology</h3>
+                    <p>IT Automation</p>
+                  </div>
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>Georgia Institute of Technology</h3>
+                    <p>Studying computer science with a focus on building real products, systems, and research-minded software.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Computer Science</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Systems Thinking</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Product Building</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Research Mindset</span>
                     </li>
                   </ul>
                 </div>
