@@ -48,7 +48,7 @@
     #about,
     #experiences,
     #projects {
-      scroll-margin-top: var(--pad);
+      scroll-margin-top: calc(var(--pad) + 0.5rem);
     }
 
     .shell {
@@ -77,22 +77,55 @@
     }
 
     .side-nav {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       gap: 0.35em;
       font-size: var(--type);
+      padding-left: 1.15em;
+    }
+
+    .nav-chevron {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0.7em;
+      height: 1.2em;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      pointer-events: none;
+      transform: translateY(var(--chevron-y, 0px));
+      transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    .nav-chevron svg {
+      width: 0.7em;
+      height: 0.7em;
+      display: block;
     }
 
     .side-nav a {
-      color: var(--text);
+      color: #6e6e6e;
       text-decoration: none;
       line-height: 1.2;
-      transition: color 75ms;
+      transition: color 220ms ease;
     }
 
     .side-nav a:hover {
-      color: #a3a3a3;
+      color: #c8c8c8;
+    }
+
+    .side-nav a.is-active {
+      color: var(--text);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav-chevron {
+        transition: none;
+      }
     }
 
     .main {
@@ -100,13 +133,126 @@
       padding-bottom: 2rem;
     }
 
-    .intro {
-      max-width: 36rem;
-      margin-left: auto;
-      margin-bottom: clamp(2.5rem, 5vw, 3.75rem);
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(12rem, 0.95fr) minmax(18rem, 34rem);
+      gap: clamp(1.5rem, 3.5vw, 3rem);
+      align-items: end;
+      margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
     }
 
-    .intro p {
+    .portrait {
+      position: relative;
+      min-width: 0;
+      justify-self: start;
+      width: auto;
+      max-width: 100%;
+      height: min(52vh, 26rem);
+      aspect-ratio: 816 / 698;
+      border-radius: clamp(1rem, 2vw, 1.5rem);
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+
+    .portrait-frame {
+      position: absolute;
+      inset: 0;
+    }
+
+    .portrait-frame img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+      transition: opacity 650ms cubic-bezier(0.4, 0, 0.2, 1),
+        filter 650ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .portrait-frame .portrait-art {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .portrait-frame .portrait-real {
+      opacity: 0;
+      z-index: 2;
+      filter: blur(6px) saturate(0.7);
+    }
+
+    .portrait.is-real .portrait-art {
+      opacity: 0;
+      filter: blur(4px);
+    }
+
+    .portrait.is-real .portrait-real {
+      opacity: 1;
+      filter: blur(0) saturate(1);
+    }
+
+    .portrait-toggle {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      z-index: 5;
+      width: 2.4rem;
+      height: 2.4rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #fff;
+      cursor: pointer;
+      padding: 0;
+      transition: background 180ms ease, transform 180ms ease, border-color 180ms ease;
+    }
+
+    .portrait-toggle:hover {
+      background: rgba(0, 0, 0, 0.65);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.05);
+    }
+
+    .portrait-toggle:active {
+      transform: scale(0.96);
+    }
+
+    .portrait-toggle:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .portrait-toggle svg {
+      width: 1.05rem;
+      height: 1.05rem;
+      display: none;
+    }
+
+    .portrait-toggle .icon-camera {
+      display: block;
+    }
+
+    .portrait.is-real .portrait-toggle .icon-camera {
+      display: none;
+    }
+
+    .portrait.is-real .portrait-toggle .icon-sparkles {
+      display: block;
+    }
+
+    .intro-copy {
+      min-width: 0;
+      align-self: center;
+    }
+
+    .intro-copy p {
       font-size: clamp(0.98rem, 1.3vw, 1.08rem);
       line-height: 1.65;
       font-weight: 400;
@@ -114,56 +260,72 @@
       letter-spacing: -0.01em;
     }
 
-    .intro p + p {
+    .intro-copy p + p {
       margin-top: 1em;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.15rem;
+      align-items: center;
+      gap: 1.6rem;
+      margin-top: 1.25rem;
     }
 
-    .btn {
+    .social-link {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      height: 2.55rem;
-      padding: 0 1.2rem;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: opacity 0.2s ease;
-      cursor: pointer;
-      border: 1px solid transparent;
-      white-space: nowrap;
-      font-family: inherit;
-    }
-
-    .btn:hover {
-      opacity: 0.88;
-    }
-
-    .btn-primary {
-      background: #ffffff;
-      color: #000000;
-    }
-
-    .btn-secondary {
+      width: 1.55rem;
+      height: 1.55rem;
+      padding: 0;
+      border: none;
+      border-radius: 0;
       background: transparent;
-      color: #c8c8c8;
-      border-color: #3a3a3a;
+      color: #ffffff;
+      text-decoration: none;
+      opacity: 0.88;
+      transition: opacity 150ms ease, transform 150ms ease, filter 150ms ease;
     }
 
-    .btn-secondary .dot {
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 50%;
-      background: #7a7a7a;
-      flex-shrink: 0;
+    .social-link svg,
+    .social-link img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+
+    .social-link:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    .social-link:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 3px;
+    }
+
+    .social-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.5rem;
+      transform: translateX(-50%) translateY(120%);
+      padding: 0.65rem 1rem;
+      border-radius: 999px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #fff;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 280ms ease, opacity 280ms ease;
+      z-index: 100;
+    }
+
+    .social-toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     .block + .block {
@@ -208,7 +370,7 @@
     }
 
     .flip-card:focus-visible {
-      outline: 2px solid var(--accent);
+      outline: 2px solid #ffffff;
       outline-offset: 3px;
     }
 
@@ -226,6 +388,10 @@
 
     @media (prefers-reduced-motion: reduce) {
       .flip-card-inner {
+        transition: none;
+      }
+
+      .portrait-frame img {
         transition: none;
       }
     }
@@ -291,7 +457,18 @@
       max-height: 20%;
     }
 
-    .asktailr-lockup {
+    .flip-front-visual img.project-thumb {
+      max-width: 88%;
+      max-height: 58%;
+      border-radius: 0.65rem;
+      object-fit: cover;
+    }
+
+    .grid + .grid {
+      margin-top: clamp(0.85rem, 1.8vw, 1.15rem);
+    }
+
+    .brand-lockup {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -299,15 +476,16 @@
       max-width: 88%;
     }
 
-    .asktailr-lockup .logo-mark {
+    .brand-lockup .logo-mark {
       width: clamp(2.6rem, 5.5vw, 3.6rem);
-      height: auto;
-      flex-shrink: 0;
+      height: clamp(2.6rem, 5.5vw, 3.6rem);
       max-width: none;
       max-height: none;
+      flex-shrink: 0;
+      object-fit: contain;
     }
 
-    .asktailr-lockup .logo-word {
+    .brand-lockup .logo-word {
       width: auto;
       height: clamp(1.5rem, 3.2vw, 2.1rem);
       max-width: none;
@@ -370,7 +548,7 @@
       position: absolute;
       inset: -8px;
       border-radius: 0.5rem;
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05), transparent);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04), transparent);
       opacity: 0.85;
     }
 
@@ -379,12 +557,13 @@
       z-index: 1;
       width: 1rem;
       height: 1rem;
-      color: var(--accent);
-      transition: transform 300ms ease;
+      color: #c8c8c8;
+      transition: transform 300ms ease, color 300ms ease;
     }
 
     .flip-card:hover .flip-icon svg {
       transform: rotate(-12deg) scale(1.1);
+      color: #ffffff;
     }
 
     .flip-back {
@@ -465,7 +644,7 @@
     .flip-features svg {
       width: 0.75rem;
       height: 0.75rem;
-      color: var(--accent);
+      color: #a3a3a3;
       flex-shrink: 0;
     }
 
@@ -503,8 +682,8 @@
     }
 
     .flip-cta:hover {
-      background: linear-gradient(90deg, rgba(249, 115, 22, 0.18), rgba(249, 115, 22, 0.06), transparent);
-      color: #fb923c;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04), transparent);
+      color: #ffffff;
       transform: scale(1.02);
     }
 
@@ -513,7 +692,7 @@
     }
 
     .flip-cta:focus-visible {
-      outline: 2px solid var(--accent);
+      outline: 2px solid #ffffff;
       outline-offset: 2px;
     }
 
@@ -527,12 +706,17 @@
       inset: 0;
       opacity: 0;
       transform: scale(0.9);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04), transparent);
       transition: opacity 300ms ease, transform 300ms ease;
     }
 
     .flip-cta:hover .flip-icon::before {
       opacity: 1;
       transform: scale(1);
+    }
+
+    .flip-cta:hover .flip-icon svg {
+      color: #ffffff;
     }
 
     .flip-cta:hover .flip-icon svg {
@@ -551,9 +735,23 @@
         gap: 1.5rem;
       }
 
-      .intro {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
         margin-left: 0;
-        max-width: none;
+      }
+
+      .portrait {
+        height: min(42vh, 20rem);
+        width: auto;
+        max-width: min(100%, 22rem);
+      }
+
+      .portrait-toggle {
+        top: 0.6rem;
+        right: 0.6rem;
+        width: 2.2rem;
+        height: 2.2rem;
       }
 
       .grid {
@@ -581,32 +779,117 @@
     <aside class="rail">
       <div class="site-name">Vedant Bhatt</div>
       <nav class="side-nav" aria-label="Primary">
-        <a href="#about">About Me</a>
-        <a href="#experiences">Experiences</a>
-        <a href="#projects">Projects</a>
+        <span class="nav-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </span>
+        <a href="#about" data-section="about">About Me</a>
+        <a href="#experiences" data-section="experiences">Experiences</a>
+        <a href="#projects" data-section="projects">Projects</a>
       </nav>
     </aside>
 
     <main class="main">
-      <div class="intro" id="about">
-        <p>
-          Hey, I’m Vedant, a Computer Science student at Georgia Tech.<br />
-          I just wrapped a summer internship at Expedia in Seattle, where I built
-          scalable data pipelines to process, analyze, and triage flight booking failures.
-        </p>
-        <p>
-          I’ve also worked with startups, most notably AskTailr in fashion tech,
-          building a recommendation pipeline that helps users discover and buy real garments.
-          Outside of that, I’m usually at hackathons (I’ve won over $25,000 in prizes)
-          or shipping side projects. Across them, I’ve grown 2,000+ active users while
-          solving real pain points. Check them out below :)
-        </p>
-        <div class="actions">
-          <a class="btn btn-primary" href="mailto:hello@vedantbhatt.com">Let’s talk</a>
-          <a class="btn btn-secondary" href="#booking">
-            <span class="dot" aria-hidden="true"></span>
-            Booking September
-          </a>
+      <div class="hero" id="about">
+        <div class="portrait" data-mode="art">
+          <div class="portrait-frame">
+            <img
+              class="portrait-art"
+              src="assets/rehaul/vedant-portrait.png"
+              alt="Vedant Bhatt, stylized portrait"
+            />
+            <img
+              class="portrait-real"
+              src="assets/rehaul/vedant-headshot.png"
+              alt="Vedant Bhatt"
+            />
+          </div>
+          <button
+            type="button"
+            class="portrait-toggle"
+            aria-label="Show real photo"
+            aria-pressed="false"
+            title="Show real photo"
+          >
+            <!-- camera: art → real -->
+            <svg class="icon-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+              <circle cx="12" cy="13" r="3" />
+            </svg>
+            <!-- sparkles: real → art -->
+            <svg class="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+              <path d="M20 3v4" />
+              <path d="M22 5h-4" />
+              <path d="M4 17v2" />
+              <path d="M5 18H3" />
+            </svg>
+          </button>
+        </div>
+        <div class="intro-copy">
+          <p>
+            Hey, I’m Vedant, a Computer Science student at Georgia Tech.<br />
+            I just wrapped a summer internship at Expedia in Seattle, where I built
+            scalable data pipelines to process, analyze, and triage flight booking failures.
+          </p>
+          <p>
+            I’ve also worked with startups, most notably AskTailr in fashion tech,
+            building a recommendation pipeline that helps users discover and buy real garments.
+            Outside of that, I’m usually at hackathons (I’ve won over $25,000 in prizes)
+            or shipping side projects. Across them, I’ve grown 2,000+ active users while
+            solving real pain points. Check them out below :)
+          </p>
+          <div class="actions" aria-label="Contact links">
+            <a
+              class="social-link"
+              href="https://www.linkedin.com/in/vedantlbhatt"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+            </a>
+            <a
+              class="social-link"
+              href="https://github.com/vedantlbhatt"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              title="GitHub"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+              </svg>
+            </a>
+            <a
+              class="social-link email-link"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=hello@vedantbhatt.com"
+              data-email="hello@vedantbhatt.com"
+              data-compose="gmail"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Email via Gmail"
+              title="Email via Gmail"
+            >
+              <img src="assets/rehaul/gmail-icon-gray.png" alt="" />
+            </a>
+            <a
+              class="social-link email-link"
+              href="https://outlook.office.com/mail/deeplink/compose?to=hello@vedantbhatt.com"
+              data-email="hello@vedantbhatt.com"
+              data-compose="outlook"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Email via Outlook"
+              title="Email via Outlook"
+            >
+              <img src="assets/rehaul/outlook-icon-gray.png" alt="" />
+            </a>
+          </div>
         </div>
       </div>
 
@@ -628,8 +911,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>Expedia Group</h3>
-                    <p>Data pipelines at scale</p>
-                  </div>
+                    <p>Scalable Data Pipelines for Anomaly Detection</p>                </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="m2 9 3-3 3 3" />
@@ -686,7 +968,7 @@
             <div class="flip-card-inner">
               <div class="flip-face flip-front">
                 <div class="flip-front-visual">
-                  <div class="asktailr-lockup" aria-hidden="true">
+                  <div class="brand-lockup" aria-hidden="true">
                     <img class="logo-mark" src="assets/rehaul/asktailr-mark-white.png" alt="" />
                     <img class="logo-word" src="assets/rehaul/asktailr-white.png" alt="" />
                   </div>
@@ -811,7 +1093,71 @@
       <section class="block" id="projects" aria-labelledby="projects-label">
         <h2 class="section-label" id="projects-label">Projects</h2>
         <div class="grid">
-          <article class="card card-empty" aria-hidden="true"></article>
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="RideGT — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <div class="brand-lockup" aria-hidden="true">
+                    <img class="logo-mark" src="assets/rehaul/bus-app-icon-white.png?v=4" alt="" />
+                    <img class="logo-word" src="assets/rehaul/ridegt-white.png?v=aclonica" alt="" />
+                  </div>
+                </div>
+                <div class="flip-front-meta">
+                  <div class="flip-front-copy">
+                    <h3>RideGT</h3>
+                    <p>Campus transit, simplified</p>
+                  </div>
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>RideGT</h3>
+                    <p>A campus transit app for tracking buses in real time, with clear routes and arrival estimates when you need them.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Live Tracking</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Route Maps</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Arrival Estimates</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Mobile-first</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <span class="flip-cta" tabindex="-1">
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
 
           <button
             type="button"
@@ -827,7 +1173,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>Zettelkasten</h3>
-                    <p>Linked thinking, made tangible</p>
+                    <p>Spatial Mind Map startup, won $20K</p>
                   </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -878,15 +1224,366 @@
 
           <article class="card card-empty" aria-hidden="true"></article>
         </div>
+
+        <div class="grid">
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="Track My — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="project-thumb" src="assets/trackmy.jpeg" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <div class="flip-front-copy">
+                    <h3>Track My</h3>
+                    <p>Lost &amp; found, powered by ML</p>
+                  </div>
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>Track My</h3>
+                    <p>A community app for reconnecting people with lost belongings using photos, location, and ML image similarity.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Image Similarity</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>React Native</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>FastAPI Backend</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>MySQL + Docker</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <span class="flip-cta" tabindex="-1">
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="MySQL Runner — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="project-thumb" src="assets/mysqlrunner.jpeg" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <div class="flip-front-copy">
+                    <h3>MySQL Runner</h3>
+                    <p>Natural language → SQL in VS Code</p>
+                  </div>
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>MySQL Runner</h3>
+                    <p>A VS Code extension that turns plain English into SQL with Flask + Ollama, then runs it against your database.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>VS Code Extension</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Ollama / Llama</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Flask API</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>TypeScript</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <span class="flip-cta" tabindex="-1">
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="Active Knockout — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="project-thumb" src="assets/active.png" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <div class="flip-front-copy">
+                    <h3>Active Knockout</h3>
+                    <p>VR boxing fitness — TSA Top 7</p>
+                  </div>
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>Active Knockout</h3>
+                    <p>A Unity VR fitness experience for boxing practice — placed 7th nationally at TSA among 200+ teams.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Unity + C#</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Blender Assets</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Real-time VR</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>National Award</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <span class="flip-cta" tabindex="-1">
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
       </section>
     </main>
   </div>
+
+  <div class="social-toast" id="social-toast" role="status" aria-live="polite"></div>
 
   <script>
     document.querySelectorAll(".flip-card").forEach((card) => {
       card.addEventListener("click", () => {
         const flipped = card.classList.toggle("is-flipped");
         card.setAttribute("aria-pressed", String(flipped));
+      });
+    });
+
+    const portrait = document.querySelector(".portrait");
+    const portraitToggle = document.querySelector(".portrait-toggle");
+    if (portrait && portraitToggle) {
+      portraitToggle.addEventListener("click", () => {
+        const showingReal = portrait.classList.toggle("is-real");
+        portrait.dataset.mode = showingReal ? "real" : "art";
+        portraitToggle.setAttribute("aria-pressed", String(showingReal));
+        portraitToggle.setAttribute(
+          "aria-label",
+          showingReal ? "Show stylized portrait" : "Show real photo"
+        );
+        portraitToggle.title = showingReal ? "Show stylized portrait" : "Show real photo";
+      });
+    }
+
+    const sideNav = document.querySelector(".side-nav");
+    const navLinks = sideNav
+      ? Array.from(sideNav.querySelectorAll("a[data-section]"))
+      : [];
+    const sections = navLinks
+      .map((link) => document.getElementById(link.dataset.section))
+      .filter(Boolean);
+
+    let lockedSection = null;
+    let scrollingToSection = false;
+
+    function moveChevronTo(link) {
+      if (!sideNav || !link) return;
+      const chevron = sideNav.querySelector(".nav-chevron");
+      const y =
+        link.offsetTop +
+        (link.offsetHeight - (chevron?.offsetHeight || 0)) / 2;
+      sideNav.style.setProperty("--chevron-y", `${Math.max(0, y)}px`);
+    }
+
+    function setActiveSection(id) {
+      navLinks.forEach((link) => {
+        const active = link.dataset.section === id;
+        link.classList.toggle("is-active", active);
+        if (active) moveChevronTo(link);
+      });
+    }
+
+    function sectionFromScroll() {
+      if (lockedSection) return lockedSection;
+
+      const scrollBottom = window.scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollBottom >= docHeight - 120) return "projects";
+
+      const marker = window.innerHeight * 0.42;
+      let current = sections[0]?.id || "about";
+      for (const section of sections) {
+        const top = section.getBoundingClientRect().top;
+        if (top <= marker) current = section.id;
+      }
+      return current;
+    }
+
+    let ticking = false;
+    function onScrollOrResize() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (!scrollingToSection) {
+          setActiveSection(sectionFromScroll());
+        }
+        ticking = false;
+      });
+    }
+
+    function scrollToSection(id) {
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      lockedSection = id;
+      scrollingToSection = true;
+      setActiveSection(id);
+      history.pushState(null, "", `#${id}`);
+
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      const started = Date.now();
+      const settle = () => {
+        const top = Math.abs(target.getBoundingClientRect().top - 8);
+        const timedOut = Date.now() - started > 2200;
+        const arrived = top < 96;
+        if (arrived || timedOut) {
+          scrollingToSection = false;
+          lockedSection = null;
+          setActiveSection(sectionFromScroll());
+          return;
+        }
+        requestAnimationFrame(settle);
+      };
+      requestAnimationFrame(settle);
+    }
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        scrollToSection(link.dataset.section);
+      });
+    });
+
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    if (location.hash) {
+      const id = location.hash.slice(1);
+      if (document.getElementById(id)) {
+        scrollToSection(id);
+      } else {
+        setActiveSection(sectionFromScroll());
+      }
+    } else {
+      setActiveSection(sectionFromScroll());
+    }
+
+    const toast = document.getElementById("social-toast");
+    let toastTimer;
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
+    }
+
+    async function copyEmail(email) {
+      try {
+        await navigator.clipboard.writeText(email);
+        showToast("Email copied: " + email);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    document.querySelectorAll(".email-link").forEach((link) => {
+      link.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const email = link.dataset.email || "hello@vedantbhatt.com";
+        const compose = link.dataset.compose;
+        const href =
+          compose === "outlook"
+            ? `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(email)}`
+            : `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+
+        const popup = window.open(href, "_blank", "noopener,noreferrer");
+        if (!popup) {
+          // Popup blocked — try mailto, then copy as fallback
+          window.location.href = `mailto:${email}`;
+          await copyEmail(email);
+        }
       });
     });
   </script>
