@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Expedia Group — Vedant Bhatt</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --text: #ffffff;
+      --muted: #8a8a8a;
+      --pad: max(24px, min(4vw, 80px));
+      --font: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding: var(--pad);
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-name,
+    .back {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .back {
+      color: var(--muted);
+      transition: color 220ms ease;
+    }
+
+    .back:hover {
+      color: #fff;
+    }
+
+    .bsod {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: clamp(3rem, 10vh, 6rem);
+      padding-left: clamp(0.5rem, 4vw, 2rem);
+      max-width: 52rem;
+    }
+
+    .bsod-face {
+      font-size: clamp(6rem, 18vw, 11rem);
+      font-weight: 300;
+      line-height: 0.85;
+      letter-spacing: 0.02em;
+      color: #fff;
+      user-select: none;
+    }
+
+    .bsod-message {
+      margin-top: clamp(2.5rem, 6vh, 4.5rem);
+      font-size: clamp(1.35rem, 3.4vw, 2.35rem);
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .bsod-message span {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top">
+    <a class="site-name" href="index.html">Vedant Bhatt</a>
+    <a class="back" href="index.html">← Back</a>
+  </div>
+  <main class="bsod">
+    <div class="bsod-face" aria-hidden="true">:(</div>
+    <p class="bsod-message">
+      <span>This page is under construction.</span>
+      <span>Please come back later.</span>
+    </p>
+  </main>
+</body>
+
+</html>

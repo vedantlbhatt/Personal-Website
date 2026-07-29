@@ -5,6 +5,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Vedant Bhatt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #000000;
@@ -141,10 +144,17 @@
       margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
     }
 
+    .portrait-wrap {
+      position: relative;
+      justify-self: start;
+      width: fit-content;
+      max-width: 100%;
+      margin-top: 3.85rem;
+    }
+
     .portrait {
       position: relative;
       min-width: 0;
-      justify-self: start;
       width: auto;
       max-width: 100%;
       height: min(52vh, 26rem);
@@ -214,6 +224,48 @@
       transition: background 180ms ease, transform 180ms ease, border-color 180ms ease;
     }
 
+    .portrait-click-cue {
+      position: absolute;
+      top: -1.7rem;
+      right: -2.65rem;
+      z-index: 6;
+      width: 6.75rem;
+      height: 3.9rem;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.95;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+      transform: rotate(-45deg);
+      transform-origin: 2.1rem 3.6rem;
+      transition: opacity 280ms ease, transform 280ms ease;
+    }
+
+    .portrait-click-cue-label {
+      position: absolute;
+      top: 0.95rem;
+      right: -3.35rem;
+      left: auto;
+      font-family: "Caveat", cursive;
+      font-weight: 700;
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      line-height: 1;
+      color: #fff;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transform: none;
+    }
+
+    .portrait-click-cue-arrow {
+      position: absolute;
+      right: -0.35rem;
+      bottom: -1.35rem;
+      width: clamp(1.75rem, 7.5%, 2.15rem);
+      height: auto;
+      display: block;
+      transform: rotate(90deg);
+      transform-origin: center;
+    }
+
     .portrait-toggle:hover {
       background: rgba(0, 0, 0, 0.65);
       border-color: rgba(255, 255, 255, 0.4);
@@ -258,6 +310,13 @@
       font-weight: 400;
       color: #f2f2f2;
       letter-spacing: -0.01em;
+    }
+
+    .intro-copy strong,
+    .flip-features strong,
+    .flip-back-copy strong {
+      font-weight: 700;
+      color: #fff;
     }
 
     .intro-copy p + p {
@@ -332,6 +391,16 @@
       margin-top: clamp(2rem, 4vw, 2.75rem);
     }
 
+    .site-note {
+      margin-top: clamp(2.5rem, 5vw, 3.5rem);
+      padding-bottom: 0.5rem;
+      max-width: 36rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--muted);
+      letter-spacing: -0.01em;
+    }
+
     .section-label {
       font-size: 0.95rem;
       font-weight: 500;
@@ -344,6 +413,10 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: clamp(0.85rem, 1.8vw, 1.15rem);
+    }
+
+    .grid[hidden] {
+      display: none !important;
     }
 
     .card {
@@ -448,13 +521,18 @@
     }
 
     .flip-front-visual img.logo-gt {
-      max-width: 78%;
-      max-height: 36%;
+      max-width: 68%;
+      max-height: 30%;
     }
 
     .flip-front-visual img.logo-zettelkasten {
       max-width: 82%;
       max-height: 20%;
+    }
+
+    .flip-front-visual img.logo-recall {
+      max-width: 72%;
+      max-height: 22%;
     }
 
     .flip-front-visual img.project-thumb {
@@ -610,9 +688,10 @@
 
     .flip-features li {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 0.5rem;
       font-size: 0.82rem;
+      line-height: 1.35;
       color: #d4d4d4;
       opacity: 0;
       transform: translateX(-10px);
@@ -644,6 +723,7 @@
     .flip-features svg {
       width: 0.75rem;
       height: 0.75rem;
+      margin-top: 0.2rem;
       color: #a3a3a3;
       flex-shrink: 0;
     }
@@ -747,11 +827,36 @@
         max-width: min(100%, 22rem);
       }
 
+      .portrait-wrap {
+        margin-top: 3.25rem;
+        max-width: min(100%, 22rem);
+      }
+
       .portrait-toggle {
         top: 0.6rem;
         right: 0.6rem;
         width: 2.2rem;
         height: 2.2rem;
+      }
+
+      .portrait-click-cue {
+        top: -1.5rem;
+        right: -2.05rem;
+        width: 6.1rem;
+        height: 3.5rem;
+      }
+
+      .portrait-click-cue-label {
+        font-size: 1.05rem;
+        top: 0.75rem;
+        right: -2.85rem;
+        left: auto;
+      }
+
+      .portrait-click-cue-arrow {
+        width: 1.7rem;
+        right: -0.2rem;
+        bottom: -1.05rem;
       }
 
       .grid {
@@ -792,53 +897,66 @@
 
     <main class="main">
       <div class="hero" id="about">
-        <div class="portrait" data-mode="art">
-          <div class="portrait-frame">
-            <img
-              class="portrait-art"
-              src="assets/rehaul/vedant-portrait.png"
-              alt="Vedant Bhatt, stylized portrait"
-            />
-            <img
-              class="portrait-real"
-              src="assets/rehaul/vedant-headshot.png"
-              alt="Vedant Bhatt"
-            />
+        <div class="portrait-wrap">
+          <div class="portrait" data-mode="art">
+            <div class="portrait-frame">
+              <img
+                class="portrait-art"
+                src="assets/rehaul/vedant-portrait.png"
+                alt="Vedant Bhatt, stylized portrait"
+              />
+              <img
+                class="portrait-real"
+                src="assets/rehaul/vedant-headshot.png"
+                alt="Vedant Bhatt"
+              />
+            </div>
+            <button
+              type="button"
+              class="portrait-toggle"
+              aria-label="Show real photo"
+              aria-pressed="false"
+              title="Show real photo"
+            >
+              <!-- camera: art → real -->
+              <svg class="icon-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                <circle cx="12" cy="13" r="3" />
+              </svg>
+              <!-- sparkles: real → art -->
+              <svg class="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+                <path d="M20 3v4" />
+                <path d="M22 5h-4" />
+                <path d="M4 17v2" />
+                <path d="M5 18H3" />
+              </svg>
+            </button>
           </div>
-          <button
-            type="button"
-            class="portrait-toggle"
-            aria-label="Show real photo"
-            aria-pressed="false"
-            title="Show real photo"
-          >
-            <!-- camera: art → real -->
-            <svg class="icon-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-              <circle cx="12" cy="13" r="3" />
-            </svg>
-            <!-- sparkles: real → art -->
-            <svg class="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-              <path d="M20 3v4" />
-              <path d="M22 5h-4" />
-              <path d="M4 17v2" />
-              <path d="M5 18H3" />
-            </svg>
-          </button>
+          <div class="portrait-click-cue" aria-hidden="true">
+            <img
+              class="portrait-click-cue-arrow"
+              src="assets/rehaul/click-me-arrow-white.svg?v=2"
+              alt=""
+            />
+            <span class="portrait-click-cue-label">CLICK ME</span>
+          </div>
         </div>
         <div class="intro-copy">
           <p>
             Hey, I’m Vedant, a Computer Science student at Georgia Tech.<br />
-            I just wrapped a summer internship at Expedia in Seattle, where I built
+            I just wrapped up a summer internship at Expedia in Seattle, where I built
             scalable data pipelines to process, analyze, and triage flight booking failures.
           </p>
           <p>
             I’ve also worked with startups, most notably AskTailr in fashion tech,
             building a recommendation pipeline that helps users discover and buy real garments.
-            Outside of that, I’m usually at hackathons (I’ve won over $25,000 in prizes)
-            or shipping side projects. Across them, I’ve grown 2,000+ active users while
-            solving real pain points. Check them out below :)
+            Outside of that, I’m usually at hackathons (I’ve won over <strong>$25,000</strong> in prizes)
+            or shipping side projects. Across them, I’ve grown <strong>2,000+</strong> active users while
+            solving real pain points.
+          </p>
+          <p>
+            Click any project or experience to learn more below :)
           </p>
           <div class="actions" aria-label="Contact links">
             <a
@@ -911,7 +1029,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>Expedia Group</h3>
-                    <p>Scalable Data Pipelines for Anomaly Detection</p>                </div>
+                    <p>Scalable data pipelines for failure analysis</p>                </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="m2 9 3-3 3 3" />
@@ -926,34 +1044,30 @@
                 <div class="flip-back-body">
                   <div class="flip-back-copy">
                     <h3>Expedia Group</h3>
-                    <p>Building travel experiences that move millions of travelers through search, booking, and beyond.</p>
+                    <p>Worked with the Flight Bookings Team to identify anomalies in booking patterns, cluster outages to certain services, and triage failures.</p>
                   </div>
                   <ul class="flip-features">
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Product Engineering</span>
+                      <span>Engineered a Trino SQL + Kafka-based streaming ETL pipeline, enabling incremental processing across <strong>4.8M+</strong> failed booking transactions for anomaly detection, resulting in the capture of over <strong>$3.2M</strong> revenue loss monthly previously untracked</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Large-scale Systems</span>
+                      <span>Designed a dashboard for triaging outages, reducing analysis time by over <strong>95%</strong>, saving <strong>$220,000+</strong> yearly in operational costs</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Travel Platforms</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Cross-team Shipping</span>
+                      <span>Productionalized a Claude + MCP enterprise AI agent, enabling <strong>3</strong> non-tech teams to run NL queries and derive insights</span>
                     </li>
                   </ul>
                 </div>
                 <div class="flip-cta-wrap">
-                  <span class="flip-cta" tabindex="-1">
+                  <a class="flip-cta" href="expedia.html" tabindex="-1">
                     <span>Learn more</span>
                     <span class="flip-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                     </span>
-                  </span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -976,7 +1090,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>AskTailr</h3>
-                    <p>Recommendation &amp; Interactive Experiences</p>
+                    <p>Recommendation &amp; interactive experiences</p>
                   </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -992,34 +1106,32 @@
                 <div class="flip-back-body">
                   <div class="flip-back-copy">
                     <h3>AskTailr</h3>
-                    <p>An AI companion that helps pet parents get clear answers on care, behavior, and everyday decisions.</p>
+                    <p>Worked part-time with AskTailr, a fashion-tech startup where I built a patent-pending garment recommendation system. </p>
                   </div>
                   <ul class="flip-features">
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Conversational AI</span>
+                      <span>Engineered end-to-end shopping pipeline, seamlessly linking consumers to curated garments for purchase and commission</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Pet Care Guidance</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Product Design</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Founder-built</span>
+                      <span>Built a recommendation engine that matched users to apparel via embedding similarity on style attributes, improving click-through on recommended items by <strong>38%</strong> over a <strong>6-week</strong> A/B test across <strong>110+</strong> beta users</span>
                     </li>
                   </ul>
                 </div>
                 <div class="flip-cta-wrap">
-                  <span class="flip-cta" tabindex="-1">
+                  <a
+                    class="flip-cta"
+                    href="https://www.linkedin.com/posts/asktailr_we-had-the-opportunity-to-work-with-vedant-activity-7485649880263118848-qRgz?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEFTysUBw3-lHzTsjag4u5Xm5btBMiq2rJs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabindex="-1"
+                  >
                     <span>Learn more</span>
                     <span class="flip-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                     </span>
-                  </span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1039,7 +1151,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>Georgia Institute of Technology</h3>
-                    <p>IT Automation</p>
+                    <p>Advanced Database Systems Lab research</p>
                   </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1055,34 +1167,36 @@
                 <div class="flip-back-body">
                   <div class="flip-back-copy">
                     <h3>Georgia Institute of Technology</h3>
-                    <p>Studying computer science with a focus on building real products, systems, and research-minded software.</p>
+                    <p>I research under Professor Joy Arulraj in the Advanced Database Systems Lab. Worked on TokenSmith, a chatbot tool to chat with textbooks.</p>
                   </div>
                   <ul class="flip-features">
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Computer Science</span>
+                      <span>Designed ingestion pipeline to parse, chunk, embed, and index textbooks for an open-source RAG chatbot for students at GT</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Systems Thinking</span>
+                      <span>Implemented semantic search via FAISS and BM25, enabling NLP query understanding and candidate ranking over textbooks</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Product Building</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Research Mindset</span>
+                      <span>Developed NLI-based confidence scoring pipeline, cutting hallucination rates by <strong>50%</strong> via threshold-tuned text classifiers</span>
                     </li>
                   </ul>
                 </div>
                 <div class="flip-cta-wrap">
-                  <span class="flip-cta" tabindex="-1">
+                  <a
+                    class="flip-cta"
+                    href="https://db.cc.gatech.edu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabindex="-1"
+                  >
                     <span>Learn more</span>
                     <span class="flip-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                     </span>
-                  </span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1126,34 +1240,32 @@
                 <div class="flip-back-body">
                   <div class="flip-back-copy">
                     <h3>RideGT</h3>
-                    <p>A campus transit app for tracking buses in real time, with clear routes and arrival estimates when you need them.</p>
+                    <p>Identified a massive pain point: campus buses were hard to navigate, so I built RideGT, a search-driven app that finds the fastest route to your destination.</p>
                   </div>
                   <ul class="flip-features">
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Live Tracking</span>
+                      <span>Developed a full-stack React Native bus route navigation app and React website for Georgia Tech students, serving <strong>1,700+</strong> monthly active users across all platforms</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Route Maps</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Arrival Estimates</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Mobile-first</span>
+                      <span>Engineered Prometheus alerting and Grafana dashboards for site reliability to monitor p99 latency, error rates, and throughput</span>
                     </li>
                   </ul>
                 </div>
                 <div class="flip-cta-wrap">
-                  <span class="flip-cta" tabindex="-1">
+                  <a
+                    class="flip-cta"
+                    href="https://www.linkedin.com/posts/vedantlbhatt_i-just-launched-my-first-app-on-the-app-store-share-7454981909081833474-8LCo/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEFTysUBw3-lHzTsjag4u5Xm5btBMiq2rJs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabindex="-1"
+                  >
                     <span>Learn more</span>
                     <span class="flip-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                     </span>
-                  </span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1173,7 +1285,7 @@
                 <div class="flip-front-meta">
                   <div class="flip-front-copy">
                     <h3>Zettelkasten</h3>
-                    <p>Spatial Mind Map startup, won $20K</p>
+                    <p>Spatial mind map, won $25K+ [GT Hackathon]</p>
                   </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1189,43 +1301,100 @@
                 <div class="flip-back-body">
                   <div class="flip-back-copy">
                     <h3>Zettelkasten</h3>
-                    <p>A note system for capturing ideas, connecting them over time, and turning scattered thoughts into durable knowledge.</p>
+                    <p>A note system for capturing and clustering ideas with vector embeddings and ML in spatial AR; won <strong>1st</strong> in Microsoft Startup Track @ Georgia Tech Hackathon!</p>
                   </div>
                   <ul class="flip-features">
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Atomic Notes</span>
+                      <span>Built an AI-powered 3D knowledge graph platform with semantic search, securing a <strong>$25,000+</strong> Microsoft-sponsored grant</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Bidirectional Links</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Knowledge Graphs</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Local-first Craft</span>
+                      <span>Created an embedding-based clustering pipeline using k-NN, PCA, and UMAP with cosine similarity to visualize node data</span>
                     </li>
                   </ul>
                 </div>
                 <div class="flip-cta-wrap">
-                  <span class="flip-cta" tabindex="-1">
+                  <a
+                    class="flip-cta"
+                    href="https://devpost.com/software/zettelkasten?ref_content=user-portfolio&ref_feature=in_progress"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabindex="-1"
+                  >
                     <span>Learn more</span>
                     <span class="flip-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                     </span>
-                  </span>
+                  </a>
                 </div>
               </div>
             </div>
           </button>
 
-          <article class="card card-empty" aria-hidden="true"></article>
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="Recall — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="logo-recall" src="assets/rehaul/recall-white.png" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <div class="flip-front-copy">
+                    <h3>Recall</h3>
+                    <p>Auto-triage for missed care [UCB Hackathon]</p>
+                  </div>
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>Recall</h3>
+                    <p>We found that <strong>40,000+</strong> Americans are lost annually to missed follow-ups, so we built Recall, an agentic system that triages scans and calls high-risk patients.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Built an agentic pipeline processing CT/MRI scans via Anthropic's API to generate individual patient risk profiles at scale</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Integrated Twilio and Deepgram into a conversational phone agent that explains conditions and schedules appointments preemptively through proactive phone calls</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <a
+                    class="flip-cta"
+                    href="https://devpost.com/software/recall-tpfq6l?ref_content=user-portfolio&ref_feature=in_progress"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabindex="-1"
+                  >
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </button>
         </div>
 
-        <div class="grid">
+        <div class="grid" hidden aria-hidden="true">
           <button
             type="button"
             class="card flip-card"
@@ -1382,7 +1551,7 @@
                 <div class="flip-back-body">
                   <div class="flip-back-copy">
                     <h3>Active Knockout</h3>
-                    <p>A Unity VR fitness experience for boxing practice — placed 7th nationally at TSA among 200+ teams.</p>
+                    <p>A Unity VR fitness experience for boxing practice — placed <strong>7th</strong> nationally at TSA among <strong>200+</strong> teams.</p>
                   </div>
                   <ul class="flip-features">
                     <li>
@@ -1416,6 +1585,10 @@
           </button>
         </div>
       </section>
+
+      <p class="site-note">
+        Note: This site is still growing! I’m adding more experiences and projects over time, and for now have only included a selection of my most recent and notable work. I'm working to add more!
+      </p>
     </main>
   </div>
 
@@ -1423,7 +1596,19 @@
 
   <script>
     document.querySelectorAll(".flip-card").forEach((card) => {
-      card.addEventListener("click", () => {
+      card.addEventListener("click", (event) => {
+        const cta = event.target.closest("a.flip-cta");
+        if (cta) {
+          event.preventDefault();
+          event.stopPropagation();
+          const isExternal = /^https?:\/\//i.test(cta.getAttribute("href") || "");
+          if (isExternal) {
+            window.open(cta.href, "_blank", "noopener,noreferrer");
+          } else {
+            window.location.href = cta.href;
+          }
+          return;
+        }
         const flipped = card.classList.toggle("is-flipped");
         card.setAttribute("aria-pressed", String(flipped));
       });
