@@ -37,6 +37,8 @@ jobs:
           mkdir site
           cp index.html site/
           cp projects.html site/
+          cp expedia.html site/
+          cp ridegt-fonts.html site/
           cp -r assets/ site/
           cp -r scripts/ site/
           cp -r styles/ site/
