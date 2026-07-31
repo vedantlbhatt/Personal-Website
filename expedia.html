@@ -17,35 +17,25 @@
       } catch (e) {
         document.documentElement.setAttribute("data-theme", "dark");
       }
+      try {
+        var raw = sessionStorage.getItem("vb-page-transition");
+        if (!raw) return;
+        var data = raw;
+        try {
+          data = JSON.parse(raw);
+        } catch (err) {}
+        if (data === "expedia" || (data && data.to === "expedia")) {
+          document.documentElement.classList.add("is-page-entering");
+          if (data && data.ox) {
+            document.documentElement.style.setProperty("--zoom-ox", data.ox);
+            document.documentElement.style.setProperty("--zoom-oy", data.oy || "40%");
+          }
+        }
+      } catch (e) {}
     })();
   </script>
   <style>
     :root,
-    html[data-theme="light"] {
-      --bg: #ffffff;
-      --text: #37352f;
-      --muted: #787774;
-      --meta: #9b9a97;
-      --rule: #e9e9e7;
-      --strong: #000000;
-      --topbar-bg: rgba(255, 255, 255, 0.92);
-      --avatar-bg: #f1f1ef;
-      --chart-bg: #ffffff;
-      --chart-grid: #ebebea;
-      --chart-band: rgba(46, 120, 210, 0.16);
-      --chart-band-highlight: rgba(46, 120, 210, 0.28);
-      --chart-psr: #2e78d2;
-      --chart-anomaly: #d13438;
-      --chart-outage: rgba(209, 52, 56, 0.12);
-      --chart-outage-label: #d13438;
-      --pad-x: max(1.25rem, min(4vw, 2.5rem));
-      --article: 44rem;
-      --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
-        "Segoe UI", system-ui, sans-serif;
-      --serif: "Source Serif 4", "Iowan Old Style", "Apple Garamond", Baskerville,
-        "Times New Roman", serif;
-    }
-
     html[data-theme="dark"] {
       --bg: #191919;
       --text: #d4d4d4;
@@ -63,6 +53,31 @@
       --chart-anomaly: #e0454a;
       --chart-outage: rgba(224, 69, 74, 0.18);
       --chart-outage-label: #f07178;
+      --pad-x: max(1.25rem, min(4vw, 2.5rem));
+      --article: 44rem;
+      --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", system-ui, sans-serif;
+      --serif: "Source Serif 4", "Iowan Old Style", "Apple Garamond", Baskerville,
+        "Times New Roman", serif;
+    }
+
+    html[data-theme="light"] {
+      --bg: #ffffff;
+      --text: #37352f;
+      --muted: #787774;
+      --meta: #9b9a97;
+      --rule: #e9e9e7;
+      --strong: #000000;
+      --topbar-bg: rgba(255, 255, 255, 0.92);
+      --avatar-bg: #f1f1ef;
+      --chart-bg: #ffffff;
+      --chart-grid: #ebebea;
+      --chart-band: rgba(46, 120, 210, 0.16);
+      --chart-band-highlight: rgba(46, 120, 210, 0.28);
+      --chart-psr: #2e78d2;
+      --chart-anomaly: #d13438;
+      --chart-outage: rgba(209, 52, 56, 0.12);
+      --chart-outage-label: #d13438;
     }
 
     * {
@@ -83,6 +98,86 @@
     body {
       font-family: var(--sans);
       transition: background 180ms ease, color 180ms ease;
+    }
+
+    html.is-page-entering {
+      --zoom-ox: 50%;
+      --zoom-oy: 42%;
+    }
+
+    html.is-page-entering body {
+      overflow: hidden;
+    }
+
+    html.is-page-entering .topbar,
+    html.is-page-entering .layout {
+      opacity: 0;
+    }
+
+    html.is-page-entering .page-enter {
+      opacity: 0;
+      transform: translateY(18px) scale(0.94);
+      filter: blur(4px);
+    }
+
+    html.is-page-entering.is-page-ready .topbar,
+    html.is-page-entering.is-page-ready .layout {
+      opacity: 1;
+      transition: opacity 180ms ease;
+    }
+
+    html.is-page-entering.is-page-ready .page-enter {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition:
+        opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
+        filter 260ms ease;
+      transition-delay: var(--enter-delay, 0ms);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html.is-page-entering .topbar,
+      html.is-page-entering .layout,
+      html.is-page-entering .page-enter,
+      html.is-page-entering.is-page-ready .topbar,
+      html.is-page-entering.is-page-ready .layout,
+      html.is-page-entering.is-page-ready .page-enter {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+      }
+    }
+
+    body.is-page-leaving {
+      background: var(--bg);
+      transition: background 480ms cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+
+    body.is-page-leaving .topbar,
+    body.is-page-leaving .layout {
+      opacity: 0;
+      transform: scale(0.92);
+      transform-origin: var(--zoom-ox, 50%) var(--zoom-oy, 12%);
+      filter: blur(6px);
+      transition:
+        opacity 360ms cubic-bezier(0.4, 0, 1, 1),
+        transform 480ms cubic-bezier(0.33, 0.1, 0.25, 1),
+        filter 360ms ease;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body.is-page-leaving,
+      body.is-page-leaving .topbar,
+      body.is-page-leaving .layout {
+        transition: none;
+        filter: none;
+        transform: none;
+      }
     }
 
     .topbar {
@@ -568,6 +663,46 @@
   </div>
 
   <script>
+    (function () {
+      const entering = document.documentElement.classList.contains("is-page-entering");
+      if (!entering) return;
+
+      try {
+        sessionStorage.removeItem("vb-page-transition");
+      } catch (e) {}
+
+      const pops = [
+        document.querySelector(".site-name"),
+        document.querySelector(".topbar-back"),
+        document.querySelector(".theme-toggle"),
+        document.querySelector(".meta"),
+        document.querySelector(".title"),
+        document.querySelector(".byline"),
+        ...document.querySelectorAll(".content > *"),
+      ].filter(Boolean);
+
+      pops.forEach((el, i) => {
+        el.classList.add("page-enter");
+        el.style.setProperty("--enter-delay", `${20 + i * 22}ms`);
+      });
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.documentElement.classList.add("is-page-ready");
+        });
+      });
+
+      const clearAfter = 20 + pops.length * 22 + 420;
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("is-page-entering", "is-page-ready");
+        document.body.style.overflow = "";
+        pops.forEach((el) => {
+          el.classList.remove("page-enter");
+          el.style.removeProperty("--enter-delay");
+        });
+      }, clearAfter);
+    })();
+
     const topbar = document.getElementById("topbar");
     const onScroll = () => {
       topbar.classList.toggle("is-scrolled", window.scrollY > 8);
@@ -596,6 +731,50 @@
       } catch (e) {}
       syncThemeToggle();
     });
+
+    const backLink = document.querySelector(".topbar-back");
+    if (backLink) {
+      backLink.addEventListener("click", (event) => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        event.preventDefault();
+        if (document.body.classList.contains("is-page-leaving")) return;
+        try {
+          sessionStorage.setItem("vb-page-transition", "home");
+        } catch (e) {}
+        document.body.classList.add("is-page-leaving");
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          window.location.href = backLink.href;
+        };
+        const layout = document.querySelector(".layout");
+        layout?.addEventListener("transitionend", (e) => {
+          if (e.target === layout && e.propertyName === "opacity") finish();
+        });
+        setTimeout(finish, 520);
+      });
+    }
+
+    const siteName = document.querySelector(".site-name");
+    if (siteName) {
+      siteName.addEventListener("click", (event) => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        event.preventDefault();
+        if (document.body.classList.contains("is-page-leaving")) return;
+        try {
+          sessionStorage.setItem("vb-page-transition", "home");
+        } catch (e) {}
+        document.body.classList.add("is-page-leaving");
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          window.location.href = siteName.href;
+        };
+        setTimeout(finish, 520);
+      });
+    }
   </script>
 </body>
 
