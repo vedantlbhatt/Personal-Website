@@ -559,7 +559,7 @@
           <strong>Transform:</strong> this is where messy logs become analysis-ready. The key step is <strong>signature normalization</strong>: multi-stage regex strips volatile tokens (UUIDs, ARLs, timestamps, fare versions) from free-text errors and collapses them into stable signatures. Those signatures are mapped into high-level failure categories, then we joined tables to enrich failure data with additional dimensions (think of attributes like cabin class or route data!)
         </p>
         <p>
-          <strong>Load:</strong> the result lands in an aggregated Iceberg table at an hourly grain (<strong>Hour × GDS × Carrier × Error</strong>). For the same dashboard breakdowns, Trino now reads that pre-aggregated table instead of re-scanning raw service-call logs row by row. Comparing bytes scanned on those query paths is where the roughly <strong>70%</strong> reduction comes from. On top of that, we added a three-layer cache so the dashboard stays fast under real usage:
+          <strong>Load:</strong> the dashboard queries the lakehouse <strong>live through Trino</strong> for each breakdown. To keep that responsive under real usage, we added a three-layer cache:
         </p>
         <ul>
           <li><strong>In-memory TTL cache</strong> for instant repeated lookups</li>
