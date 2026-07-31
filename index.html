@@ -355,7 +355,8 @@
       display: grid;
       grid-template-columns: minmax(12rem, 0.95fr) minmax(18rem, 34rem);
       gap: clamp(1.5rem, 3.5vw, 3rem);
-      align-items: end;
+      align-items: center;
+      padding-top: 3.85rem;
       margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
     }
 
@@ -364,7 +365,7 @@
       justify-self: start;
       width: fit-content;
       max-width: 100%;
-      margin-top: 3.85rem;
+      margin-top: 0;
     }
 
     .portrait {
@@ -1043,6 +1044,8 @@
         grid-template-columns: 1fr;
         gap: 1.25rem;
         margin-left: 0;
+        padding-top: 2.5rem;
+        align-items: start;
       }
 
       .portrait {
@@ -1052,7 +1055,7 @@
       }
 
       .portrait-wrap {
-        margin-top: 2.5rem;
+        margin-top: 0;
         max-width: min(100%, 22rem);
         width: 100%;
       }
