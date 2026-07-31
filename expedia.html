@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Building real-time observability into Expedia’s air booking funnel | Vedant Bhatt</title>
+  <title>Building observability into Expedia’s air booking funnel | Vedant Bhatt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
@@ -12,10 +12,10 @@
     (function () {
       try {
         var saved = localStorage.getItem("expedia-theme");
-        var theme = saved === "light" || saved === "dark" ? saved : "dark";
+        var theme = saved === "light" || saved === "dark" ? saved : "light";
         document.documentElement.setAttribute("data-theme", theme);
       } catch (e) {
-        document.documentElement.setAttribute("data-theme", "dark");
+        document.documentElement.setAttribute("data-theme", "light");
       }
       try {
         var raw = sessionStorage.getItem("vb-page-transition");
@@ -492,7 +492,6 @@
 
 <body>
   <header class="topbar" id="topbar">
-    <a class="topbar-back" href="index.html">← Back</a>
     <div class="topbar-actions">
       <button
         type="button"
@@ -521,7 +520,7 @@
 
   <div class="layout">
     <article class="article">
-      <p class="meta">Last Edited July 29 2026</p>
+      <p class="meta">Last Edited July 29, 2026</p>
       <h1 class="title">Building observability into Expedia’s air booking funnel</h1>
 
       <div class="byline">
@@ -534,15 +533,15 @@
 
       <div class="content">
         <p>
-          From the moment a traveler hits "Purchase," Expedia's systems orchestrate a series of calls to Global Distribution Systems (GDSs), airline connectors, payment gateways, and more services. Most of the time, this works perfectly and the booking goes through successfully. But sometimes, a fare expires, a supplier times out, or a schedule changes mid-purchase, and the booking fails.
+          From the moment a traveler hits “Purchase,” Expedia’s systems orchestrate a series of calls to Global Distribution Systems (GDSs), airline connectors, payment gateways, and other services. Most of the time, this works perfectly and the booking goes through successfully. But sometimes, a fare expires, a supplier times out, or a schedule changes mid-purchase, and the booking fails.
         </p>
         <p>
-          The metric we use to protect this experience is <strong>Purchase Success Rate (PSR)</strong>, the fraction of booking attempts that actually complete. Because our supplier chain is so long, a dip of even 1-2% in PSR can mean thousands of failed bookings and a massive loss in revenue.
+          The metric we use to protect this experience is <strong>Purchase Success Rate (PSR)</strong>, the fraction of booking attempts that actually complete. Because our supplier chain is so long, a dip of even 1–2% in PSR can mean thousands of failed bookings and a massive loss in revenue.
         </p>
 
         <h2>The visibility gap</h2>
         <p>
-          For a long time, investigating a drop in PSR was a manual, "needle in a haystack" effort. Failures were buried in the noise of millions of rows of service logs. To find a root cause, an on-call engineer often had to run queries in Querybook and manually investigate in Datadog, a process that could take <strong>one to four hours</strong>.
+          For a long time, investigating a drop in PSR was a manual, “needle in a haystack” effort. Failures were buried in the noise of millions of rows of service logs. To find a root cause, an on-call engineer often had to run queries in Querybook and manually investigate in Datadog, a process that could take <strong>one to four hours</strong>.
         </p>
         <p>
           Beyond the time sink, many signals were simply too quiet to catch. When a single carrier or a specific route started degrading, the signal was often drowned out by the overall volume of the flight funnel. To solve this, we built the <strong>Air Booking Insights</strong> platform, a system designed to turn monitoring from a passive chart into an automated triage engine.
@@ -556,7 +555,7 @@
           <strong>Extract:</strong> raw service-call events are materialized into lossless intermediate storage.
         </p>
         <p>
-          <strong>Transform:</strong> this is where messy logs become analysis-ready. The key step is <strong>signature normalization</strong>: multi-stage regex strips volatile tokens (UUIDs, ARLs, timestamps, fare versions) from free-text errors and collapses them into stable signatures. Those signatures are mapped into high-level failure categories, then we joined tables to enrich failure data with additional dimensions (think of attributes like cabin class or route data!)
+          <strong>Transform:</strong> this is where messy logs become analysis-ready. The key step is <strong>signature normalization</strong>: multi-stage regex strips volatile tokens (UUIDs, ARLs, timestamps, fare versions) from free-text errors and collapses them into stable signatures. Those signatures are mapped into high-level failure categories, then joined with other tables to enrich failure data with booking-side dimensions like cabin class and route.
         </p>
         <p>
           <strong>Load:</strong> the dashboard queries the lakehouse <strong>live through Trino</strong> for each breakdown. To keep that responsive under real usage, we added a three-layer cache:
@@ -645,10 +644,10 @@
 
         <h2>AIRA: Empowering Non-Technical Teams</h2>
         <p>
-          To ensure these insights weren't locked behind a SQL console, we integrated <strong>AIRA</strong>, our AI assistant. AIRA allows non-technical teams to drive real business impact by triaging failures using natural language, leveraging the Trino MCP for accurate data.
+          To ensure these insights weren’t locked behind a SQL console, we integrated <strong>AIRA</strong>, our AI assistant. AIRA lets non-technical teams triage failures in natural language, using the Trino MCP for accurate data access.
         </p>
         <p>
-          Instead of waiting for an engineer, a product manager can ask AIRA: "What's driving the drop in PSR for the last week?" AIRA then writes the validated SQL, executes it, and narrates the cause with inline charts. This removes the context switching between tools and democratizes incident response across the organization.
+          Instead of waiting for an engineer, a product manager can ask AIRA: “What’s driving the drop in PSR for the last week?” AIRA then writes the validated SQL, executes it, and narrates the cause with inline charts. This removes the context switching between tools and democratizes incident response across the organization.
         </p>
 
         <h2>Real Impacts</h2>
@@ -660,7 +659,6 @@
           <li><strong>Proven Accuracy:</strong> In backtesting, the system caught documented major incidents and also surfaced smaller outages that still moved PSR, ones that had gone previously untracked and undocumented.</li>
           <li><strong>Recoverable Value:</strong> The system identified millions of dollars in monthly Gross Booking Value in recoverable bookings that were previously lost in the noise.</li>
         </ul>
-        <p></p>
         <p>
           By automating the heavy lifting with ETL and AIRA, we can isolate, resolve, and analyze outages before they hit thousands of travelers. I’m proud to have helped kick off the Air Booking Insights platform, and I’m excited to see where the team takes it next!
         </p>
