@@ -4,15 +4,80 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Expedia Group — Vedant Bhatt</title>
+  <title>Building observability into Expedia’s air booking funnel | Vedant Bhatt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("expedia-theme");
+        var theme = saved === "light" || saved === "dark" ? saved : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+      try {
+        var raw = sessionStorage.getItem("vb-page-transition");
+        if (!raw) return;
+        var data = raw;
+        try {
+          data = JSON.parse(raw);
+        } catch (err) {}
+        if (data === "expedia" || (data && data.to === "expedia")) {
+          document.documentElement.classList.add("is-page-entering");
+          if (data && data.ox) {
+            document.documentElement.style.setProperty("--zoom-ox", data.ox);
+            document.documentElement.style.setProperty("--zoom-oy", data.oy || "40%");
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
   <style>
-    :root {
-      --bg: #000000;
-      --text: #ffffff;
-      --muted: #8a8a8a;
-      --pad: max(24px, min(4vw, 80px));
-      --font: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+    :root,
+    html[data-theme="dark"] {
+      --bg: #191919;
+      --text: #d4d4d4;
+      --muted: #9b9b9b;
+      --meta: #787878;
+      --rule: #2f2f2f;
+      --strong: #ffffff;
+      --topbar-bg: rgba(25, 25, 25, 0.92);
+      --avatar-bg: #2a2a2a;
+      --chart-bg: #191919;
+      --chart-grid: #2f2f2f;
+      --chart-band: rgba(70, 145, 235, 0.2);
+      --chart-band-highlight: rgba(70, 145, 235, 0.35);
+      --chart-psr: #4691eb;
+      --chart-anomaly: #e0454a;
+      --chart-outage: rgba(224, 69, 74, 0.18);
+      --chart-outage-label: #f07178;
+      --pad-x: max(1.25rem, min(4vw, 2.5rem));
+      --article: 44rem;
+      --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
         "Segoe UI", system-ui, sans-serif;
+      --serif: "Source Serif 4", "Iowan Old Style", "Apple Garamond", Baskerville,
+        "Times New Roman", serif;
+    }
+
+    html[data-theme="light"] {
+      --bg: #ffffff;
+      --text: #37352f;
+      --muted: #787774;
+      --meta: #9b9a97;
+      --rule: #e9e9e7;
+      --strong: #000000;
+      --topbar-bg: rgba(255, 255, 255, 0.92);
+      --avatar-bg: #f1f1ef;
+      --chart-bg: #ffffff;
+      --chart-grid: #ebebea;
+      --chart-band: rgba(46, 120, 210, 0.16);
+      --chart-band-highlight: rgba(46, 120, 210, 0.28);
+      --chart-psr: #2e78d2;
+      --chart-anomaly: #d13438;
+      --chart-outage: rgba(209, 52, 56, 0.12);
+      --chart-outage-label: #d13438;
     }
 
     * {
@@ -26,87 +91,674 @@
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
     body {
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      padding: var(--pad);
+      font-family: var(--sans);
+      transition: background 180ms ease, color 180ms ease;
     }
 
-    .top {
+    html.is-page-entering {
+      --zoom-ox: 50%;
+      --zoom-oy: 42%;
+    }
+
+    html.is-page-entering body {
+      overflow: hidden;
+    }
+
+    html.is-page-entering .topbar,
+    html.is-page-entering .layout {
+      opacity: 0;
+    }
+
+    html.is-page-entering .page-enter {
+      opacity: 0;
+      transform: translateY(18px) scale(0.94);
+      filter: blur(4px);
+    }
+
+    html.is-page-entering.is-page-ready .topbar,
+    html.is-page-entering.is-page-ready .layout {
+      opacity: 1;
+      transition: opacity 180ms ease;
+    }
+
+    html.is-page-entering.is-page-ready .page-enter {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition:
+        opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
+        filter 260ms ease;
+      transition-delay: var(--enter-delay, 0ms);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html.is-page-entering .topbar,
+      html.is-page-entering .layout,
+      html.is-page-entering .page-enter,
+      html.is-page-entering.is-page-ready .topbar,
+      html.is-page-entering.is-page-ready .layout,
+      html.is-page-entering.is-page-ready .page-enter {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+      }
+    }
+
+    body.is-page-leaving {
+      background: var(--bg);
+      transition: background 480ms cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+
+    body.is-page-leaving .topbar,
+    body.is-page-leaving .layout {
+      opacity: 0;
+      transform: scale(0.92);
+      transform-origin: var(--zoom-ox, 50%) var(--zoom-oy, 12%);
+      filter: blur(6px);
+      transition:
+        opacity 360ms cubic-bezier(0.4, 0, 1, 1),
+        transform 480ms cubic-bezier(0.33, 0.1, 0.25, 1),
+        filter 360ms ease;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body.is-page-leaving,
+      body.is-page-leaving .topbar,
+      body.is-page-leaving .layout {
+        transition: none;
+        filter: none;
+        transform: none;
+      }
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem var(--pad-x);
+      background: var(--topbar-bg);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
     }
 
-    .site-name,
-    .back {
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      color: #fff;
-      text-decoration: none;
+    .topbar.is-scrolled {
+      border-bottom-color: var(--rule);
     }
 
-    .back {
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-left: auto;
+    }
+
+    .topbar-back {
+      font-size: 0.9rem;
       color: var(--muted);
-      transition: color 220ms ease;
+      text-decoration: none;
+      transition: color 160ms ease;
     }
 
-    .back:hover {
-      color: #fff;
+    .topbar-back:hover {
+      color: var(--strong);
     }
 
-    .bsod {
-      flex: 1;
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.15rem;
+      height: 2.15rem;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--strong);
+      border-color: var(--muted);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--strong);
+      outline-offset: 2px;
+    }
+
+    .theme-toggle svg {
+      width: 1.05rem;
+      height: 1.05rem;
+      display: block;
+    }
+
+    .theme-toggle .icon-sun {
+      display: none;
+    }
+
+    html[data-theme="dark"] .theme-toggle .icon-sun {
+      display: block;
+    }
+
+    html[data-theme="dark"] .theme-toggle .icon-moon {
+      display: none;
+    }
+
+    .layout {
+      position: relative;
+      width: min(100%, var(--article));
+      margin: 0 auto;
+      padding: 2.75rem var(--pad-x) 5rem;
+    }
+
+    .article {
+      width: 100%;
+    }
+
+    .meta {
+      font-size: 0.875rem;
+      line-height: 1.4;
+      color: var(--meta);
+      letter-spacing: -0.01em;
+    }
+
+    .meta strong {
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .title {
+      margin-top: 0.85rem;
+      font-size: clamp(2.15rem, 4.6vw, 3.15rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+      color: var(--strong);
+    }
+
+    .byline {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.35rem;
+    }
+
+    .byline img {
+      width: 3.85rem;
+      height: auto;
+      display: block;
+      flex-shrink: 0;
+      background: none;
+      border: 0;
+      border-radius: 0;
+      filter:
+        drop-shadow(0.5px 0 0 #fff)
+        drop-shadow(-0.5px 0 0 #fff)
+        drop-shadow(0 0.5px 0 #fff)
+        drop-shadow(0 -0.5px 0 #fff)
+        drop-shadow(0.5px 0.5px 0 #fff)
+        drop-shadow(-0.5px -0.5px 0 #fff)
+        drop-shadow(0.5px -0.5px 0 #fff)
+        drop-shadow(-0.5px 0.5px 0 #fff);
+    }
+
+    .byline-text {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      padding-top: clamp(3rem, 10vh, 6rem);
-      padding-left: clamp(0.5rem, 4vw, 2rem);
-      max-width: 52rem;
+      gap: 0.1rem;
     }
 
-    .bsod-face {
-      font-size: clamp(6rem, 18vw, 11rem);
-      font-weight: 300;
-      line-height: 0.85;
-      letter-spacing: 0.02em;
-      color: #fff;
-      user-select: none;
+    .byline-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--strong);
+      letter-spacing: -0.01em;
     }
 
-    .bsod-message {
-      margin-top: clamp(2.5rem, 6vh, 4.5rem);
-      font-size: clamp(1.35rem, 3.4vw, 2.35rem);
-      font-weight: 400;
-      line-height: 1.35;
-      letter-spacing: -0.02em;
-      color: #fff;
+    .byline-role {
+      font-size: 0.875rem;
+      color: var(--muted);
     }
 
-    .bsod-message span {
+    .content {
+      margin-top: 2.35rem;
+      font-family: var(--serif);
+      font-size: 1.125rem;
+      line-height: 1.7;
+      color: var(--text);
+      font-optical-sizing: auto;
+    }
+
+    .content p + p {
+      margin-top: 1.15em;
+    }
+
+    .content h2 {
+      margin: 2.35rem 0 0.85rem;
+      font-family: var(--sans);
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.025em;
+      color: var(--strong);
+    }
+
+    .content strong {
+      font-weight: 700;
+      color: var(--strong);
+    }
+
+    .content em {
+      font-style: italic;
+    }
+
+    .content ul {
+      margin: 1rem 0 0;
+      padding-left: 1.35rem;
+    }
+
+    .content li {
+      margin-top: 0.55rem;
+      padding-left: 0.2rem;
+    }
+
+    .content li::marker {
+      color: var(--meta);
+    }
+
+    .content figure {
+      margin: 1.5rem 0 0.25rem;
+    }
+
+    .content figure img,
+    .content figure .chart {
       display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule);
+    }
+
+    .content figure .chart {
+      overflow: hidden;
+      background: var(--chart-bg);
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .content figure .chart .chart-bg {
+      fill: var(--chart-bg);
+      transition: fill 180ms ease;
+    }
+
+    .content figure .chart .chart-grid {
+      stroke: var(--chart-grid);
+      transition: stroke 180ms ease;
+    }
+
+    .content figure .chart .chart-band {
+      fill: var(--chart-band);
+    }
+
+    .content figure .chart .chart-psr {
+      stroke: var(--chart-psr);
+    }
+
+    .content figure .chart .chart-anomaly {
+      stroke: var(--chart-anomaly);
+    }
+
+    .content figure .chart .chart-outage {
+      fill: var(--chart-outage);
+    }
+
+    .content figure .chart .chart-outage-label {
+      fill: var(--chart-outage-label);
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-band-label {
+      fill: var(--chart-psr);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-band-title {
+      fill: var(--chart-psr);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-band-title-bg {
+      fill: var(--chart-band-highlight);
+    }
+
+    .content figure .chart .chart-band-label-sub {
+      fill: var(--muted);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-band-callout {
+      stroke: var(--chart-psr);
+      fill: none;
+      stroke-width: 1.25;
+      opacity: 0.7;
+    }
+
+    .content figcaption {
+      margin-top: 0.65rem;
+      font-family: var(--sans);
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      color: var(--meta);
+      letter-spacing: -0.01em;
+    }
+
+    @media (max-width: 640px) {
+      .content {
+        font-size: 1.05rem;
+        line-height: 1.65;
+      }
+
+      .title {
+        font-size: 1.9rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="top">
-    <a class="site-name" href="index.html">Vedant Bhatt</a>
-    <a class="back" href="index.html">← Back</a>
+  <header class="topbar" id="topbar">
+    <div class="topbar-actions">
+      <button
+        type="button"
+        class="theme-toggle"
+        id="theme-toggle"
+        aria-label="Switch to light mode"
+        title="Switch to light mode"
+      >
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <article class="article">
+      <p class="meta">Last Edited July 29, 2026</p>
+      <h1 class="title">Building observability into Expedia’s air booking funnel</h1>
+
+      <div class="byline">
+        <img src="assets/rehaul/vedant-notion-face.png?v=4" alt="Vedant Lalit Bhatt" />
+        <div class="byline-text">
+          <span class="byline-name">By Vedant Lalit Bhatt</span>
+          <span class="byline-role">SDE Intern - Data, Expedia Group</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <p>
+          From the moment a traveler hits “Purchase,” Expedia’s systems orchestrate a series of calls to Global Distribution Systems (GDSs), airline connectors, payment gateways, and other services. Most of the time, this works perfectly and the booking goes through successfully. But sometimes, a fare expires, a supplier times out, or a schedule changes mid-purchase, and the booking fails.
+        </p>
+        <p>
+          The metric we use to protect this experience is <strong>Purchase Success Rate (PSR)</strong>, the fraction of booking attempts that actually complete. Because our supplier chain is so long, a dip of even 1–2% in PSR can mean thousands of failed bookings and a massive loss in revenue.
+        </p>
+
+        <h2>The visibility gap</h2>
+        <p>
+          For a long time, investigating a drop in PSR was a manual, “needle in a haystack” effort. Failures were buried in the noise of millions of rows of service logs. To find a root cause, an on-call engineer often had to run queries in Querybook and manually investigate in Datadog, a process that could take <strong>one to four hours</strong>.
+        </p>
+        <p>
+          Beyond the time sink, many signals were simply too quiet to catch. When a single carrier or a specific route started degrading, the signal was often drowned out by the overall volume of the flight funnel. To solve this, we built the <strong>Air Booking Insights</strong> platform, a system designed to turn monitoring from a passive chart into an automated triage engine.
+        </p>
+
+        <h2>Building the ETL and Data Layer</h2>
+        <p>
+          The first challenge was processing millions of raw events into something queryable on our <strong>lakehouse</strong>: <strong>Trino</strong> as a distributed SQL engine over Hive-cataloged datasets in S3. We implemented an <strong>ETL (Extract, Transform, Load)</strong> pipeline on top of that stack.
+        </p>
+        <p>
+          <strong>Extract:</strong> raw service-call events are materialized into lossless intermediate storage.
+        </p>
+        <p>
+          <strong>Transform:</strong> this is where messy logs become analysis-ready. The key step is <strong>signature normalization</strong>: multi-stage regex strips volatile tokens (UUIDs, ARLs, timestamps, fare versions) from free-text errors and collapses them into stable signatures. Those signatures are mapped into high-level failure categories, then joined with other tables to enrich failure data with booking-side dimensions like cabin class and route.
+        </p>
+        <p>
+          <strong>Load:</strong> the dashboard queries the lakehouse <strong>live through Trino</strong> for each breakdown. To keep that responsive under real usage, we added a three-layer cache:
+        </p>
+        <ul>
+          <li><strong>In-memory TTL cache</strong> for instant repeated lookups</li>
+          <li><strong>Single-flight de-duplication</strong> so identical concurrent queries do not hammer the database</li>
+          <li><strong>On-disk SQLite cache</strong> for immutable historical data, so date navigation stays near-instant</li>
+        </ul>
+
+        <h2>Detecting dips in PSR</h2>
+        <p>
+          Before we can explain a drop, we have to catch it. Anomaly detection is the layer that watches PSR continuously and flags when the funnel is behaving differently from what we expect, so a quiet dip does not sit unnoticed until someone happens to open a chart.
+        </p>
+
+        <h2>Defining “Normal” with the Safety Band</h2>
+        <p>
+          Detecting an anomaly is only useful if the system knows what “normal” looks like. We can’t use a flat threshold because booking volume is seasonal: a quiet Tuesday at 2:00&nbsp;AM looks very different from a Friday evening surge.
+        </p>
+        <p>
+          We built a <strong>Seasonal Safety Band</strong> using eight weeks of history for every specific hour-of-the-week slot. By using <strong>Median</strong> and <strong>Median Absolute Deviation (MAD)</strong> instead of standard averages, our “normal” range isn’t corrupted by past outages. A dip only flags as an incident if it breaks this statistical band <em>and</em> crosses a volume-scaled impact floor, which separates minor blips from high-severity outages.
+        </p>
+        <figure>
+          <div class="chart" role="img" aria-label="PSR line staying inside a seasonal safety band, then dropping in red below the band during an anomaly. A highlighted timeslice marks when PSR dropped.">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 312" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <rect class="chart-bg" width="1024" height="312"/>
+              <g class="chart-grid" stroke-width="1" fill="none" shape-rendering="crispEdges">
+                <line x1="0" y1="34.88" x2="1024" y2="34.88"/>
+                <line x1="0" y1="69.75" x2="1024" y2="69.75"/>
+                <line x1="0" y1="104.62" x2="1024" y2="104.62"/>
+                <line x1="0" y1="139.5" x2="1024" y2="139.5"/>
+                <line x1="0" y1="174.38" x2="1024" y2="174.38"/>
+                <line x1="0" y1="209.25" x2="1024" y2="209.25"/>
+                <line x1="0" y1="244.12" x2="1024" y2="244.12"/>
+                <line x1="64" y1="0" x2="64" y2="279"/>
+                <line x1="128" y1="0" x2="128" y2="279"/>
+                <line x1="192" y1="0" x2="192" y2="279"/>
+                <line x1="256" y1="0" x2="256" y2="279"/>
+                <line x1="320" y1="0" x2="320" y2="279"/>
+                <line x1="384" y1="0" x2="384" y2="279"/>
+                <line x1="448" y1="0" x2="448" y2="279"/>
+                <line x1="512" y1="0" x2="512" y2="279"/>
+                <line x1="576" y1="0" x2="576" y2="279"/>
+                <line x1="640" y1="0" x2="640" y2="279"/>
+                <line x1="704" y1="0" x2="704" y2="279"/>
+                <line x1="768" y1="0" x2="768" y2="279"/>
+                <line x1="832" y1="0" x2="832" y2="279"/>
+                <line x1="896" y1="0" x2="896" y2="279"/>
+                <line x1="960" y1="0" x2="960" y2="279"/>
+              </g>
+              <rect class="chart-outage" x="444" y="0" width="107" height="279"/>
+              <path class="chart-band" d="M0,36 L7,39 L15,41 L23,41 L30,41 L38,40 L46,40 L54,40 L61,42 L69,44 L77,46 L85,48 L92,50 L100,51 L108,48 L115,46 L123,44 L131,41 L139,39 L146,38 L154,39 L162,40 L170,41 L177,42 L185,42 L193,41 L200,40 L208,40 L216,38 L224,38 L231,36 L239,34 L247,31 L255,29 L262,27 L270,25 L278,22 L285,20 L293,18 L301,16 L309,13 L316,12 L324,14 L332,15 L340,16 L347,17 L355,18 L363,18 L370,17 L378,17 L386,17 L394,16 L420,16 L450,16 L480,16 L510,16 L540,16 L570,16 L600,16 L630,16 L650,16 L659,16 L667,16 L675,16 L683,16 L690,15 L698,15 L706,14 L713,14 L721,13 L729,12 L737,11 L744,11 L752,10 L760,10 L768,10 L775,10 L783,10 L791,10 L798,10 L806,11 L814,11 L822,12 L829,12 L837,12 L845,12 L853,13 L860,13 L868,13 L876,14 L883,15 L891,16 L899,18 L907,18 L914,20 L922,22 L930,24 L938,26 L945,28 L953,30 L961,31 L968,30 L976,30 L984,29 L992,29 L999,28 L1007,30 L1015,31 L1023,32 L1023,60 L1015,59 L1007,58 L999,56 L992,57 L984,57 L976,58 L968,58 L961,59 L953,58 L945,56 L938,54 L930,52 L922,50 L914,48 L907,46 L899,46 L891,44 L883,43 L876,42 L868,41 L860,41 L853,41 L845,40 L837,40 L829,40 L822,40 L814,39 L806,39 L798,38 L791,38 L783,38 L775,38 L768,38 L760,38 L752,38 L744,39 L737,39 L729,40 L721,41 L713,42 L706,42 L698,43 L690,43 L683,44 L675,44 L667,44 L659,44 L650,44 L630,44 L600,44 L570,44 L540,44 L510,44 L480,44 L450,44 L420,44 L394,44 L386,45 L378,45 L370,45 L363,46 L355,46 L347,45 L340,44 L332,43 L324,42 L316,40 L309,41 L301,44 L293,46 L285,48 L278,50 L270,53 L262,55 L255,57 L247,59 L239,62 L231,64 L224,66 L216,66 L208,68 L200,68 L193,69 L185,70 L177,70 L170,69 L162,68 L154,67 L146,66 L139,67 L131,69 L123,72 L115,74 L108,76 L100,79 L92,78 L85,76 L77,74 L69,72 L61,70 L54,68 L46,68 L38,68 L30,69 L23,69 L15,69 L7,67 L0,64 Z"/>
+              <path class="chart-psr" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M0,40 L7,43 L15,45 L23,45 L30,45 L38,44 L46,44 L54,44 L61,46 L69,48 L77,50 L85,52 L92,54 L100,55 L108,52 L115,50 L123,48 L131,45 L139,43 L146,42 L154,43 L162,44 L170,45 L177,46 L185,46 L193,45 L200,44 L208,44 L216,42 L224,42 L231,40 L239,38 L247,35 L255,33 L262,31 L270,29 L278,26 L285,24 L293,22 L301,20 L309,17 L316,16 L324,18 L332,19 L340,20 L347,21 L355,22 L363,22 L370,21 L378,21 L386,21 L394,20 L400,21 L412,22 L422,24 L432,25 L438,26 L444,34"/>
+              <path class="chart-anomaly" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M444,34 L445,36 L448,46 L451,55 L454,64 L458,77 L461,86 L464,95 L467,105 L471,117 L474,127 L477,136 L480,146 L483,155 L487,154 L490,146 L493,138 L496,130 L500,119 L503,112 L506,104 L509,95 L512,88 L516,77 L519,69 L522,61 L525,53 L529,46 L532,44 L535,42 L538,40 L542,38 L545,37 L548,35 L551,34"/>
+              <path class="chart-psr" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M551,34 L554,32 L558,30 L561,28 L564,27 L567,25 L571,23 L580,23 L590,23 L600,22 L620,22 L640,21 L655,21 L659,20 L667,20 L675,20 L683,20 L690,19 L698,19 L706,18 L713,18 L721,17 L729,16 L737,15 L744,15 L752,14 L760,14 L768,14 L775,14 L783,14 L791,14 L798,14 L806,15 L814,15 L822,16 L829,16 L837,16 L845,16 L853,17 L860,17 L868,17 L876,18 L883,19 L891,20 L899,22 L907,22 L914,24 L922,26 L930,28 L938,30 L945,32 L953,34 L961,35 L968,34 L976,34 L984,33 L992,33 L999,32 L1007,34 L1015,35 L1023,36"/>
+              <path class="chart-band-callout" d="M120,52 L120,92 L136,92"/>
+              <text class="chart-band-label" x="144" y="96">Actual PSR Values</text>
+              <path class="chart-band-callout" d="M720,38 L720,78 L736,78"/>
+              <rect class="chart-band-title-bg" x="740" y="56" width="112" height="28" rx="5" ry="5"/>
+              <text class="chart-band-title" x="752" y="75">Safety band</text>
+              <text class="chart-band-label-sub" x="744" y="102">
+                <tspan x="744" dy="0">Expected PSR range from median</tspan>
+                <tspan x="744" dy="20">absolute deviation. Small dips</tspan>
+                <tspan x="744" dy="20">inside it aren’t flagged as outages.</tspan>
+              </text>
+              <text class="chart-outage-label" x="497.5" y="302" text-anchor="middle">PSR dropped below baseline during this timeslice</text>
+            </svg>
+          </div>
+          <figcaption>
+            Actual PSR Values (blue) against the seasonal safety band. When the series breaks the band, the dip lights up as an incident (red). Real numbers and dates have been removed for confidentiality.
+          </figcaption>
+        </figure>
+
+        <h2>Automating the Failure Analysis</h2>
+        <p>
+          Once a dip clears that bar, the core of the platform is explaining <em>why</em> it is happening. The system performs a <strong>root-cause breakdown</strong> by comparing the current “bad” window against the same seasonal baseline, specifically the same day-of-week and clock-window over the prior eight weeks.
+        </p>
+        <p>
+          This allows us to see exactly what changed by looking for <strong>attribute concentration</strong>:
+        </p>
+        <ul>
+          <li><strong>Supplier Concentration:</strong> If failures spike for one GDS across all airlines, it’s a vendor-level outage.</li>
+          <li><strong>Carrier Concentration:</strong> If failures spike for one airline across multiple GDSs, it’s a carrier-side issue.</li>
+          <li><strong>Pattern Recognition:</strong> By grouping those normalized signatures into <strong>error clusters</strong>, we can instantly see if a drop is driven by a specific failure pattern.</li>
+        </ul>
+
+        <h2>AIRA: Empowering Non-Technical Teams</h2>
+        <p>
+          To ensure these insights weren’t locked behind a SQL console, we integrated <strong>AIRA</strong>, our AI assistant. AIRA lets non-technical teams triage failures in natural language, using the Trino MCP for accurate data access.
+        </p>
+        <p>
+          Instead of waiting for an engineer, a product manager can ask AIRA: “What’s driving the drop in PSR for the last week?” AIRA then writes the validated SQL, executes it, and narrates the cause with inline charts. This removes the context switching between tools and democratizes incident response across the organization.
+        </p>
+
+        <h2>Real Impacts</h2>
+        <p>
+          The impact of shifting from manual logs to baseline-aware triage has been immediate:
+        </p>
+        <ul>
+          <li><strong>Time Compression:</strong> Investigations that once took hours are now completed in <strong>minutes</strong>.</li>
+          <li><strong>Proven Accuracy:</strong> In backtesting, the system caught documented major incidents and also surfaced smaller outages that still moved PSR, ones that had gone previously untracked and undocumented.</li>
+          <li><strong>Recoverable Value:</strong> The system identified millions of dollars in monthly Gross Booking Value in recoverable bookings that were previously lost in the noise.</li>
+        </ul>
+        <p>
+          By automating the heavy lifting with ETL and AIRA, we can isolate, resolve, and analyze outages before they hit thousands of travelers. I’m proud to have helped kick off the Air Booking Insights platform, and I’m excited to see where the team takes it next!
+        </p>
+      </div>
+    </article>
   </div>
-  <main class="bsod">
-    <div class="bsod-face" aria-hidden="true">:(</div>
-    <p class="bsod-message">
-      <span>This page is under construction.</span>
-      <span>Please come back later.</span>
-    </p>
-  </main>
+
+  <script>
+    (function () {
+      const entering = document.documentElement.classList.contains("is-page-entering");
+      if (!entering) return;
+
+      try {
+        sessionStorage.removeItem("vb-page-transition");
+      } catch (e) {}
+
+      const pops = [
+        document.querySelector(".topbar-back"),
+        document.querySelector(".theme-toggle"),
+        document.querySelector(".meta"),
+        document.querySelector(".title"),
+        document.querySelector(".byline"),
+        ...document.querySelectorAll(".content > *"),
+      ].filter(Boolean);
+
+      pops.forEach((el, i) => {
+        el.classList.add("page-enter");
+        el.style.setProperty("--enter-delay", `${20 + i * 22}ms`);
+      });
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.documentElement.classList.add("is-page-ready");
+        });
+      });
+
+      const clearAfter = 20 + pops.length * 22 + 420;
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("is-page-entering", "is-page-ready");
+        document.body.style.overflow = "";
+        pops.forEach((el) => {
+          el.classList.remove("page-enter");
+          el.style.removeProperty("--enter-delay");
+        });
+      }, clearAfter);
+    })();
+
+    const topbar = document.getElementById("topbar");
+    const onScroll = () => {
+      topbar.classList.toggle("is-scrolled", window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const syncThemeToggle = () => {
+      const isDark = document.documentElement.getAttribute("data-theme") !== "light";
+      themeToggle.setAttribute(
+        "aria-label",
+        isDark ? "Switch to light mode" : "Switch to dark mode"
+      );
+      themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
+    };
+    syncThemeToggle();
+    themeToggle.addEventListener("click", () => {
+      const next =
+        document.documentElement.getAttribute("data-theme") === "light"
+          ? "dark"
+          : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("expedia-theme", next);
+      } catch (e) {}
+      syncThemeToggle();
+    });
+
+    const backLink = document.querySelector(".topbar-back");
+    if (backLink) {
+      backLink.addEventListener("click", (event) => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        event.preventDefault();
+        if (document.body.classList.contains("is-page-leaving")) return;
+        try {
+          sessionStorage.setItem("vb-page-transition", "home");
+        } catch (e) {}
+        document.body.classList.add("is-page-leaving");
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          window.location.href = backLink.href;
+        };
+        const layout = document.querySelector(".layout");
+        layout?.addEventListener("transitionend", (e) => {
+          if (e.target === layout && e.propertyName === "opacity") finish();
+        });
+        setTimeout(finish, 520);
+      });
+    }
+  </script>
 </body>
 
 </html>
