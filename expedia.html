@@ -198,18 +198,11 @@
       border-bottom-color: var(--rule);
     }
 
-    .site-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--strong);
-      text-decoration: none;
-      letter-spacing: -0.01em;
-    }
-
     .topbar-actions {
       display: flex;
       align-items: center;
       gap: 0.85rem;
+      margin-left: auto;
     }
 
     .topbar-back {
@@ -305,14 +298,22 @@
     }
 
     .byline img {
-      width: 3.25rem;
+      width: 3.85rem;
       height: auto;
       display: block;
       flex-shrink: 0;
       background: none;
       border: 0;
       border-radius: 0;
-      box-shadow: none;
+      filter:
+        drop-shadow(0.5px 0 0 #fff)
+        drop-shadow(-0.5px 0 0 #fff)
+        drop-shadow(0 0.5px 0 #fff)
+        drop-shadow(0 -0.5px 0 #fff)
+        drop-shadow(0.5px 0.5px 0 #fff)
+        drop-shadow(-0.5px -0.5px 0 #fff)
+        drop-shadow(0.5px -0.5px 0 #fff)
+        drop-shadow(-0.5px 0.5px 0 #fff);
     }
 
     .byline-text {
@@ -427,7 +428,7 @@
     .content figure .chart .chart-outage-label {
       fill: var(--chart-outage-label);
       font-family: var(--sans);
-      font-size: 13px;
+      font-size: 17px;
       font-weight: 500;
       letter-spacing: -0.01em;
     }
@@ -435,7 +436,7 @@
     .content figure .chart .chart-band-label {
       fill: var(--chart-psr);
       font-family: var(--sans);
-      font-size: 12.5px;
+      font-size: 16px;
       font-weight: 600;
       letter-spacing: -0.01em;
     }
@@ -443,7 +444,7 @@
     .content figure .chart .chart-band-title {
       fill: var(--chart-psr);
       font-family: var(--sans);
-      font-size: 12.5px;
+      font-size: 16px;
       font-weight: 600;
       letter-spacing: -0.01em;
     }
@@ -455,7 +456,7 @@
     .content figure .chart .chart-band-label-sub {
       fill: var(--muted);
       font-family: var(--sans);
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 400;
       letter-spacing: -0.01em;
     }
@@ -491,9 +492,8 @@
 
 <body>
   <header class="topbar" id="topbar">
-    <a class="site-name" href="index.html">Vedant Bhatt</a>
+    <a class="topbar-back" href="index.html">← Back</a>
     <div class="topbar-actions">
-      <a class="topbar-back" href="index.html">← Back</a>
       <button
         type="button"
         class="theme-toggle"
@@ -550,10 +550,16 @@
 
         <h2>Building the ETL and Data Layer</h2>
         <p>
-          The first challenge was processing millions of raw events into something queryable. We implemented an <strong>ETL (Extract, Transform, Load)</strong> pipeline that materializes raw service calls into an aggregated Iceberg fact table. Instead of scanning millions of rows of raw logs for every request, the system pre-computes an hourly grain (<strong>Hour × GDS × Carrier × Error</strong>).
+          The first challenge was processing millions of raw events into something queryable on our <strong>lakehouse</strong>: <strong>Trino</strong> as a distributed SQL engine over Hive-cataloged datasets in S3. We implemented an <strong>ETL (Extract, Transform, Load)</strong> pipeline on top of that stack.
         </p>
         <p>
-          This transformation reduced the data scanned by roughly <strong>70%</strong>. On top of that, we added a three-layer cache so the dashboard stays fast under real usage:
+          <strong>Extract:</strong> raw service-call events are materialized into lossless intermediate storage.
+        </p>
+        <p>
+          <strong>Transform:</strong> this is where messy logs become analysis-ready. The key step is <strong>signature normalization</strong>: multi-stage regex strips volatile tokens (UUIDs, ARLs, timestamps, fare versions) from free-text errors and collapses them into stable signatures. Those signatures are mapped into high-level failure categories, then we joined tables to enrich failure data with additional dimensions (think of attributes like cabin class or route data!)
+        </p>
+        <p>
+          <strong>Load:</strong> the result lands in an aggregated Iceberg table at an hourly grain (<strong>Hour × GDS × Carrier × Error</strong>). For the same dashboard breakdowns, Trino now reads that pre-aggregated table instead of re-scanning raw service-call logs row by row. Comparing bytes scanned on those query paths is where the roughly <strong>70%</strong> reduction comes from. On top of that, we added a three-layer cache so the dashboard stays fast under real usage:
         </p>
         <ul>
           <li><strong>In-memory TTL cache</strong> for instant repeated lookups</li>
@@ -603,20 +609,20 @@
               </g>
               <rect class="chart-outage" x="444" y="0" width="107" height="279"/>
               <path class="chart-band" d="M0,36 L7,39 L15,41 L23,41 L30,41 L38,40 L46,40 L54,40 L61,42 L69,44 L77,46 L85,48 L92,50 L100,51 L108,48 L115,46 L123,44 L131,41 L139,39 L146,38 L154,39 L162,40 L170,41 L177,42 L185,42 L193,41 L200,40 L208,40 L216,38 L224,38 L231,36 L239,34 L247,31 L255,29 L262,27 L270,25 L278,22 L285,20 L293,18 L301,16 L309,13 L316,12 L324,14 L332,15 L340,16 L347,17 L355,18 L363,18 L370,17 L378,17 L386,17 L394,16 L420,16 L450,16 L480,16 L510,16 L540,16 L570,16 L600,16 L630,16 L650,16 L659,16 L667,16 L675,16 L683,16 L690,15 L698,15 L706,14 L713,14 L721,13 L729,12 L737,11 L744,11 L752,10 L760,10 L768,10 L775,10 L783,10 L791,10 L798,10 L806,11 L814,11 L822,12 L829,12 L837,12 L845,12 L853,13 L860,13 L868,13 L876,14 L883,15 L891,16 L899,18 L907,18 L914,20 L922,22 L930,24 L938,26 L945,28 L953,30 L961,31 L968,30 L976,30 L984,29 L992,29 L999,28 L1007,30 L1015,31 L1023,32 L1023,60 L1015,59 L1007,58 L999,56 L992,57 L984,57 L976,58 L968,58 L961,59 L953,58 L945,56 L938,54 L930,52 L922,50 L914,48 L907,46 L899,46 L891,44 L883,43 L876,42 L868,41 L860,41 L853,41 L845,40 L837,40 L829,40 L822,40 L814,39 L806,39 L798,38 L791,38 L783,38 L775,38 L768,38 L760,38 L752,38 L744,39 L737,39 L729,40 L721,41 L713,42 L706,42 L698,43 L690,43 L683,44 L675,44 L667,44 L659,44 L650,44 L630,44 L600,44 L570,44 L540,44 L510,44 L480,44 L450,44 L420,44 L394,44 L386,45 L378,45 L370,45 L363,46 L355,46 L347,45 L340,44 L332,43 L324,42 L316,40 L309,41 L301,44 L293,46 L285,48 L278,50 L270,53 L262,55 L255,57 L247,59 L239,62 L231,64 L224,66 L216,66 L208,68 L200,68 L193,69 L185,70 L177,70 L170,69 L162,68 L154,67 L146,66 L139,67 L131,69 L123,72 L115,74 L108,76 L100,79 L92,78 L85,76 L77,74 L69,72 L61,70 L54,68 L46,68 L38,68 L30,69 L23,69 L15,69 L7,67 L0,64 Z"/>
-              <path class="chart-psr" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M0,50 L7,53 L15,55 L23,55 L30,55 L38,54 L46,54 L54,54 L61,56 L69,58 L77,60 L85,62 L92,64 L100,65 L108,62 L115,60 L123,58 L131,55 L139,53 L146,52 L154,53 L162,54 L170,55 L177,56 L185,56 L193,55 L200,54 L208,54 L216,52 L224,52 L231,50 L239,48 L247,45 L255,43 L262,41 L270,39 L278,36 L285,34 L293,32 L301,30 L309,27 L316,26 L324,28 L332,29 L340,30 L347,31 L355,32 L363,32 L370,31 L378,31 L386,31 L394,30 L400,31 L412,32 L422,34 L432,35 L438,36 L444,44"/>
-              <path class="chart-anomaly" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M444,44 L445,46 L448,56 L451,65 L454,74 L458,87 L461,96 L464,105 L467,115 L471,127 L474,137 L477,146 L480,156 L483,165 L487,164 L490,156 L493,148 L496,140 L500,129 L503,122 L506,114 L509,105 L512,98 L516,87 L519,79 L522,71 L525,63 L529,56 L532,54 L535,52 L538,50 L542,48 L545,47 L548,45 L551,44"/>
-              <path class="chart-psr" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M551,44 L554,42 L558,40 L561,38 L564,37 L567,35 L571,33 L580,33 L590,33 L600,32 L620,32 L640,31 L655,31 L659,30 L667,30 L675,30 L683,30 L690,29 L698,29 L706,28 L713,28 L721,27 L729,26 L737,25 L744,25 L752,24 L760,24 L768,24 L775,24 L783,24 L791,24 L798,24 L806,25 L814,25 L822,26 L829,26 L837,26 L845,26 L853,27 L860,27 L868,27 L876,28 L883,29 L891,30 L899,32 L907,32 L914,34 L922,36 L930,38 L938,40 L945,42 L953,44 L961,45 L968,44 L976,44 L984,43 L992,43 L999,42 L1007,44 L1015,45 L1023,46"/>
-              <path class="chart-band-callout" d="M120,62 L120,92 L136,92"/>
+              <path class="chart-psr" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M0,40 L7,43 L15,45 L23,45 L30,45 L38,44 L46,44 L54,44 L61,46 L69,48 L77,50 L85,52 L92,54 L100,55 L108,52 L115,50 L123,48 L131,45 L139,43 L146,42 L154,43 L162,44 L170,45 L177,46 L185,46 L193,45 L200,44 L208,44 L216,42 L224,42 L231,40 L239,38 L247,35 L255,33 L262,31 L270,29 L278,26 L285,24 L293,22 L301,20 L309,17 L316,16 L324,18 L332,19 L340,20 L347,21 L355,22 L363,22 L370,21 L378,21 L386,21 L394,20 L400,21 L412,22 L422,24 L432,25 L438,26 L444,34"/>
+              <path class="chart-anomaly" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M444,34 L445,36 L448,46 L451,55 L454,64 L458,77 L461,86 L464,95 L467,105 L471,117 L474,127 L477,136 L480,146 L483,155 L487,154 L490,146 L493,138 L496,130 L500,119 L503,112 L506,104 L509,95 L512,88 L516,77 L519,69 L522,61 L525,53 L529,46 L532,44 L535,42 L538,40 L542,38 L545,37 L548,35 L551,34"/>
+              <path class="chart-psr" fill="none" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M551,34 L554,32 L558,30 L561,28 L564,27 L567,25 L571,23 L580,23 L590,23 L600,22 L620,22 L640,21 L655,21 L659,20 L667,20 L675,20 L683,20 L690,19 L698,19 L706,18 L713,18 L721,17 L729,16 L737,15 L744,15 L752,14 L760,14 L768,14 L775,14 L783,14 L791,14 L798,14 L806,15 L814,15 L822,16 L829,16 L837,16 L845,16 L853,17 L860,17 L868,17 L876,18 L883,19 L891,20 L899,22 L907,22 L914,24 L922,26 L930,28 L938,30 L945,32 L953,34 L961,35 L968,34 L976,34 L984,33 L992,33 L999,32 L1007,34 L1015,35 L1023,36"/>
+              <path class="chart-band-callout" d="M120,52 L120,92 L136,92"/>
               <text class="chart-band-label" x="144" y="96">Actual PSR Values</text>
-              <path class="chart-band-callout" d="M780,48 L780,78 L796,78"/>
-              <rect class="chart-band-title-bg" x="800" y="60" width="92" height="22" rx="4" ry="4"/>
-              <text class="chart-band-title" x="810" y="75">Safety band</text>
-              <text class="chart-band-label-sub" x="804" y="100">
-                <tspan x="804" dy="0">Expected PSR range from median</tspan>
-                <tspan x="804" dy="17">absolute deviation. Small dips</tspan>
-                <tspan x="804" dy="17">inside it aren’t flagged as outages.</tspan>
+              <path class="chart-band-callout" d="M720,38 L720,78 L736,78"/>
+              <rect class="chart-band-title-bg" x="740" y="56" width="112" height="28" rx="5" ry="5"/>
+              <text class="chart-band-title" x="752" y="75">Safety band</text>
+              <text class="chart-band-label-sub" x="744" y="102">
+                <tspan x="744" dy="0">Expected PSR range from median</tspan>
+                <tspan x="744" dy="20">absolute deviation. Small dips</tspan>
+                <tspan x="744" dy="20">inside it aren’t flagged as outages.</tspan>
               </text>
-              <text class="chart-outage-label" x="497.5" y="300" text-anchor="middle">PSR dropped below baseline during this timeslice</text>
+              <text class="chart-outage-label" x="497.5" y="302" text-anchor="middle">PSR dropped below baseline during this timeslice</text>
             </svg>
           </div>
           <figcaption>
@@ -634,7 +640,7 @@
         <ul>
           <li><strong>Supplier Concentration:</strong> If failures spike for one GDS across all airlines, it’s a vendor-level outage.</li>
           <li><strong>Carrier Concentration:</strong> If failures spike for one airline across multiple GDSs, it’s a carrier-side issue.</li>
-          <li><strong>Pattern Recognition:</strong> By rolling thousands of raw error messages into <strong>multiple error clusters</strong>, we can instantly see if a drop is driven by a specific failure pattern.</li>
+          <li><strong>Pattern Recognition:</strong> By grouping those normalized signatures into <strong>error clusters</strong>, we can instantly see if a drop is driven by a specific failure pattern.</li>
         </ul>
 
         <h2>AIRA: Empowering Non-Technical Teams</h2>
@@ -652,7 +658,7 @@
         <ul>
           <li><strong>Time Compression:</strong> Investigations that once took hours are now completed in <strong>minutes</strong>.</li>
           <li><strong>Proven Accuracy:</strong> In backtesting, the system caught documented major incidents and also surfaced smaller outages that still moved PSR, ones that had gone previously untracked and undocumented.</li>
-          <li><strong>Recoverable Value:</strong> The system identified millions of dollars in monthly Gross Booking Value oppor2wsx nity in recoverable bookings that were previously lost in the noise.</li>
+          <li><strong>Recoverable Value:</strong> The system identified millions of dollars in monthly Gross Booking Value in recoverable bookings that were previously lost in the noise.</li>
         </ul>
         <p></p>
         <p>
@@ -672,7 +678,6 @@
       } catch (e) {}
 
       const pops = [
-        document.querySelector(".site-name"),
         document.querySelector(".topbar-back"),
         document.querySelector(".theme-toggle"),
         document.querySelector(".meta"),
@@ -752,26 +757,6 @@
         layout?.addEventListener("transitionend", (e) => {
           if (e.target === layout && e.propertyName === "opacity") finish();
         });
-        setTimeout(finish, 520);
-      });
-    }
-
-    const siteName = document.querySelector(".site-name");
-    if (siteName) {
-      siteName.addEventListener("click", (event) => {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        event.preventDefault();
-        if (document.body.classList.contains("is-page-leaving")) return;
-        try {
-          sessionStorage.setItem("vb-page-transition", "home");
-        } catch (e) {}
-        document.body.classList.add("is-page-leaving");
-        let done = false;
-        const finish = () => {
-          if (done) return;
-          done = true;
-          window.location.href = siteName.href;
-        };
         setTimeout(finish, 520);
       });
     }
