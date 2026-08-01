@@ -370,11 +370,11 @@
 
     .portrait {
       position: relative;
-      min-width: 0;
-      width: auto;
-      max-width: 100%;
+      box-sizing: border-box;
+      width: min(100%, calc(min(52vh, 26rem) * 816 / 698));
       height: min(52vh, 26rem);
       aspect-ratio: 816 / 698;
+      flex-shrink: 0;
       border-radius: clamp(1rem, 2vw, 1.5rem);
       overflow: hidden;
       background: #0a0a0a;
@@ -1049,9 +1049,10 @@
       }
 
       .portrait {
-        height: min(45vh, 22rem);
-        width: 100%;
-        max-width: min(100%, 22rem);
+        width: min(100%, 22rem, calc(min(45vh, 22rem) * 816 / 698));
+        height: auto;
+        aspect-ratio: 816 / 698;
+        max-height: min(45vh, 22rem);
       }
 
       .portrait-wrap {
