@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Building observability into Expedia’s air booking funnel | Vedant Bhatt</title>
+  <title>Building real-time observability into Expedia’s air booking funnel | Vedant Bhatt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
@@ -12,10 +12,10 @@
     (function () {
       try {
         var saved = localStorage.getItem("expedia-theme");
-        var theme = saved === "light" || saved === "dark" ? saved : "light";
+        var theme = saved === "light" || saved === "dark" ? saved : "dark";
         document.documentElement.setAttribute("data-theme", theme);
       } catch (e) {
-        document.documentElement.setAttribute("data-theme", "light");
+        document.documentElement.setAttribute("data-theme", "dark");
       }
       try {
         var raw = sessionStorage.getItem("vb-page-transition");
@@ -526,7 +526,7 @@
   <div class="layout">
     <article class="article">
       <p class="meta">Last Edited July 31, 2026</p>
-      <h1 class="title">Building observability into Expedia’s air booking funnel</h1>
+      <h1 class="title">Building real-time observability into Expedia’s air booking funnel</h1>
 
       <div class="byline">
         <img src="assets/rehaul/vedant-notion-face.png?v=4" alt="Vedant Lalit Bhatt" />
@@ -563,7 +563,7 @@
           <strong>Transform:</strong> this is where messy logs become analysis-ready. The key step is <strong>signature normalization</strong>: multi-stage regex strips volatile tokens (UUIDs, ARLs, timestamps, fare versions) from free-text errors and collapses them into stable signatures. Those signatures are mapped into high-level failure categories, then joined with other tables to enrich failure data with booking-side dimensions like cabin class and route.
         </p>
         <p>
-          <strong>Load:</strong> the dashboard queries the lakehouse <strong>live through Trino</strong> for each breakdown. To keep that responsive under real usage, we added a three-layer cache:
+          <strong>Load:</strong> the result lands in an aggregated Iceberg table at an hourly grain (<strong>Hour × GDS × Carrier × Error</strong>). For the same dashboard breakdowns, Trino now reads that pre-aggregated table instead of re-scanning raw service-call logs row by row. Comparing bytes scanned on those query paths is where the roughly <strong>70%</strong> reduction comes from. On top of that, we added a three-layer cache so the dashboard stays fast under real usage:
         </p>
         <ul>
           <li><strong>In-memory TTL cache</strong> for instant repeated lookups</li>
