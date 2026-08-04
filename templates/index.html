@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Event Templates</title>
+  <meta name="description" content="A small library of prebuilt, shareable event templates — birthdays, events, and club meetings." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("expedia-theme");
+        var theme = saved === "light" || saved === "dark" ? saved : "dark";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+  <style>
+    :root,
+    html[data-theme="dark"] {
+      --bg: #000000;
+      --card: #111111;
+      --text: #ffffff;
+      --muted: #8a8a8a;
+      --strong: #ffffff;
+      --rule: #2f2f2f;
+      --field-border: rgba(255, 255, 255, 0.08);
+      --shadow: rgba(0, 0, 0, 0.45);
+      --btn-ghost-border: rgba(255, 255, 255, 0.14);
+      --btn-ghost-hover: rgba(255, 255, 255, 0.06);
+    }
+
+    html[data-theme="light"] {
+      --bg: #ffffff;
+      --card: #f7f7f5;
+      --text: #111111;
+      --muted: #6b6b6b;
+      --strong: #000000;
+      --rule: #e9e9e7;
+      --field-border: rgba(0, 0, 0, 0.08);
+      --shadow: rgba(0, 0, 0, 0.12);
+      --btn-ghost-border: #dddcd8;
+      --btn-ghost-hover: rgba(0, 0, 0, 0.04);
+    }
+
+    :root {
+      --font: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: clamp(20px, 5vw, 64px) clamp(16px, 4vw, 40px) 80px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: clamp(32px, 7vw, 64px);
+    }
+
+    .back {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+
+    .back:hover { color: var(--text); }
+
+    .theme-toggle {
+      appearance: none;
+      background: transparent;
+      border: 1px solid var(--btn-ghost-border);
+      color: var(--text);
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+
+    .theme-toggle:hover { background: var(--btn-ghost-hover); }
+    .theme-toggle svg { width: 18px; height: 18px; }
+    html[data-theme="dark"] .theme-toggle .sun { display: block; }
+    html[data-theme="dark"] .theme-toggle .moon { display: none; }
+    html[data-theme="light"] .theme-toggle .sun { display: none; }
+    html[data-theme="light"] .theme-toggle .moon { display: block; }
+
+    .lead {
+      margin-bottom: clamp(32px, 6vw, 56px);
+      max-width: 620px;
+    }
+
+    .lead .script {
+      font-family: "Caveat", cursive;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .lead h1 {
+      font-size: clamp(2.2rem, 8vw, 3.4rem);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--strong);
+      margin-bottom: 1rem;
+    }
+
+    .lead p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: clamp(16px, 3vw, 24px);
+    }
+
+    .tile {
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--field-border);
+      border-radius: 18px;
+      padding: 1.6rem;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: transform 160ms ease, box-shadow 200ms ease, border-color 160ms ease;
+    }
+
+    .tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 44px -24px var(--shadow);
+      border-color: var(--accent, var(--rule));
+    }
+
+    .tile .swatch {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+      color: #fff;
+    }
+
+    .tile .swatch svg { width: 24px; height: 24px; }
+
+    .tile h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--strong);
+      margin-bottom: 0.4rem;
+    }
+
+    .tile p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 1.2rem;
+      flex: 1 1 auto;
+    }
+
+    .tile .open {
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+    }
+
+    .tile .open svg {
+      width: 15px;
+      height: 15px;
+      transition: transform 160ms ease;
+    }
+
+    .tile:hover .open svg { transform: translateX(3px); }
+
+    .note {
+      margin-top: clamp(32px, 6vw, 48px);
+      padding: 1.4rem 1.6rem;
+      border: 1px dashed var(--rule);
+      border-radius: 14px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .note strong { color: var(--strong); }
+
+    .note code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: var(--card);
+      border: 1px solid var(--field-border);
+      border-radius: 6px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="topbar">
+      <a class="back" href="../index.html" aria-label="Back to home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+        Home
+      </a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+      </button>
+    </div>
+
+    <header class="lead">
+      <p class="script">Prebuilt &amp; ready to share</p>
+      <h1>Event Templates</h1>
+      <p>
+        A small library of clean, responsive invitation and announcement pages.
+        Pick one, swap the placeholders for your details, and share the link or file.
+        Every template supports light and dark mode out of the box.
+      </p>
+    </header>
+
+    <section class="grid">
+      <a class="tile" href="./birthday.html" style="--accent:#ec4899">
+        <span class="swatch" style="background:linear-gradient(135deg,#ec4899,#f97316)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8" /><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1" /><path d="M2 21h20" /><path d="M7 8v3M12 8v3M17 8v3" /><path d="M7 4h.01M12 3h.01M17 4h.01" /></svg>
+        </span>
+        <h2>Birthday</h2>
+        <p>A warm, celebratory invite for birthday parties &mdash; complete with RSVP and add-to-calendar buttons.</p>
+        <span class="open">Open template
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+
+      <a class="tile" href="./event.html" style="--accent:#3b82f6">
+        <span class="swatch" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+        </span>
+        <h2>Event</h2>
+        <p>A flexible, all-purpose invitation for any occasion &mdash; launches, dinners, fundraisers, and more.</p>
+        <span class="open">Open template
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+
+      <a class="tile" href="./club-meeting.html" style="--accent:#22c55e">
+        <span class="swatch" style="background:linear-gradient(135deg,#22c55e,#14b8a6)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+        </span>
+        <h2>Club Meeting</h2>
+        <p>An organized meeting announcement with a built-in agenda, timings, and attendance buttons.</p>
+        <span class="open">Open template
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+    </section>
+
+    <div class="note">
+      <strong>How to use:</strong> open a template, edit the <code>[bracketed]</code>
+      placeholders (title, date, location, RSVP email, calendar link), then share the
+      page. Each file is fully self-contained &mdash; no build step, no dependencies.
+      Use one as a starting point to add your own event types.
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.querySelector(".theme-toggle");
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("expedia-theme", next); } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+
+</html>
