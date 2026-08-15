@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>How I built an app thousands of my classmates use by solving a campus pain point | Vedant Bhatt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("expedia-theme");
+        var theme = saved === "light" || saved === "dark" ? saved : "dark";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+      try {
+        var raw = sessionStorage.getItem("vb-page-transition");
+        if (!raw) return;
+        var data = raw;
+        try {
+          data = JSON.parse(raw);
+        } catch (err) {}
+        if (data === "ridegt" || (data && data.to === "ridegt")) {
+          document.documentElement.classList.add("is-page-entering");
+          if (data && data.ox) {
+            document.documentElement.style.setProperty("--zoom-ox", data.ox);
+            document.documentElement.style.setProperty("--zoom-oy", data.oy || "40%");
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root,
+    html[data-theme="dark"] {
+      --bg: #191919;
+      --text: #d4d4d4;
+      --muted: #9b9b9b;
+      --meta: #787878;
+      --rule: #2f2f2f;
+      --strong: #ffffff;
+      --topbar-bg: rgba(25, 25, 25, 0.92);
+      --avatar-bg: #2a2a2a;
+      --chart-bg: #191919;
+      --chart-grid: #2f2f2f;
+      --chart-bar: #4691eb;
+      --chart-bar-soft: rgba(70, 145, 235, 0.28);
+      --chart-good: #3fb950;
+      --chart-good-soft: rgba(63, 185, 80, 0.18);
+      --chart-axis: #6f6f6f;
+      --pad-x: max(1.25rem, min(4vw, 2.5rem));
+      --article: 44rem;
+      --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", system-ui, sans-serif;
+      --serif: "Source Serif 4", "Iowan Old Style", "Apple Garamond", Baskerville,
+        "Times New Roman", serif;
+    }
+
+    html[data-theme="light"] {
+      --bg: #ffffff;
+      --text: #37352f;
+      --muted: #787774;
+      --meta: #9b9a97;
+      --rule: #e9e9e7;
+      --strong: #000000;
+      --topbar-bg: rgba(255, 255, 255, 0.92);
+      --avatar-bg: #f1f1ef;
+      --chart-bg: #ffffff;
+      --chart-grid: #ebebea;
+      --chart-bar: #2e78d2;
+      --chart-bar-soft: rgba(46, 120, 210, 0.22);
+      --chart-good: #1a7f37;
+      --chart-good-soft: rgba(26, 127, 55, 0.14);
+      --chart-axis: #8f8e8b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--sans);
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    html.is-page-entering {
+      --zoom-ox: 50%;
+      --zoom-oy: 42%;
+    }
+
+    html.is-page-entering body {
+      overflow: hidden;
+    }
+
+    html.is-page-entering .topbar,
+    html.is-page-entering .layout {
+      opacity: 0;
+    }
+
+    html.is-page-entering .page-enter {
+      opacity: 0;
+      transform: translateY(18px) scale(0.94);
+      filter: blur(4px);
+    }
+
+    html.is-page-entering.is-page-ready .topbar,
+    html.is-page-entering.is-page-ready .layout {
+      opacity: 1;
+      transition: opacity 180ms ease;
+    }
+
+    html.is-page-entering.is-page-ready .page-enter {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition:
+        opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
+        filter 260ms ease;
+      transition-delay: var(--enter-delay, 0ms);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html.is-page-entering .topbar,
+      html.is-page-entering .layout,
+      html.is-page-entering .page-enter,
+      html.is-page-entering.is-page-ready .topbar,
+      html.is-page-entering.is-page-ready .layout,
+      html.is-page-entering.is-page-ready .page-enter {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+      }
+    }
+
+    body.is-page-leaving {
+      background: var(--bg);
+      transition: background 480ms cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+
+    body.is-page-leaving .topbar,
+    body.is-page-leaving .layout {
+      opacity: 0;
+      transform: scale(0.92);
+      transform-origin: var(--zoom-ox, 50%) var(--zoom-oy, 12%);
+      filter: blur(6px);
+      transition:
+        opacity 360ms cubic-bezier(0.4, 0, 1, 1),
+        transform 480ms cubic-bezier(0.33, 0.1, 0.25, 1),
+        filter 360ms ease;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body.is-page-leaving,
+      body.is-page-leaving .topbar,
+      body.is-page-leaving .layout {
+        transition: none;
+        filter: none;
+        transform: none;
+      }
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem var(--pad-x);
+      background: var(--topbar-bg);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+    }
+
+    .topbar.is-scrolled {
+      border-bottom-color: var(--rule);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-left: auto;
+    }
+
+    .topbar-back {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+
+    .topbar-back:hover {
+      color: var(--strong);
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.15rem;
+      height: 2.15rem;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--strong);
+      border-color: var(--muted);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--strong);
+      outline-offset: 2px;
+    }
+
+    .theme-toggle svg {
+      width: 1.05rem;
+      height: 1.05rem;
+      display: block;
+    }
+
+    .theme-toggle .icon-sun {
+      display: none;
+    }
+
+    html[data-theme="dark"] .theme-toggle .icon-sun {
+      display: block;
+    }
+
+    html[data-theme="dark"] .theme-toggle .icon-moon {
+      display: none;
+    }
+
+    .layout {
+      position: relative;
+      width: min(100%, var(--article));
+      margin: 0 auto;
+      padding: 2.75rem var(--pad-x) 5rem;
+    }
+
+    .article {
+      width: 100%;
+    }
+
+    .meta {
+      font-size: 0.875rem;
+      line-height: 1.4;
+      color: var(--meta);
+      letter-spacing: -0.01em;
+    }
+
+    .meta strong {
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .title {
+      margin-top: 0.85rem;
+      font-size: clamp(2.15rem, 4.6vw, 3.15rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+      color: var(--strong);
+    }
+
+    .byline {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.35rem;
+    }
+
+    .byline img {
+      width: 3.85rem;
+      height: auto;
+      display: block;
+      flex-shrink: 0;
+      background: none;
+      border: 0;
+      border-radius: 0;
+      filter:
+        drop-shadow(0.5px 0 0 #fff)
+        drop-shadow(-0.5px 0 0 #fff)
+        drop-shadow(0 0.5px 0 #fff)
+        drop-shadow(0 -0.5px 0 #fff)
+        drop-shadow(0.5px 0.5px 0 #fff)
+        drop-shadow(-0.5px -0.5px 0 #fff)
+        drop-shadow(0.5px -0.5px 0 #fff)
+        drop-shadow(-0.5px 0.5px 0 #fff);
+    }
+
+    .byline-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .byline-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--strong);
+      letter-spacing: -0.01em;
+    }
+
+    .byline-role {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .content {
+      margin-top: 2.35rem;
+      font-family: var(--serif);
+      font-size: 1.125rem;
+      line-height: 1.7;
+      color: var(--text);
+      font-optical-sizing: auto;
+    }
+
+    .content p + p {
+      margin-top: 1.15em;
+    }
+
+    .content h2 {
+      margin: 2.35rem 0 0.85rem;
+      font-family: var(--sans);
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.025em;
+      color: var(--strong);
+    }
+
+    .content strong {
+      font-weight: 700;
+      color: var(--strong);
+    }
+
+    .content em {
+      font-style: italic;
+    }
+
+    .content ul {
+      margin: 1rem 0 0;
+      padding-left: 1.35rem;
+    }
+
+    .content li {
+      margin-top: 0.55rem;
+      padding-left: 0.2rem;
+    }
+
+    .content li::marker {
+      color: var(--meta);
+    }
+
+    .content figure {
+      margin: 1.5rem 0 0.25rem;
+    }
+
+    .content figure img,
+    .content figure .chart {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid var(--rule);
+    }
+
+    .content figure .chart {
+      overflow: hidden;
+      background: var(--chart-bg);
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .content figure .chart .chart-bg {
+      fill: var(--chart-bg);
+      transition: fill 180ms ease;
+    }
+
+    .content figure .chart .chart-grid {
+      stroke: var(--chart-grid);
+      transition: stroke 180ms ease;
+    }
+
+    .content figure .chart .chart-axis {
+      stroke: var(--chart-axis);
+    }
+
+    .content figure .chart .chart-bar {
+      fill: var(--chart-bar);
+    }
+
+    .content figure .chart .chart-bar-good {
+      fill: var(--chart-good);
+    }
+
+    .content figure .chart .chart-value {
+      fill: var(--chart-bar);
+      font-family: var(--sans);
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-value-good {
+      fill: var(--chart-good);
+      font-family: var(--sans);
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-tick {
+      fill: var(--meta);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-cat {
+      fill: var(--muted);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-cat-sub {
+      fill: var(--meta);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .content figure .chart .chart-cat-good {
+      fill: var(--chart-good);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .content figcaption {
+      margin-top: 0.65rem;
+      font-family: var(--sans);
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      color: var(--meta);
+      letter-spacing: -0.01em;
+    }
+
+    @media (max-width: 640px) {
+      .content {
+        font-size: 1.05rem;
+        line-height: 1.65;
+      }
+
+      .title {
+        font-size: 1.9rem;
+      }
+    }
+  </style>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+
+<body>
+  <header class="topbar" id="topbar">
+    <a class="topbar-back" href="index.html">← Back</a>
+    <div class="topbar-actions">
+      <button
+        type="button"
+        class="theme-toggle"
+        id="theme-toggle"
+        aria-label="Switch to light mode"
+        title="Switch to light mode"
+      >
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <article class="article">
+      <p class="meta">Last Edited August 15, 2026</p>
+      <h1 class="title">How I built an app thousands of my classmates use by solving a campus pain point</h1>
+
+      <div class="byline">
+        <img src="assets/rehaul/vedant-notion-face.png?v=4" alt="Vedant Lalit Bhatt" />
+        <div class="byline-text">
+          <span class="byline-name">By Vedant Lalit Bhatt</span>
+          <span class="byline-role">Creator of RideGT — Georgia Tech</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <p>
+          Georgia Tech runs a real bus network across campus, and almost nobody could use it properly. The official tools answer one question — <em>where are the buses right now?</em> — by dropping live vehicle dots onto a map. That is not the question a student standing outside their dorm at 8:52&nbsp;AM is asking. They are asking: <strong>I am here, I need to be there, is there a bus that gets me there faster than walking, and which one do I get on?</strong>
+        </p>
+        <p>
+          Answering that yourself meant memorizing route loops, guessing which stop was closest to where you were going, and then watching a dot to figure out whether it was coming toward you or away. Most people gave up and walked. So I built <strong>RideGT</strong>: type a destination, get an actual trip — walk here, board this bus, ride to this stop, walk there — built on live TransLoc vehicle data.
+        </p>
+        <p>
+          It started as a heuristic in a single Python file in September 2025. Today it is an Expo / React Native app on the App Store and Google Play plus a web version, backed by a FastAPI service, and it serves <strong>1,700+ monthly active users</strong> across platforms. This is what it actually took.
+        </p>
+
+        <h2>The hardest problem was not the map. It was picking two stops.</h2>
+        <p>
+          Route search sounds like a solved problem until you try it on a campus. The whole product reduces to two decisions: <strong>where do you get on</strong>, and <strong>where do you get off</strong>. Get those wrong and everything downstream — the ETA, the map, the notification — is a confident, well-rendered lie.
+        </p>
+        <p>
+          The bug that exposed how wrong I had it: searching <strong>North Avenue East Apartments → John Lewis Student Center</strong> on the Red route returned a bus leg with a ride time of roughly zero. Board and alight at the <em>same stop</em>. The app was rendering "ride the bus to the place you are already standing" as a trip.
+        </p>
+
+        <h2>Why a reasonable-looking objective was wrong</h2>
+        <p>
+          The original scoring picked the alight stop by minimizing total travel time:
+        </p>
+        <ul>
+          <li><strong>score = ride_seconds + walk_meters / walking_speed</strong>, take the minimum over every stop on the route.</li>
+        </ul>
+        <p>
+          The boarding stop is in that candidate list, and the forward ride distance from a stop to itself is <strong>zero</strong>. So the boarding stop always scores <em>0 + walk_from_board</em>, and no stop with a real ride can beat it unless its walk saving exceeds its entire ride time. Two consequences, and the second is much worse than the first: degenerate same-stop trips, and — quietly — <strong>genuinely closer stops being passed over</strong>, because riding costs time and standing still is free.
+        </p>
+        <p>
+          The deeper error was the objective itself. Optimizing total travel time treats a twenty-minute walk as fine as long as it is fast. But people board a bus <em>to avoid walking</em>, not to arrive sooner. On a campus this small the bus is frequently slower than walking and riders take it anyway. The metric did not match the reason the product exists.
+        </p>
+
+        <h2>Measuring instead of guessing</h2>
+        <p>
+          I did not want to fix this by intuition, so I wrote a read-only analysis harness that replays route search against live data: 10 campus buildings → <strong>90 ordered pairs</strong>, across the 6 in-service routes, for <strong>540 (pair × route) searches</strong> per policy. Every number below is measured against live TransLoc data, not estimated.
+        </p>
+        <p>
+          Then I tried the obvious fixes, and the harness rejected them one at a time.
+        </p>
+        <ul>
+          <li><strong>Refuse rides shorter than 60 seconds.</strong> Same-stop results go to 0% by construction — and the winner becomes the next-cheapest bad trade, typically a 1-minute ride followed by a 1.2&nbsp;km walk. It deletes the symptom and never finds the right answer.</li>
+          <li><strong>Weight walking more heavily</strong> (<em>ride + 2× walk</em>, <em>3×</em>, <em>5×</em>). This is the fix everyone suggests. It cannot work: scaling the walk term inflates <em>every</em> candidate's walk including the winner's, so the ordering barely moves. You cannot multiply your way out of a zero.</li>
+          <li><strong>Just use the stop closest to the destination.</strong> This finally exposed the real number — but it breaks a case my own test suite already encoded, below.</li>
+          <li><strong>Cap the maximum ride length.</strong> Arbitrary threshold, and throwing a route out entirely hides information the rider could judge themselves.</li>
+        </ul>
+
+        <figure>
+          <div class="chart" role="img" aria-label="Bar chart of same-stop result rate across scoring policies: ride plus walk 79 percent, ride plus 2x walk 70 percent, ride plus 3x walk 65 percent, ride plus 5x walk 56 percent, and the shipped rule at 0 percent.">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 312" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <rect class="chart-bg" width="1024" height="312"/>
+              <g class="chart-grid" stroke-width="1" fill="none" shape-rendering="crispEdges">
+                <line x1="86" y1="30" x2="1000" y2="30"/>
+                <line x1="86" y1="85" x2="1000" y2="85"/>
+                <line x1="86" y1="140" x2="1000" y2="140"/>
+                <line x1="86" y1="195" x2="1000" y2="195"/>
+              </g>
+              <g class="chart-tick" text-anchor="end">
+                <text x="72" y="35">100%</text>
+                <text x="72" y="90">75%</text>
+                <text x="72" y="145">50%</text>
+                <text x="72" y="200">25%</text>
+                <text x="72" y="255">0%</text>
+              </g>
+              <line class="chart-axis" x1="86" y1="250" x2="1000" y2="250" stroke-width="1.5" shape-rendering="crispEdges"/>
+
+              <rect class="chart-bar" x="117" y="76" width="110" height="174" rx="3" ry="3"/>
+              <rect class="chart-bar" x="287" y="96" width="110" height="154" rx="3" ry="3"/>
+              <rect class="chart-bar" x="457" y="107" width="110" height="143" rx="3" ry="3"/>
+              <rect class="chart-bar" x="627" y="127" width="110" height="123" rx="3" ry="3"/>
+              <rect class="chart-bar-good" x="797" y="245" width="110" height="5" rx="2" ry="2"/>
+
+              <g text-anchor="middle">
+                <text class="chart-value" x="172" y="64">79%</text>
+                <text class="chart-value" x="342" y="84">70%</text>
+                <text class="chart-value" x="512" y="95">65%</text>
+                <text class="chart-value" x="682" y="115">56%</text>
+                <text class="chart-value-good" x="852" y="233">0%</text>
+              </g>
+
+              <g text-anchor="middle">
+                <text class="chart-cat" x="172" y="274">ride + walk</text>
+                <text class="chart-cat-sub" x="172" y="294">original</text>
+                <text class="chart-cat" x="342" y="274">ride + 2× walk</text>
+                <text class="chart-cat-sub" x="342" y="294">rejected</text>
+                <text class="chart-cat" x="512" y="274">ride + 3× walk</text>
+                <text class="chart-cat-sub" x="512" y="294">rejected</text>
+                <text class="chart-cat" x="682" y="274">ride + 5× walk</text>
+                <text class="chart-cat-sub" x="682" y="294">rejected</text>
+                <text class="chart-cat-good" x="852" y="274">walk-first rule</text>
+                <text class="chart-cat-sub" x="852" y="294">shipped</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>
+            Share of the 540 measured searches that returned a degenerate "get off where you got on" result, under each scoring policy. Weighting the walk term harder — the intuitive fix — still leaves the majority broken at an absurd 5×.
+          </figcaption>
+        </figure>
+
+        <p>
+          The pure closest-stop experiment is where the real finding fell out. Under the shipped-at-the-time scoring, 424 of 540 results picked the boarding stop — but only 216 of those genuinely had nothing closer on the route.
+        </p>
+        <p>
+          <strong>In 208 of 540 searches (39%), a stop closer to the destination existed and the app skipped it to take a free ride.</strong> The same-stop bug I noticed was the visible tip of a failure four times its size.
+        </p>
+
+        <h2>Why "closest stop wins" is also wrong</h2>
+        <p>
+          Minimizing walk alone failed four existing tests immediately, and the reason is a genuinely interesting property of loop routes: <strong>a loop serves the same corner in both directions</strong>, so two stops can sit metres apart on foot and a whole loop apart in ride time.
+        </p>
+        <p>
+          Real Blue route data, boarding at North Ave Apartments, destination the Campus Rec Center: <em>CRC &amp; Stamps Health</em> is the closest stop, and <em>Exhibition Hall</em> is about 2 metres farther — but riding to the "closest" one costs <strong>612 extra seconds</strong>. Pure walk-minimisation buys you two metres for ten minutes on a bus.
+        </p>
+
+        <h2>What shipped</h2>
+        <p>
+          The fix was recognising these were <em>two independent questions</em> that the old code had conflated — and conflating them was its own bug, because it let a tuning parameter decide whether a route existed at all.
+        </p>
+        <p>
+          <strong>Question 1 — does this route have a trip at all?</strong> Drop the route if and only if no stop on it is closer to the destination than the stop the rider is already standing at. Straight walking distance, every stop, no tuning parameter allowed to touch it. An earlier version let the tie-break answer this instead, and it binned <strong>54 of 540 routes while a stop up to 95&nbsp;m closer to the destination sat unused</strong>. Now: zero.
+        </p>
+        <p>
+          <strong>Question 2 — which stop do you get off at?</strong> Walking decides first, and riding is only allowed to overrule it inside a narrow band:
+        </p>
+        <ul>
+          <li>The boarding stop is removed from the candidate pool outright — its zero-second ride otherwise wins every tie-break and steals the pick.</li>
+          <li>Default to the stop with the <strong>shortest walk</strong> to the destination.</li>
+          <li>A stop within <strong>100&nbsp;m</strong> of that one may take the pick, but only if the rider genuinely ends up ahead: <strong>ride saved − extra walking time ≥ 90&nbsp;s</strong>.</li>
+          <li>Past 100&nbsp;m, walking decides outright — no trade at any ride saving.</li>
+          <li>Route <em>ordering</em> is a third, separate question, scored in seconds, so an absurd ride sorts last instead of being hidden from the rider.</li>
+        </ul>
+        <p>
+          That net-gain test is what stops the pick flipping on noise. For two stops 10&nbsp;m and 60&nbsp;m out, the extra 50&nbsp;m costs about 36&nbsp;s on foot, so the farther stop has to save more than ~2.1 minutes of riding before it wins. Exhibition Hall clears that bar by ten minutes.
+        </p>
+
+        <h2>What the rule actually bought</h2>
+        <ul>
+          <li><strong>Degenerate trips: 79% → 0%.</strong> Not suppressed — the route is correctly dropped and a walking option is shown instead.</li>
+          <li><strong>Routes wrongly dropped while a closer stop existed: 54 → 0.</strong></li>
+          <li><strong>324 of 540</strong> searches now produce a real ride to a real stop, up from 212 in the first iteration of the rule.</li>
+          <li><strong>86 of 90 building pairs</strong> keep at least one bus option, median 4 routes. The 4 that do not are adjacent buildings where walking is genuinely correct.</li>
+          <li>The tie-break moved the pick off the strictly-closest stop in <strong>132 cases</strong> — every one of them a loop-direction case like Exhibition Hall.</li>
+        </ul>
+        <p>
+          One case makes the whole thing concrete. Glenn Hall → Campus Rec Center on the Gold route: the old scoring rode <strong>1.1 minutes</strong> and then walked the rider <strong>1,264 metres</strong>. Gold stops <em>at</em> the Rec Center. The new rule rides longer and walks 84 metres.
+        </p>
+
+        <h2>Making it fast enough to feel free</h2>
+        <p>
+          Correct is not enough if the answer takes four seconds and costs money every time. Verifying walking legs against the Google Routes API is the expensive part of a search, so the walk distances and place lookups sit behind a <strong>two-level memo table</strong>: an in-process L1 for microsecond reads, and Redis as a shared L2 so a second replica does not re-pay for an answer the first one already bought. That shared layer is the precondition for running more than one replica at all without multiplying the API bill.
+        </p>
+        <p>
+          It is worth being precise that this is a <em>memo table, not a freshness cache</em>. The walking distance between two fixed points does not change; the TTL only bounds staleness against the physical world being rebuilt. Route loop models — the mapping from each stop to its position around the loop, which is what makes ride time wrap correctly in the direction of travel — are computed once and cached hourly on top of that.
+        </p>
+
+        <h2>The alert that has to work while the phone is asleep</h2>
+        <p>
+          My favourite feature is the "time to get off" alert, and it is a good example of a client-side solution that is right until it isn't. The app already knew how to decide the moment: poll arrival estimates for the tracked bus, find its next stop, and fire once the bus has <em>departed</em> the second-to-last stop before yours. It works perfectly — right up until iOS suspends the JavaScript thread a few seconds after the rider puts their phone in their pocket. Which is exactly when a rider needs it.
+        </p>
+        <p>
+          The obvious workaround — pre-schedule a local notification from a predicted arrival time — is a bad one, because campus ETAs drift enough that the alert lands at the wrong stop. So the decision moved <strong>server-side</strong>, into a process that is already awake and already watching every vehicle on a 3-second sync loop. The rider's phone can be suspended or fully terminated and the push still lands. The server logic is a faithful port of the client gate, including the subtle part: buses run <em>loops</em>, so a stop in your leg can match on the lap <em>before</em> you even board. The alert only arms once the bus has been seen heading toward your boarding stop this session.
+        </p>
+
+        <h2>The bug that taught me the most</h2>
+        <p>
+          On iOS, the map library has no Fabric implementation, so it runs through React Native's legacy interop layer — and that layer applies all deferred child insertions before all deferred removals. Mount or unmount a marker in the <em>middle</em> of the map's children and every trailing child re-indexes, an insert index runs past the end of the map's internal array, and the app hard-crashes. Or, more insidiously, it does not crash and the bus route polyline just silently disappears.
+        </p>
+        <p>
+          The fix is not subtle, but arriving at it was: <strong>the map now renders a constant 235 children, from first commit until unmount.</strong> Polylines, stop markers and vehicles live in fixed-capacity slot pools; nothing is ever added or removed mid-list. To hide something, it stays mounted at its real coordinates and its opacity goes to zero.
+        </p>
+        <p>
+          Getting there required treating it as an experiment rather than a hunch. I built a 55-frame harness — 5 searches × 5 navigation cycles — and measured: <strong>8 of 25 back-taps lost the bus polyline before the change, 0 after</strong>, with the failures landing on a fixed parity per search that no amount of staring at the code would have revealed. Two earlier "obvious" fixes had passed a smaller harness and shipped regressions. The lesson I actually carry from this one is that <em>"the JS child list did not change" does not mean "this is free"</em> — the native layer reacts to prop traffic, not just to mounts.
+        </p>
+
+        <h2>Knowing what real users are doing</h2>
+        <p>
+          Once other people depend on something, guessing stops being acceptable. The backend exports Prometheus metrics — request rate, p99 latency, and route-search outcomes labelled by success / no-results / error — into Grafana dashboards with alerting. Product analytics are captured <strong>server-side</strong> and anonymously, covering the real funnel: app launch → route search → stop arrivals → feedback, with session replay on the client for the cases where a metric tells me <em>that</em> something is wrong but not <em>why</em>.
+        </p>
+        <p>
+          The most valuable single metric turned out to be <strong>"route search returned no results"</strong>. It is not an error — the server did its job — but it is the clearest signal in the whole system that a rider asked for something reasonable and the product had no answer.
+        </p>
+
+        <h2>Shipping to real people</h2>
+        <p>
+          Everything above is engineering. Getting to thousands of users needed the unglamorous half too: App Store and Play Store review, a plain-language location primer on first launch (declining is fully supported — every feature including route search still works by typing or dropping a pin), a data-safety declaration, and an honest set of review notes explaining that GT buses do not run 24/7, so "no routes available" at 3&nbsp;AM is correct behaviour rather than a bug.
+        </p>
+        <p>
+          There is also a small submission portal where student organizations can post events to a rotating banner in the app — every submission human-reviewed before it can appear, with in-app reporting that hides a post from the reporter immediately. It is the piece of the project that has the least code and the most product judgement in it.
+        </p>
+
+        <h2>What I took from it</h2>
+        <p>
+          The pain point was never "students cannot see the buses." It was "students cannot turn where the buses are into a decision." Almost every hard problem in RideGT — the stop-selection objective, the alert that survives a locked phone, the map that must not churn — came from taking that distinction seriously and then refusing to trust my own intuition about the fix.
+        </p>
+        <p>
+          The pattern that kept working: build the measurement harness before the fix, let it kill the plausible answers, and keep the number that survives. Weighting walking harder <em>felt</em> obviously right, and 540 searches said it left two-thirds of results broken. That is worth more to me than the download count.
+        </p>
+      </div>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      const entering = document.documentElement.classList.contains("is-page-entering");
+      if (!entering) return;
+
+      try {
+        sessionStorage.removeItem("vb-page-transition");
+      } catch (e) {}
+
+      const pops = [
+        document.querySelector(".topbar-back"),
+        document.querySelector(".theme-toggle"),
+        document.querySelector(".meta"),
+        document.querySelector(".title"),
+        document.querySelector(".byline"),
+        ...document.querySelectorAll(".content > *"),
+      ].filter(Boolean);
+
+      pops.forEach((el, i) => {
+        el.classList.add("page-enter");
+        el.style.setProperty("--enter-delay", `${20 + i * 22}ms`);
+      });
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.documentElement.classList.add("is-page-ready");
+        });
+      });
+
+      const clearAfter = 20 + pops.length * 22 + 420;
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("is-page-entering", "is-page-ready");
+        document.body.style.overflow = "";
+        pops.forEach((el) => {
+          el.classList.remove("page-enter");
+          el.style.removeProperty("--enter-delay");
+        });
+      }, clearAfter);
+    })();
+
+    const topbar = document.getElementById("topbar");
+    const onScroll = () => {
+      topbar.classList.toggle("is-scrolled", window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const syncThemeToggle = () => {
+      const isDark = document.documentElement.getAttribute("data-theme") !== "light";
+      themeToggle.setAttribute(
+        "aria-label",
+        isDark ? "Switch to light mode" : "Switch to dark mode"
+      );
+      themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
+    };
+    syncThemeToggle();
+    themeToggle.addEventListener("click", () => {
+      const next =
+        document.documentElement.getAttribute("data-theme") === "light"
+          ? "dark"
+          : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("expedia-theme", next);
+      } catch (e) {}
+      syncThemeToggle();
+    });
+
+    const backLink = document.querySelector(".topbar-back");
+    if (backLink) {
+      backLink.addEventListener("click", (event) => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        event.preventDefault();
+        if (document.body.classList.contains("is-page-leaving")) return;
+        try {
+          sessionStorage.setItem("vb-page-transition", "home");
+        } catch (e) {}
+        document.body.classList.add("is-page-leaving");
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          window.location.href = backLink.href;
+        };
+        const layout = document.querySelector(".layout");
+        layout?.addEventListener("transitionend", (e) => {
+          if (e.target === layout && e.propertyName === "opacity") finish();
+        });
+        setTimeout(finish, 520);
+      });
+    }
+  </script>
+</body>
+
+</html>

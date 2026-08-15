@@ -1543,13 +1543,7 @@
                   </ul>
                 </div>
                 <div class="flip-cta-wrap">
-                  <a
-                    class="flip-cta"
-                    href="https://www.linkedin.com/posts/vedantlbhatt_i-just-launched-my-first-app-on-the-app-store-share-7454981909081833474-8LCo/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEFTysUBw3-lHzTsjag4u5Xm5btBMiq2rJs"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    tabindex="-1"
-                  >
+                  <a class="flip-cta" href="ridegt.html" tabindex="-1">
                     <span>Learn more</span>
                     <span class="flip-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
@@ -1912,8 +1906,11 @@
             return;
           }
 
-          if (href.includes("expedia.html") && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          const articleMatch = href.match(/(expedia|ridegt)\.html/);
+          if (articleMatch && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
             if (document.body.classList.contains("is-page-leaving")) return;
+
+            const articleKey = articleMatch[1];
 
             const rect = cta.getBoundingClientRect();
             const zoomX = event.clientX || rect.left + rect.width / 2;
@@ -1934,11 +1931,11 @@
             try {
               sessionStorage.setItem(
                 "vb-page-transition",
-                JSON.stringify({ to: "expedia", ox, oy, bg: leaveBg })
+                JSON.stringify({ to: articleKey, ox, oy, bg: leaveBg })
               );
             } catch (e) {
               try {
-                sessionStorage.setItem("vb-page-transition", "expedia");
+                sessionStorage.setItem("vb-page-transition", articleKey);
               } catch (err) {}
             }
 
