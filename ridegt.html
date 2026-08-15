@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>How I built an app thousands of my classmates use by solving a campus pain point | Vedant Bhatt</title>
+  <title>Building RideGT | Vedant Bhatt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
@@ -588,7 +588,7 @@
   <div class="layout">
     <article class="article">
       <p class="meta">Last Edited August 15, 2026</p>
-      <h1 class="title">How I built an app thousands of my classmates use by solving a campus pain point</h1>
+      <h1 class="title">Building RideGT</h1>
 
       <div class="byline">
         <img src="assets/rehaul/vedant-notion-face.png?v=4" alt="Vedant Lalit Bhatt" />
@@ -600,30 +600,38 @@
 
       <div class="content">
         <p>
-          Georgia Tech runs a real bus network across campus, and the official tool shows you where every bus is right now: live dots sliding around a map. That is genuinely useful if your question is <em>where is the bus</em>. It is useless for the question everyone actually has: <strong>I'm here, I need to get there, is a bus worth it, and which one do I get on?</strong>
+          Georgia Tech runs a real bus network across campus, and the official tool shows you where every bus is right now: live dots sliding around a map. That answers the question <em>where is the bus</em>. It does not answer the question everyone actually has, which is: I'm here, I need to get there, is a bus worth it, and which one do I get on?
         </p>
         <p>
           Answering that yourself meant knowing the routes by heart, guessing which stop was closest to where you were going, and then watching a dot to work out whether it was coming toward you or driving away. Most people gave up and walked.
-        </p>
-        <p>
-          So I built <strong>RideGT</strong>, a campus public transport routing system for Georgia Tech students, serving <strong>2,000+ users</strong>. You type where you're going and it hands you a trip: walk here, get on this bus, get off here, walk there. It started as a heuristic in one Python file in September 2025 and now runs on iOS, Android and the web. <a href="https://apps.apple.com/us/app/ridegt/id6762537992" target="_blank" rel="noopener noreferrer">Download it here!</a>
         </p>
 
         <figure>
           <img src="assets/ridegt/transloc-map.jpg" alt="The existing campus transit map: coloured route loops and dozens of identical stop dots covering Georgia Tech, with no way to enter a destination." />
           <figcaption>
-            This is the whole problem in one screenshot. Every route, every stop, every bus, and nowhere to type where you're going. You are looking at the answer to someone else's question.
+            The whole problem in one screenshot. Every route, every stop, every bus, and nowhere to type where you're going.
           </figcaption>
         </figure>
-
-        <h2>How the routing works</h2>
 
         <figure class="fig-side left">
           <img src="assets/ridegt/route-options.jpg" alt="RideGT showing three route options to the Campus Recreation Center: Blue as an 11 minute trip, Red 18 minutes, Gold 15 minutes, each with an arrival time." />
           <figcaption>
-            Every option, ranked and honest: Blue gets you there in 11 minutes, Red in 18, Gold in 15, with the walk on each end priced in, not hidden.
+            Every option, ranked: Blue gets you there in 11 minutes, Red in 18, Gold in 15, with the walk on each end counted in the total.
           </figcaption>
         </figure>
+
+        <figure class="fig-side right">
+          <img src="assets/ridegt/directions.jpg" alt="RideGT step-by-step directions: walk 1 minute to North Avenue Apts, board Blue Bus #7, ride 3 stops, get off at Exhibition Hall, walk 1 minute to the Campus Recreation Center." />
+          <figcaption>
+            Walk 1 min, Blue Bus #7, ride 3 stops, off at Exhibition Hall, walk 1 min. That last stop is not the closest one to the Rec Center, and picking it anyway is the interesting part.
+          </figcaption>
+        </figure>
+
+        <p>
+          So I built <strong>RideGT</strong>, a campus public transport routing system for Georgia Tech students, serving <strong>2,000+ users</strong>. You type where you're going and it hands you a trip: walk here, get on this bus, get off here, walk there. It started as a heuristic in one Python file in September 2025 and now runs on iOS, Android and the web. <a href="https://apps.apple.com/us/app/ridegt/id6762537992" target="_blank" rel="noopener noreferrer">Download it here!</a>
+        </p>
+
+        <h2>How the routing works</h2>
 
         <p>
           Every search runs the same five steps:
@@ -636,18 +644,12 @@
           <li>Rank whatever survived and show you the best few.</li>
         </ul>
         <p>
-          The result is a list you can actually choose from, and then a trip you can actually follow: which bus, which stop, how many stops to sit through, and how long you'll be walking at either end.
+          The result is a list you can choose from, and then a trip you can follow: which bus, which stop, how many stops to sit through, and how long you'll be walking at either end.
         </p>
 
-        <figure class="fig-side right">
-          <img src="assets/ridegt/directions.jpg" alt="RideGT step-by-step directions: walk 1 minute to North Avenue Apts, board Blue Bus #7, ride 3 stops, get off at Exhibition Hall, walk 1 minute to the Campus Recreation Center." />
-          <figcaption>
-            Walk 1 min → Blue Bus #7 → ride 3 stops → off at Exhibition Hall → walk 1 min. That alight stop is not the closest one to the Rec Center, and picking it anyway is the interesting part.
-          </figcaption>
-        </figure>
 
         <p>
-          Step four is where nearly all the difficulty lives. Getting it right is the difference between an app that names a bus and an app people keep on their home screen, and getting it <em>wrong</em> is subtle enough that it shipped, looked fine, and quietly sent people walking in the wrong direction for weeks.
+          Step four is where nearly all the difficulty is. Getting it wrong is subtle enough that it shipped, looked fine, and quietly sent people walking in the wrong direction for weeks.
         </p>
         <p>
           <button type="button" class="reveal" id="routing-reveal" aria-expanded="false" aria-controls="routing-panel">Click me to learn how checking three stops instead of one made trips up to 25 minutes faster<span class="chev" aria-hidden="true">⌄</span></button>
@@ -695,51 +697,59 @@
           </div>
         </div>
 
-        <h2>Buses that have stopped being buses</h2>
+        <h2>The biggest problem I am still solving</h2>
         <p>
           A parked bus still looks like a bus on its way. Drivers take breaks, shifts change, a bus sits at the end of the line, and the feed keeps reporting it as on-route, so the countdown keeps ticking down for a bus that is never coming.
         </p>
         <p>
-          Right now we watch every bus continuously, and if one hasn't left a 25-metre circle for longer than that stop should reasonably take, we call it stalled instead of pretending it's inbound. Part of the work is separating three things that look identical from the outside: a bus genuinely parked, a bus idling nowhere near a stop, and a bus whose transponder just stopped reporting. That last one <em>looks</em> parked, but the data is simply stale, and calling it a stall would be its own kind of lie.
+          We watch every bus continuously, and if one hasn't left a 25-metre circle for longer than that stop should take, we mark it stalled instead of counting it down. Most of the work is separating three things that look identical from outside: a bus genuinely parked, a bus idling nowhere near a stop, and a bus whose transponder just stopped reporting. That last one <em>looks</em> parked, but the data is simply stale, and calling it a stall would be wrong in a different way.
         </p>
         <p>
           What's still wrong: the "how long is too long" number leans on the single generic dwell time the feed claims for each stop. But some stops are a ten-second pickup and others are a routine layover, and one number cannot be right for both. We're recording real dwell times now so each stop can learn its own normal from its own history instead of borrowing someone else's.
         </p>
 
-        <h2>How I saved $3,000</h2>
+        <h2>How I cut a $3,300 monthly bill down to $50</h2>
         <p>
-          Every walking distance in this app is a question Google charges me to answer, so before writing the routing code I worked out what it would cost at the scale I was actually expecting.
+          Every walking distance in this app is a question Google charges me to answer, and I am a student paying for this out of pocket. At the usage I was planning for, roughly a thousand searches a day, the Google bill came to about <strong>$3,300 a month</strong>. That is not a bill a free campus app survives.
         </p>
         <p>
-          The research part was unglamorous: size the campus, look at how often people make this kind of trip, and land on a target of roughly <strong>1,000 searches a day</strong>. Then count what one search costs. A search compares three candidate routes, and each one needs the walk from you to its bus stop plus the walks from four candidate stops to your destination, which is <strong>15 paid lookups per search</strong>. At a thousand searches a day that is <strong>450,000 paid lookups a month</strong>, and it grows with every user I gain. That is the kind of bill that quietly kills a free student app.
+          It is now about <strong>$50 a month</strong> at the same usage. Nothing was removed to get there, and no feature got worse. The app just stopped paying for the same answer twice.
         </p>
         <p>
-          So caching wasn't a thing I bolted on later when the invoice showed up. It was in the design from the beginning, on one rule: <strong>never ask the same question twice.</strong>
+          Three things did almost all of it.
         </p>
         <p>
-          The walking distance between two fixed points never changes, so every walk we've ever looked up is kept and reused: first from the server's own memory, and behind that from a shared store every copy of the server can read, so a second server never re-buys an answer the first one already paid for.
+          <strong>Asking for less.</strong> The expensive call was the one that priced walking distances, and it charged per pair of points. One search was asking about 52 pairs at once when it only ever needed 15 of them. Narrowing the question was free and cut two thirds of the cost before any caching existed.
         </p>
         <p>
-          That barely worked at first, for a reason worth knowing. Bus stops repeat exactly, so those always hit. But <em>your</em> end of the walk is live GPS, which never comes back the same twice. Two readings a metre apart counted as two entirely different questions. So the walk from you to your bus stop was re-bought on nearly every single search: about <strong>90,000 paid lookups a month</strong>, every one of them for a walk we already knew the answer to.
+          <strong>Remembering the answers.</strong> The walking distance between two fixed points does not change, so once we have paid for a walk we keep it and reuse it forever. It sits in the server's own memory for instant reads, and behind that in a shared store that every copy of the server can read, so a second server never re-buys something the first one already paid for. Once those answers are warm, a repeated search costs nothing at all.
         </p>
         <p>
-          The fix is to stop treating coordinates as exact. Every point snaps to a ~10-metre grid, and on a miss we check the neighbouring squares before giving up and paying. Ten metres is smaller than the error in a phone's GPS and far smaller than the gaps between competing stops, so it can never change which stop you're sent to. It just stops us buying the same answer forever. Those recovered lookups alone are <strong>over $3,000 a year</strong> at Google's rates.
+          That last part nearly did not work, for a reason worth knowing. Bus stops are always in exactly the same place, so those lookups matched every time. But <em>your</em> end of the walk is live GPS, which never reports the same position twice. Two readings a metre apart looked like two completely different questions, so the walk from you to your bus stop was re-bought on almost every search. The fix was to stop treating your location as an exact point: everything snaps to a rough 10-metre grid, and near misses check the neighbouring squares before paying. Ten metres is smaller than the error in a phone's GPS and far smaller than the distance between competing stops, so it cannot change which bus you are told to take.
         </p>
         <p>
+          <strong>Not asking at all until it matters.</strong> The search box used to look up suggestions on the first letter you typed. It now waits for three, which is the difference between paying for "a" and paying for "arc".
+        </p>
+        <p>
+          What is left is the address lookup that runs when you pick a destination, which is the priciest thing the app touches and the only cost that still grows with users. I have deliberately not optimised it yet, because the first month of real usage will tell me whether it stays inside Google's free allowance. Building a cache for a bill that may not exist is how you waste a week.
+        </p>
+        <p>
+          The live bus data is solved from the other end. Instead of every request reaching out to the campus system, the server keeps <strong>one shared live copy</strong> of every bus, refreshed continuously in the background, with route shapes and stop lists refreshed every ten minutes. A hundred people searching at once is still one conversation with the campus feed, and because the map, the search, the arrival times and the stall check all read that same copy, they cannot contradict each other.
+        </p>
           The bus feed is solved from the other end. Instead of every request reaching out to the campus system, the server keeps <strong>one shared live copy</strong> of every bus, refreshed continuously in the background; route shapes and stop lists, which hardly ever change, refresh every ten minutes. A hundred people searching at once is still one conversation with the campus feed, and because the map, the search, the arrival times and the stall check all read that same snapshot, they can't contradict each other.
         </p>
 
         <h2>Ads that are worth looking at</h2>
         <p>
-          There's a banner along the bottom of the map, and it is deliberately not an ad network. The posts come from Georgia Tech students and student organizations: club meetings, campus events, auditions, all submitted through a small portal, and <strong>every single one is read by a person before it can appear</strong>. Nothing publishes itself.
+          There's a banner along the bottom of the map, and it is not an ad network. The posts come from Georgia Tech students and student organizations: club meetings, campus events, auditions. They come in through a small portal, and <strong>every one is read by a person before it can appear</strong>.
         </p>
         <p>
-          It works because it's local by construction. Everyone who sees it is on the same campus, looking at it in the exact moment they're deciding where to go. An ad for something two thousand miles away is noise. A flyer for something happening in the building you're currently riding toward isn't really an ad at all.
+          Everyone who sees it is on the same campus, looking at it in the moment they're deciding where to go. An ad for something two thousand miles away is noise. A flyer for something happening in the building you're riding toward is not really an ad at all.
         </p>
 
-        <h2>What I took from it</h2>
+        <h2>What I learned</h2>
         <p>
-          The pain point was never "students can't see the buses." It was that seeing the buses doesn't tell you what to do. The stop that scored zero, the straight line that lied about a crosswalk, the bus that was parked the whole time: almost every hard problem in this app came from taking that difference seriously.
+          The problem was never that students couldn't see the buses. It was that seeing the buses doesn't tell you what to do. The stop that scored zero, the straight line that lied about a crosswalk, the bus that was parked the whole time: every hard problem here came out of that one gap.
         </p>
       </div>
     </article>
