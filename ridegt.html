@@ -352,6 +352,25 @@
       font-style: italic;
     }
 
+    .content a {
+      color: var(--strong);
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-color: var(--meta);
+      text-underline-offset: 0.15em;
+      transition: text-decoration-color 160ms ease, opacity 160ms ease;
+    }
+
+    .content a:hover {
+      text-decoration-color: var(--strong);
+    }
+
+    .content a:focus-visible {
+      outline: 2px solid var(--strong);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
     .content ul {
       margin: 1rem 0 0;
       padding-left: 1.35rem;
@@ -463,7 +482,7 @@
           Answering that yourself meant knowing the routes by heart, guessing which stop was closest to where you were going, and then watching a dot to work out whether it was coming toward you or driving away. Most people gave up and walked.
         </p>
         <p>
-          RideGT answers the actual question. You type where you're going and it hands you a trip: walk here, get on this bus, get off here, walk there. It started as a heuristic in one Python file in September 2025 and now runs on iOS, Android and the web for <strong>2,000+ monthly active users</strong>.
+          So I built <strong>RideGT</strong>, a campus public transport routing system for Georgia Tech students, serving <strong>2,000+ users</strong>. You type where you're going and it hands you a trip: walk here, get on this bus, get off here, walk there. It started as a heuristic in one Python file in September 2025 and now runs on iOS, Android and the web. <a href="https://apps.apple.com/us/app/ridegt/id6762537992" target="_blank" rel="noopener noreferrer">Download it here!</a>
         </p>
 
         <!-- TransLoc screenshots go here. Drop the files in assets/ and uncomment:
