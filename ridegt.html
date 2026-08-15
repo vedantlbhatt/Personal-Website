@@ -398,11 +398,137 @@
       background: var(--figure-bg);
     }
 
-    /* Side-by-side screenshots. Falls back to one column on narrow screens. */
-    .content figure .shots {
+    /* Phone screenshots that sit beside the prose. Stack on narrow screens. */
+    .content .fig-side {
+      width: min(44%, 14.5rem);
+      margin: 0.35rem 0 1.1rem;
+    }
+
+    .content .fig-side.left {
+      float: left;
+      margin-right: 1.7rem;
+    }
+
+    .content .fig-side.right {
+      float: right;
+      margin-left: 1.7rem;
+    }
+
+    .content .fig-side img {
+      border-radius: 12px;
+    }
+
+    .content .fig-side figcaption {
+      margin-top: 0.55rem;
+    }
+
+    /* Headings must never sit alongside a float. */
+    .content h2 {
+      clear: both;
+    }
+
+    @media (max-width: 640px) {
+      .content .fig-side.left,
+      .content .fig-side.right {
+        float: none;
+        width: min(74%, 18rem);
+        margin: 1.6rem auto;
+      }
+    }
+
+    /* Expandable deep-dive */
+    .content .reveal {
+      font: inherit;
+      color: var(--strong);
+      font-weight: 600;
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: var(--meta);
+      text-underline-offset: 0.15em;
+      transition: text-decoration-color 160ms ease;
+    }
+
+    .content .reveal:hover {
+      text-decoration-color: var(--strong);
+    }
+
+    .content .reveal:focus-visible {
+      outline: 2px solid var(--strong);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .content .reveal .chev {
+      display: inline-block;
+      margin-left: 0.3em;
+      transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .content .reveal[aria-expanded="true"] .chev {
+      transform: rotate(180deg);
+    }
+
+    .content .panel {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
-      gap: 0.75rem;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      /* Keep collapsed copy out of the accessibility tree, but only after it
+         has finished animating shut. */
+      visibility: hidden;
+      transition:
+        grid-template-rows 460ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 260ms ease,
+        margin-top 460ms cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0s linear 460ms;
+    }
+
+    .content .panel > .panel-clip {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .content .panel.is-open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 1.4rem;
+      visibility: visible;
+      transition:
+        grid-template-rows 460ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 260ms ease,
+        margin-top 460ms cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0s linear 0s;
+    }
+
+    .content .panel .panel-body {
+      border-left: 2px solid var(--rule);
+      padding-left: 1.2rem;
+    }
+
+    .content .panel .panel-body > :first-child {
+      margin-top: 0;
+    }
+
+    .content .panel .panel-body h3 {
+      margin: 1.3rem 0 0.5rem;
+      font-family: var(--sans);
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--strong);
+    }
+
+    .content .panel .panel-body > h3:first-child {
+      margin-top: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .content .panel,
+      .content .reveal .chev {
+        transition: none;
+      }
     }
 
     .content figcaption {
@@ -485,19 +611,22 @@
           So I built <strong>RideGT</strong>, a campus public transport routing system for Georgia Tech students, serving <strong>2,000+ users</strong>. You type where you're going and it hands you a trip: walk here, get on this bus, get off here, walk there. It started as a heuristic in one Python file in September 2025 and now runs on iOS, Android and the web. <a href="https://apps.apple.com/us/app/ridegt/id6762537992" target="_blank" rel="noopener noreferrer">Download it here!</a>
         </p>
 
-        <!-- TransLoc screenshots go here. Drop the files in assets/ and uncomment:
         <figure>
-          <div class="shots">
-            <img src="assets/transloc-1.png" alt="The official TransLoc map showing live bus dots" />
-            <img src="assets/ridegt-1.png" alt="RideGT showing a full trip from origin to destination" />
-          </div>
+          <img src="assets/ridegt/transloc-map.jpg" alt="The existing campus transit map: coloured route loops and dozens of identical stop dots covering Georgia Tech, with no way to enter a destination." />
           <figcaption>
-            Left: what campus already had — every bus, no answer. Right: RideGT, same data, turned into a trip.
+            This is the whole problem in one screenshot. Every route, every stop, every bus — and nowhere to type where you're going. You are looking at the answer to someone else's question.
           </figcaption>
         </figure>
-        -->
 
         <h2>How the routing works</h2>
+
+        <figure class="fig-side left">
+          <img src="assets/ridegt/route-options.jpg" alt="RideGT showing three route options to the Campus Recreation Center: Blue as an 11 minute trip, Red 18 minutes, Gold 15 minutes, each with an arrival time." />
+          <figcaption>
+            Every option, ranked and honest: Blue gets you there in 11 minutes, Red in 18, Gold in 15 — with the walk on each end priced in, not hidden.
+          </figcaption>
+        </figure>
+
         <p>
           Every search runs the same five steps:
         </p>
@@ -509,43 +638,58 @@
           <li>Rank whatever survived and show you the best few.</li>
         </ul>
         <p>
-          Step four is where nearly all the difficulty lives, and it went wrong in two completely different ways.
+          The result is a list you can actually choose from, and then a trip you can actually follow — which bus, which stop, how many stops to sit through, and how long you'll be walking at either end.
         </p>
 
-        <h2>The stop that looked closest and wasn't</h2>
+        <figure class="fig-side right">
+          <img src="assets/ridegt/directions.jpg" alt="RideGT step-by-step directions: walk 1 minute to North Avenue Apts, board Blue Bus #7, ride 3 stops, get off at Exhibition Hall, walk 1 minute to the Campus Recreation Center." />
+          <figcaption>
+            Walk 1 min → Blue Bus #7 → ride 3 stops → off at Exhibition Hall → walk 1 min. That alight stop is not the closest one to the Rec Center, and picking it anyway is the interesting part.
+          </figcaption>
+        </figure>
+
         <p>
-          The first version scored every possible stop as <em>time on the bus + time walking at the end</em>, then picked the smallest. That sounds correct. It isn't, and the reason is almost funny: <strong>the stop you're standing at is in that list, and riding from a stop to itself takes zero seconds.</strong> So the stop you were already at usually won. The app would tell you to get off exactly where you got on.
+          Step four is where nearly all the difficulty lives. Getting it right is the difference between an app that names a bus and an app people keep on their home screen — and getting it <em>wrong</em> is subtle enough that it shipped, looked fine, and quietly sent people walking in the wrong direction for weeks.
         </p>
         <p>
-          The quieter version of that bug was worse. Stops that were genuinely closer to your destination got skipped, because walking there scored as free while riding there cost time. The app kept choosing to stand still.
-        </p>
-        <p>
-          The mistake underneath was the goal itself. Optimizing for total travel time treats a twenty-minute walk as fine as long as it's quick. But nobody gets on a campus bus to arrive sooner — on a campus this small the bus is often slower than walking and people ride it anyway. <strong>They ride so they don't have to walk.</strong>
-        </p>
-        <p>
-          So walking decides. Get off at whichever stop leaves you the shortest walk, with two guards:
-        </p>
-        <ul>
-          <li>The stop you got on at is taken out of the running entirely.</li>
-          <li>A slightly farther stop can only steal the pick if it genuinely saves you time — at least a minute and a half, after paying for the extra steps. Without that, you'd get sent around the whole loop to save twenty feet.</li>
-        </ul>
-        <p>
-          What that's worth, on real searches: <strong>Glenn Hall → Campus Rec Center</strong> used to put you on a bus for one minute and then walk you <strong>1,264 metres</strong> — three quarters of a mile, straight past the Rec Center. That route <em>stops at</em> the Rec Center. Now it walks you 84 metres. That's roughly <strong>fourteen minutes of walking deleted from a single search</strong>.
-        </p>
-        <p>
-          The guard earns its keep in the other direction too. On some searches the closest-looking stop is thirty minutes around the loop, while one twenty metres farther is five minutes away. Same walk, <strong>twenty-five minutes saved</strong>.
+          <button type="button" class="reveal" id="routing-reveal" aria-expanded="false" aria-controls="routing-panel">Click me to learn how I made 2.8× more searches return a real bus trip<span class="chev" aria-hidden="true">⌄</span></button>
         </p>
 
-        <h2>Why we check three stops instead of one</h2>
-        <p>
-          The second problem is that a straight line doesn't know about streets.
-        </p>
-        <p>
-          A stop can sit forty metres from your destination on a map and be a five-minute detour in reality, because it's on the far side of a road where the nearest crosswalk is a block away — or worse, across the rail cut that splits campus, where the nearest bridge is much further than that. Measured as the crow flies it's the winner. On foot it's the worst option on the list.
-        </p>
-        <p>
-          So we never commit to one stop. We shortlist the <strong>three</strong> best candidates by straight-line distance, then look up the real walking route for all three — actual sidewalks, actual crossings — and pick again using those. Three lookups instead of one, and it's the whole difference between <em>closest on the map</em> and <em>closest on foot</em>.
-        </p>
+        <div class="panel" id="routing-panel" role="region" aria-labelledby="routing-reveal">
+          <div class="panel-clip">
+            <div class="panel-body">
+              <h3>The stop that looked closest and wasn't</h3>
+              <p>
+                The first version scored every possible stop as <em>time on the bus + time walking at the end</em>, then picked the smallest. That sounds correct. It isn't, and the reason is almost funny: <strong>the stop you're standing at is in that list, and riding from a stop to itself takes zero seconds.</strong> So the stop you were already at usually won, and the app would tell you to get off exactly where you got on.
+              </p>
+              <p>
+                The quieter version of that bug was worse. Stops genuinely closer to your destination got skipped, because walking there scored as free while riding there cost time. The app kept choosing to stand still.
+              </p>
+              <p>
+                The mistake underneath was the goal itself. Optimizing total travel time treats a twenty-minute walk as fine as long as it's quick. But nobody gets on a campus bus to arrive sooner — on a campus this small the bus is often slower than walking and people ride it anyway. <strong>They ride so they don't have to walk.</strong>
+              </p>
+
+              <h3>The fix</h3>
+              <p>
+                Walking decides. Get off at whichever stop leaves you the shortest walk, with two guards: the stop you got on at is removed from the running entirely, and a slightly farther stop can only steal the pick if it genuinely saves you time — at least a minute and a half, after paying for the extra steps. Without that second guard you'd be sent around the whole loop to save twenty feet.
+              </p>
+              <p>
+                Then there's a second, separate lie to deal with: <strong>a straight line doesn't know about streets.</strong> A stop can sit forty metres from your destination on a map and be a five-minute detour in reality, because it's across a road where the nearest crosswalk is a block away — or across the rail cut that splits campus. So we never commit to one stop. We shortlist the <strong>three</strong> best candidates, look up the real walking route for all three — actual sidewalks, actual crossings — and pick again using those.
+              </p>
+
+              <h3>Where the number comes from</h3>
+              <p>
+                I replayed the same <strong>540 searches</strong> (10 campus buildings, every ordered pair, across all six routes running that day) through the old scoring and the new rule.
+              </p>
+              <p>
+                Under the old scoring, <strong>424 of 540</strong> searches picked the boarding stop — meaning only <strong>116</strong> produced a real bus trip to a different stop. Under the new rule, <strong>324</strong> do. That's <strong>2.8× more searches that return an actual trip</strong>, and the same-stop nonsense drops from 79% to zero, because a route with nothing closer is now correctly dropped and shown as a walk instead.
+              </p>
+              <p>
+                The individual cases are blunter. <strong>Glenn Hall → Campus Rec Center</strong> used to put you on a bus for one minute and then walk you <strong>1,264 metres</strong> — three quarters of a mile, straight past the Rec Center, on a route that <em>stops at</em> the Rec Center. Now it walks you 84 metres: about <strong>fourteen minutes of walking deleted from one search</strong>. And going the other way, the guard catches searches where the closest-looking stop is thirty minutes around the loop while one twenty metres farther is five minutes away — same walk, <strong>twenty-five minutes saved</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
 
         <h2>Buses that have stopped being buses</h2>
         <p>
@@ -558,18 +702,24 @@
           What's still wrong: the "how long is too long" number leans on the single generic dwell time the feed claims for each stop. But some stops are a ten-second pickup and others are a routine layover, and one number cannot be right for both. We're recording real dwell times now so each stop can learn its own normal from its own history instead of borrowing someone else's.
         </p>
 
-        <h2>Never paying twice for the same answer</h2>
+        <h2>How I saved $3,000</h2>
         <p>
-          RideGT depends on two outside sources: Google for walking directions, and the campus feed for where the buses are. One of them is slow and the other charges per question, so the rule is the same for both — never ask the same question twice.
+          Every walking distance in this app is a question Google charges me to answer, so before writing the routing code I worked out what it would cost at the scale I was actually expecting.
         </p>
         <p>
-          The walking distance between two fixed points never changes, so every walk we've ever looked up gets kept and reused: first from the server's own memory, and behind that from a shared store every copy of the server can read, so a second server never re-buys an answer the first one already paid for.
+          The research part was unglamorous: size the campus, look at how often people make this kind of trip, and land on a target of roughly <strong>1,000 searches a day</strong>. Then count what one search costs. A search compares three candidate routes, and each one needs the walk from you to its bus stop plus the walks from four candidate stops to your destination — <strong>15 paid lookups per search</strong>. At a thousand searches a day that is <strong>450,000 paid lookups a month</strong>, and it grows with every user I gain. That is the kind of bill that quietly kills a free student app.
         </p>
         <p>
-          That barely worked at first, for a reason worth knowing. Bus stops repeat exactly, so those always hit. But <em>your</em> end of the walk is live GPS, which never comes back the same twice — two readings a metre apart counted as two different questions. So the walk from you to your bus stop was re-bought on nearly every single search: roughly <strong>90,000 paid lookups a month</strong> at a thousand searches a day, every one of them for a walk we already knew.
+          So caching wasn't a thing I bolted on later when the invoice showed up. It was in the design from the beginning, on one rule: <strong>never ask the same question twice.</strong>
         </p>
         <p>
-          The fix is to stop treating coordinates as exact. Every point snaps to a ~10-metre grid, and on a miss we check the neighbouring squares before giving up and paying. Ten metres is smaller than the error in a phone's GPS and far smaller than the gaps between competing stops, so it can't change which stop you're sent to. It just stops us buying the same answer forever.
+          The walking distance between two fixed points never changes, so every walk we've ever looked up is kept and reused — first from the server's own memory, and behind that from a shared store every copy of the server can read, so a second server never re-buys an answer the first one already paid for.
+        </p>
+        <p>
+          That barely worked at first, for a reason worth knowing. Bus stops repeat exactly, so those always hit. But <em>your</em> end of the walk is live GPS, which never comes back the same twice — two readings a metre apart counted as two entirely different questions. So the walk from you to your bus stop was re-bought on nearly every single search: about <strong>90,000 paid lookups a month</strong>, every one of them for a walk we already knew the answer to.
+        </p>
+        <p>
+          The fix is to stop treating coordinates as exact. Every point snaps to a ~10-metre grid, and on a miss we check the neighbouring squares before giving up and paying. Ten metres is smaller than the error in a phone's GPS and far smaller than the gaps between competing stops, so it can never change which stop you're sent to — it just stops us buying the same answer forever. Those recovered lookups alone are <strong>over $3,000 a year</strong> at Google's rates.
         </p>
         <p>
           The bus feed is solved from the other end. Instead of every request reaching out to the campus system, the server keeps <strong>one shared live copy</strong> of every bus, refreshed continuously in the background; route shapes and stop lists, which hardly ever change, refresh every ten minutes. A hundred people searching at once is still one conversation with the campus feed — and because the map, the search, the arrival times and the stall check all read that same snapshot, they can't contradict each other.
@@ -606,7 +756,7 @@
         document.querySelector(".meta"),
         document.querySelector(".title"),
         document.querySelector(".byline"),
-        ...document.querySelectorAll(".content > *"),
+        ...document.querySelectorAll(".content > *:not(.panel)"),
       ].filter(Boolean);
 
       pops.forEach((el, i) => {
@@ -659,6 +809,15 @@
       } catch (e) {}
       syncThemeToggle();
     });
+
+    const reveal = document.getElementById("routing-reveal");
+    const panel = document.getElementById("routing-panel");
+    if (reveal && panel) {
+      reveal.addEventListener("click", () => {
+        const open = panel.classList.toggle("is-open");
+        reveal.setAttribute("aria-expanded", String(open));
+      });
+    }
 
     const backLink = document.querySelector(".topbar-back");
     if (backLink) {
