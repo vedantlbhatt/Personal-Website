@@ -45,13 +45,7 @@
       --strong: #ffffff;
       --topbar-bg: rgba(25, 25, 25, 0.92);
       --avatar-bg: #2a2a2a;
-      --chart-bg: #191919;
-      --chart-grid: #2f2f2f;
-      --chart-bar: #4691eb;
-      --chart-bar-soft: rgba(70, 145, 235, 0.28);
-      --chart-good: #3fb950;
-      --chart-good-soft: rgba(63, 185, 80, 0.18);
-      --chart-axis: #6f6f6f;
+      --figure-bg: #1f1f1f;
       --pad-x: max(1.25rem, min(4vw, 2.5rem));
       --article: 44rem;
       --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
@@ -69,13 +63,7 @@
       --strong: #000000;
       --topbar-bg: rgba(255, 255, 255, 0.92);
       --avatar-bg: #f1f1ef;
-      --chart-bg: #ffffff;
-      --chart-grid: #ebebea;
-      --chart-bar: #2e78d2;
-      --chart-bar-soft: rgba(46, 120, 210, 0.22);
-      --chart-good: #1a7f37;
-      --chart-good-soft: rgba(26, 127, 55, 0.14);
-      --chart-axis: #8f8e8b;
+      --figure-bg: #f7f7f5;
     }
 
     * {
@@ -382,89 +370,20 @@
       margin: 1.5rem 0 0.25rem;
     }
 
-    .content figure img,
-    .content figure .chart {
+    .content figure img {
       display: block;
       width: 100%;
       height: auto;
       border-radius: 6px;
       border: 1px solid var(--rule);
+      background: var(--figure-bg);
     }
 
-    .content figure .chart {
-      overflow: hidden;
-      background: var(--chart-bg);
-      transition: background 180ms ease, border-color 180ms ease;
-    }
-
-    .content figure .chart .chart-bg {
-      fill: var(--chart-bg);
-      transition: fill 180ms ease;
-    }
-
-    .content figure .chart .chart-grid {
-      stroke: var(--chart-grid);
-      transition: stroke 180ms ease;
-    }
-
-    .content figure .chart .chart-axis {
-      stroke: var(--chart-axis);
-    }
-
-    .content figure .chart .chart-bar {
-      fill: var(--chart-bar);
-    }
-
-    .content figure .chart .chart-bar-good {
-      fill: var(--chart-good);
-    }
-
-    .content figure .chart .chart-value {
-      fill: var(--chart-bar);
-      font-family: var(--sans);
-      font-size: 19px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    .content figure .chart .chart-value-good {
-      fill: var(--chart-good);
-      font-family: var(--sans);
-      font-size: 19px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-
-    .content figure .chart .chart-tick {
-      fill: var(--meta);
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.01em;
-    }
-
-    .content figure .chart .chart-cat {
-      fill: var(--muted);
-      font-family: var(--sans);
-      font-size: 16px;
-      font-weight: 500;
-      letter-spacing: -0.01em;
-    }
-
-    .content figure .chart .chart-cat-sub {
-      fill: var(--meta);
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.01em;
-    }
-
-    .content figure .chart .chart-cat-good {
-      fill: var(--chart-good);
-      font-family: var(--sans);
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
+    /* Side-by-side screenshots. Falls back to one column on narrow screens. */
+    .content figure .shots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+      gap: 0.75rem;
     }
 
     .content figcaption {
@@ -538,200 +457,116 @@
 
       <div class="content">
         <p>
-          Georgia Tech runs a real bus network across campus, and almost nobody could use it properly. The official tools answer one question — <em>where are the buses right now?</em> — by dropping live vehicle dots onto a map. That is not the question a student standing outside their dorm at 8:52&nbsp;AM is asking. They are asking: <strong>I am here, I need to be there, is there a bus that gets me there faster than walking, and which one do I get on?</strong>
+          Georgia Tech runs a real bus network across campus, and the official tool shows you where every bus is right now — live dots sliding around a map. That is genuinely useful if your question is <em>where is the bus</em>. It is useless for the question everyone actually has: <strong>I'm here, I need to get there, is a bus worth it, and which one do I get on?</strong>
         </p>
         <p>
-          Answering that yourself meant memorizing route loops, guessing which stop was closest to where you were going, and then watching a dot to figure out whether it was coming toward you or away. Most people gave up and walked. So I built <strong>RideGT</strong>: type a destination, get an actual trip — walk here, board this bus, ride to this stop, walk there — built on live TransLoc vehicle data.
+          Answering that yourself meant knowing the routes by heart, guessing which stop was closest to where you were going, and then watching a dot to work out whether it was coming toward you or driving away. Most people gave up and walked.
         </p>
         <p>
-          It started as a heuristic in a single Python file in September 2025. Today it is an Expo / React Native app on the App Store and Google Play plus a web version, backed by a FastAPI service, and it serves <strong>2,000+ monthly active users</strong> across platforms. This is what it actually took.
+          RideGT answers the actual question. You type where you're going and it hands you a trip: walk here, get on this bus, get off here, walk there. It started as a heuristic in one Python file in September 2025 and now runs on iOS, Android and the web for <strong>2,000+ monthly active users</strong>.
         </p>
 
-        <h2>The hardest problem was not the map. It was picking two stops.</h2>
-        <p>
-          Route search sounds like a solved problem until you try it on a campus. The whole product reduces to two decisions: <strong>where do you get on</strong>, and <strong>where do you get off</strong>. Get those wrong and everything downstream — the ETA, the map, the notification — is a confident, well-rendered lie.
-        </p>
-        <p>
-          The bug that exposed how wrong I had it: searching <strong>North Avenue East Apartments → John Lewis Student Center</strong> on the Red route returned a bus leg with a ride time of roughly zero. Board and alight at the <em>same stop</em>. The app was rendering "ride the bus to the place you are already standing" as a trip.
-        </p>
-
-        <h2>Why a reasonable-looking objective was wrong</h2>
-        <p>
-          The original scoring picked the alight stop by minimizing total travel time:
-        </p>
-        <ul>
-          <li><strong>score = ride_seconds + walk_meters / walking_speed</strong>, take the minimum over every stop on the route.</li>
-        </ul>
-        <p>
-          The boarding stop is in that candidate list, and the forward ride distance from a stop to itself is <strong>zero</strong>. So the boarding stop always scores <em>0 + walk_from_board</em>, and no stop with a real ride can beat it unless its walk saving exceeds its entire ride time. Two consequences, and the second is much worse than the first: degenerate same-stop trips, and — quietly — <strong>genuinely closer stops being passed over</strong>, because riding costs time and standing still is free.
-        </p>
-        <p>
-          The deeper error was the objective itself. Optimizing total travel time treats a twenty-minute walk as fine as long as it is fast. But people board a bus <em>to avoid walking</em>, not to arrive sooner. On a campus this small the bus is frequently slower than walking and riders take it anyway. The metric did not match the reason the product exists.
-        </p>
-
-        <h2>Measuring instead of guessing</h2>
-        <p>
-          I did not want to fix this by intuition, so I wrote a read-only analysis harness that replays route search against live data: 10 campus buildings → <strong>90 ordered pairs</strong>, across the 6 in-service routes, for <strong>540 (pair × route) searches</strong> per policy. Every number below is measured against live TransLoc data, not estimated.
-        </p>
-        <p>
-          Then I tried the obvious fixes, and the harness rejected them one at a time.
-        </p>
-        <ul>
-          <li><strong>Refuse rides shorter than 60 seconds.</strong> Same-stop results go to 0% by construction — and the winner becomes the next-cheapest bad trade, typically a 1-minute ride followed by a 1.2&nbsp;km walk. It deletes the symptom and never finds the right answer.</li>
-          <li><strong>Weight walking more heavily</strong> (<em>ride + 2× walk</em>, <em>3×</em>, <em>5×</em>). This is the fix everyone suggests. It cannot work: scaling the walk term inflates <em>every</em> candidate's walk including the winner's, so the ordering barely moves. You cannot multiply your way out of a zero.</li>
-          <li><strong>Just use the stop closest to the destination.</strong> This finally exposed the real number — but it breaks a case my own test suite already encoded, below.</li>
-          <li><strong>Cap the maximum ride length.</strong> Arbitrary threshold, and throwing a route out entirely hides information the rider could judge themselves.</li>
-        </ul>
-
+        <!-- TransLoc screenshots go here. Drop the files in assets/ and uncomment:
         <figure>
-          <div class="chart" role="img" aria-label="Bar chart of same-stop result rate across scoring policies: ride plus walk 79 percent, ride plus 2x walk 70 percent, ride plus 3x walk 65 percent, ride plus 5x walk 56 percent, and the shipped rule at 0 percent.">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 312" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <rect class="chart-bg" width="1024" height="312"/>
-              <g class="chart-grid" stroke-width="1" fill="none" shape-rendering="crispEdges">
-                <line x1="86" y1="30" x2="1000" y2="30"/>
-                <line x1="86" y1="85" x2="1000" y2="85"/>
-                <line x1="86" y1="140" x2="1000" y2="140"/>
-                <line x1="86" y1="195" x2="1000" y2="195"/>
-              </g>
-              <g class="chart-tick" text-anchor="end">
-                <text x="72" y="35">100%</text>
-                <text x="72" y="90">75%</text>
-                <text x="72" y="145">50%</text>
-                <text x="72" y="200">25%</text>
-                <text x="72" y="255">0%</text>
-              </g>
-              <line class="chart-axis" x1="86" y1="250" x2="1000" y2="250" stroke-width="1.5" shape-rendering="crispEdges"/>
-
-              <rect class="chart-bar" x="117" y="76" width="110" height="174" rx="3" ry="3"/>
-              <rect class="chart-bar" x="287" y="96" width="110" height="154" rx="3" ry="3"/>
-              <rect class="chart-bar" x="457" y="107" width="110" height="143" rx="3" ry="3"/>
-              <rect class="chart-bar" x="627" y="127" width="110" height="123" rx="3" ry="3"/>
-              <rect class="chart-bar-good" x="797" y="245" width="110" height="5" rx="2" ry="2"/>
-
-              <g text-anchor="middle">
-                <text class="chart-value" x="172" y="64">79%</text>
-                <text class="chart-value" x="342" y="84">70%</text>
-                <text class="chart-value" x="512" y="95">65%</text>
-                <text class="chart-value" x="682" y="115">56%</text>
-                <text class="chart-value-good" x="852" y="233">0%</text>
-              </g>
-
-              <g text-anchor="middle">
-                <text class="chart-cat" x="172" y="274">ride + walk</text>
-                <text class="chart-cat-sub" x="172" y="294">original</text>
-                <text class="chart-cat" x="342" y="274">ride + 2× walk</text>
-                <text class="chart-cat-sub" x="342" y="294">rejected</text>
-                <text class="chart-cat" x="512" y="274">ride + 3× walk</text>
-                <text class="chart-cat-sub" x="512" y="294">rejected</text>
-                <text class="chart-cat" x="682" y="274">ride + 5× walk</text>
-                <text class="chart-cat-sub" x="682" y="294">rejected</text>
-                <text class="chart-cat-good" x="852" y="274">walk-first rule</text>
-                <text class="chart-cat-sub" x="852" y="294">shipped</text>
-              </g>
-            </svg>
+          <div class="shots">
+            <img src="assets/transloc-1.png" alt="The official TransLoc map showing live bus dots" />
+            <img src="assets/ridegt-1.png" alt="RideGT showing a full trip from origin to destination" />
           </div>
           <figcaption>
-            Share of the 540 measured searches that returned a degenerate "get off where you got on" result, under each scoring policy. Weighting the walk term harder — the intuitive fix — still leaves the majority broken at an absurd 5×.
+            Left: what campus already had — every bus, no answer. Right: RideGT, same data, turned into a trip.
           </figcaption>
         </figure>
+        -->
 
+        <h2>How the routing works</h2>
         <p>
-          The pure closest-stop experiment is where the real finding fell out. Under the shipped-at-the-time scoring, 424 of 540 results picked the boarding stop — but only 216 of those genuinely had nothing closer on the route.
-        </p>
-        <p>
-          <strong>In 208 of 540 searches (39%), a stop closer to the destination existed and the app skipped it to take a free ride.</strong> The same-stop bug I noticed was the visible tip of a failure four times its size.
-        </p>
-
-        <h2>Why "closest stop wins" is also wrong</h2>
-        <p>
-          Minimizing walk alone failed four existing tests immediately, and the reason is a genuinely interesting property of loop routes: <strong>a loop serves the same corner in both directions</strong>, so two stops can sit metres apart on foot and a whole loop apart in ride time.
-        </p>
-        <p>
-          Real Blue route data, boarding at North Ave Apartments, destination the Campus Rec Center: <em>CRC &amp; Stamps Health</em> is the closest stop, and <em>Exhibition Hall</em> is about 2 metres farther — but riding to the "closest" one costs <strong>612 extra seconds</strong>. Pure walk-minimisation buys you two metres for ten minutes on a bus.
-        </p>
-
-        <h2>What shipped</h2>
-        <p>
-          The fix was recognising these were <em>two independent questions</em> that the old code had conflated — and conflating them was its own bug, because it let a tuning parameter decide whether a route existed at all.
-        </p>
-        <p>
-          <strong>Question 1 — does this route have a trip at all?</strong> Drop the route if and only if no stop on it is closer to the destination than the stop the rider is already standing at. Straight walking distance, every stop, no tuning parameter allowed to touch it. An earlier version let the tie-break answer this instead, and it binned <strong>54 of 540 routes while a stop up to 95&nbsp;m closer to the destination sat unused</strong>. Now: zero.
-        </p>
-        <p>
-          <strong>Question 2 — which stop do you get off at?</strong> Walking decides first, and riding is only allowed to overrule it inside a narrow band:
+          Every search runs the same five steps:
         </p>
         <ul>
-          <li>The boarding stop is removed from the candidate pool outright — its zero-second ride otherwise wins every tie-break and steals the pick.</li>
-          <li>Default to the stop with the <strong>shortest walk</strong> to the destination.</li>
-          <li>A stop within <strong>100&nbsp;m</strong> of that one may take the pick, but only if the rider genuinely ends up ahead: <strong>ride saved − extra walking time ≥ 90&nbsp;s</strong>.</li>
-          <li>Past 100&nbsp;m, walking decides outright — no trade at any ride saving.</li>
-          <li>Route <em>ordering</em> is a third, separate question, scored in seconds, so an absurd ride sorts last instead of being hidden from the rider.</li>
+          <li>Work out where you are and where you're going.</li>
+          <li>Throw away every route that has no bus actually moving on it. A perfect route with no bus is not an option.</li>
+          <li>Pick where you <strong>get on</strong> — the closest stop to you.</li>
+          <li>Pick where you <strong>get off</strong>. This is the hard one.</li>
+          <li>Rank whatever survived and show you the best few.</li>
         </ul>
         <p>
-          That net-gain test is what stops the pick flipping on noise. For two stops 10&nbsp;m and 60&nbsp;m out, the extra 50&nbsp;m costs about 36&nbsp;s on foot, so the farther stop has to save more than ~2.1 minutes of riding before it wins. Exhibition Hall clears that bar by ten minutes.
+          Step four is where nearly all the difficulty lives, and it went wrong in two completely different ways.
         </p>
 
-        <h2>What the rule actually bought</h2>
+        <h2>The stop that looked closest and wasn't</h2>
+        <p>
+          The first version scored every possible stop as <em>time on the bus + time walking at the end</em>, then picked the smallest. That sounds correct. It isn't, and the reason is almost funny: <strong>the stop you're standing at is in that list, and riding from a stop to itself takes zero seconds.</strong> So the stop you were already at usually won. The app would tell you to get off exactly where you got on.
+        </p>
+        <p>
+          The quieter version of that bug was worse. Stops that were genuinely closer to your destination got skipped, because walking there scored as free while riding there cost time. The app kept choosing to stand still.
+        </p>
+        <p>
+          The mistake underneath was the goal itself. Optimizing for total travel time treats a twenty-minute walk as fine as long as it's quick. But nobody gets on a campus bus to arrive sooner — on a campus this small the bus is often slower than walking and people ride it anyway. <strong>They ride so they don't have to walk.</strong>
+        </p>
+        <p>
+          So walking decides. Get off at whichever stop leaves you the shortest walk, with two guards:
+        </p>
         <ul>
-          <li><strong>Degenerate trips: 79% → 0%.</strong> Not suppressed — the route is correctly dropped and a walking option is shown instead.</li>
-          <li><strong>Routes wrongly dropped while a closer stop existed: 54 → 0.</strong></li>
-          <li><strong>324 of 540</strong> searches now produce a real ride to a real stop, up from 212 in the first iteration of the rule.</li>
-          <li><strong>86 of 90 building pairs</strong> keep at least one bus option, median 4 routes. The 4 that do not are adjacent buildings where walking is genuinely correct.</li>
-          <li>The tie-break moved the pick off the strictly-closest stop in <strong>132 cases</strong> — every one of them a loop-direction case like Exhibition Hall.</li>
+          <li>The stop you got on at is taken out of the running entirely.</li>
+          <li>A slightly farther stop can only steal the pick if it genuinely saves you time — at least a minute and a half, after paying for the extra steps. Without that, you'd get sent around the whole loop to save twenty feet.</li>
         </ul>
         <p>
-          One case makes the whole thing concrete. Glenn Hall → Campus Rec Center on the Gold route: the old scoring rode <strong>1.1 minutes</strong> and then walked the rider <strong>1,264 metres</strong>. Gold stops <em>at</em> the Rec Center. The new rule rides longer and walks 84 metres.
+          What that's worth, on real searches: <strong>Glenn Hall → Campus Rec Center</strong> used to put you on a bus for one minute and then walk you <strong>1,264 metres</strong> — three quarters of a mile, straight past the Rec Center. That route <em>stops at</em> the Rec Center. Now it walks you 84 metres. That's roughly <strong>fourteen minutes of walking deleted from a single search</strong>.
+        </p>
+        <p>
+          The guard earns its keep in the other direction too. On some searches the closest-looking stop is thirty minutes around the loop, while one twenty metres farther is five minutes away. Same walk, <strong>twenty-five minutes saved</strong>.
         </p>
 
-        <h2>Making it fast enough to feel free</h2>
+        <h2>Why we check three stops instead of one</h2>
         <p>
-          Correct is not enough if the answer takes four seconds and costs money every time. Verifying walking legs against the Google Routes API is the expensive part of a search, so the walk distances and place lookups sit behind a <strong>two-level memo table</strong>: an in-process L1 for microsecond reads, and Redis as a shared L2 so a second replica does not re-pay for an answer the first one already bought. That shared layer is the precondition for running more than one replica at all without multiplying the API bill.
+          The second problem is that a straight line doesn't know about streets.
         </p>
         <p>
-          It is worth being precise that this is a <em>memo table, not a freshness cache</em>. The walking distance between two fixed points does not change; the TTL only bounds staleness against the physical world being rebuilt. Route loop models — the mapping from each stop to its position around the loop, which is what makes ride time wrap correctly in the direction of travel — are computed once and cached hourly on top of that.
-        </p>
-
-        <h2>The alert that has to work while the phone is asleep</h2>
-        <p>
-          My favourite feature is the "time to get off" alert, and it is a good example of a client-side solution that is right until it isn't. The app already knew how to decide the moment: poll arrival estimates for the tracked bus, find its next stop, and fire once the bus has <em>departed</em> the second-to-last stop before yours. It works perfectly — right up until iOS suspends the JavaScript thread a few seconds after the rider puts their phone in their pocket. Which is exactly when a rider needs it.
+          A stop can sit forty metres from your destination on a map and be a five-minute detour in reality, because it's on the far side of a road where the nearest crosswalk is a block away — or worse, across the rail cut that splits campus, where the nearest bridge is much further than that. Measured as the crow flies it's the winner. On foot it's the worst option on the list.
         </p>
         <p>
-          The obvious workaround — pre-schedule a local notification from a predicted arrival time — is a bad one, because campus ETAs drift enough that the alert lands at the wrong stop. So the decision moved <strong>server-side</strong>, into a process that is already awake and already watching every vehicle on a 3-second sync loop. The rider's phone can be suspended or fully terminated and the push still lands. The server logic is a faithful port of the client gate, including the subtle part: buses run <em>loops</em>, so a stop in your leg can match on the lap <em>before</em> you even board. The alert only arms once the bus has been seen heading toward your boarding stop this session.
+          So we never commit to one stop. We shortlist the <strong>three</strong> best candidates by straight-line distance, then look up the real walking route for all three — actual sidewalks, actual crossings — and pick again using those. Three lookups instead of one, and it's the whole difference between <em>closest on the map</em> and <em>closest on foot</em>.
         </p>
 
-        <h2>The bug that taught me the most</h2>
+        <h2>Buses that have stopped being buses</h2>
         <p>
-          On iOS, the map library has no Fabric implementation, so it runs through React Native's legacy interop layer — and that layer applies all deferred child insertions before all deferred removals. Mount or unmount a marker in the <em>middle</em> of the map's children and every trailing child re-indexes, an insert index runs past the end of the map's internal array, and the app hard-crashes. Or, more insidiously, it does not crash and the bus route polyline just silently disappears.
+          A parked bus still looks like a bus on its way. Drivers take breaks, shifts change, a bus sits at the end of the line — and the feed keeps reporting it as on-route, so the countdown keeps ticking down for a bus that is never coming.
         </p>
         <p>
-          The fix is not subtle, but arriving at it was: <strong>the map now renders a constant 235 children, from first commit until unmount.</strong> Polylines, stop markers and vehicles live in fixed-capacity slot pools; nothing is ever added or removed mid-list. To hide something, it stays mounted at its real coordinates and its opacity goes to zero.
+          Right now we watch every bus continuously, and if one hasn't left a 25-metre circle for longer than that stop should reasonably take, we call it stalled instead of pretending it's inbound. Part of the work is separating three things that look identical from the outside: a bus genuinely parked, a bus idling nowhere near a stop, and a bus whose transponder just stopped reporting — that last one <em>looks</em> parked, but the data is simply stale, and calling it a stall would be its own kind of lie.
         </p>
         <p>
-          Getting there required treating it as an experiment rather than a hunch. I built a 55-frame harness — 5 searches × 5 navigation cycles — and measured: <strong>8 of 25 back-taps lost the bus polyline before the change, 0 after</strong>, with the failures landing on a fixed parity per search that no amount of staring at the code would have revealed. Two earlier "obvious" fixes had passed a smaller harness and shipped regressions. The lesson I actually carry from this one is that <em>"the JS child list did not change" does not mean "this is free"</em> — the native layer reacts to prop traffic, not just to mounts.
-        </p>
-
-        <h2>Knowing what real users are doing</h2>
-        <p>
-          Once other people depend on something, guessing stops being acceptable. The backend exports Prometheus metrics — request rate, p99 latency, and route-search outcomes labelled by success / no-results / error — into Grafana dashboards with alerting. Product analytics are captured <strong>server-side</strong> and anonymously, covering the real funnel: app launch → route search → stop arrivals → feedback, with session replay on the client for the cases where a metric tells me <em>that</em> something is wrong but not <em>why</em>.
-        </p>
-        <p>
-          The most valuable single metric turned out to be <strong>"route search returned no results"</strong>. It is not an error — the server did its job — but it is the clearest signal in the whole system that a rider asked for something reasonable and the product had no answer.
+          What's still wrong: the "how long is too long" number leans on the single generic dwell time the feed claims for each stop. But some stops are a ten-second pickup and others are a routine layover, and one number cannot be right for both. We're recording real dwell times now so each stop can learn its own normal from its own history instead of borrowing someone else's.
         </p>
 
-        <h2>Shipping to real people</h2>
+        <h2>Never paying twice for the same answer</h2>
         <p>
-          Everything above is engineering. Getting to thousands of users needed the unglamorous half too: App Store and Play Store review, a plain-language location primer on first launch (declining is fully supported — every feature including route search still works by typing or dropping a pin), a data-safety declaration, and an honest set of review notes explaining that GT buses do not run 24/7, so "no routes available" at 3&nbsp;AM is correct behaviour rather than a bug.
+          RideGT depends on two outside sources: Google for walking directions, and the campus feed for where the buses are. One of them is slow and the other charges per question, so the rule is the same for both — never ask the same question twice.
         </p>
         <p>
-          There is also a small submission portal where student organizations can post events to a rotating banner in the app — every submission human-reviewed before it can appear, with in-app reporting that hides a post from the reporter immediately. It is the piece of the project that has the least code and the most product judgement in it.
+          The walking distance between two fixed points never changes, so every walk we've ever looked up gets kept and reused: first from the server's own memory, and behind that from a shared store every copy of the server can read, so a second server never re-buys an answer the first one already paid for.
+        </p>
+        <p>
+          That barely worked at first, for a reason worth knowing. Bus stops repeat exactly, so those always hit. But <em>your</em> end of the walk is live GPS, which never comes back the same twice — two readings a metre apart counted as two different questions. So the walk from you to your bus stop was re-bought on nearly every single search: roughly <strong>90,000 paid lookups a month</strong> at a thousand searches a day, every one of them for a walk we already knew.
+        </p>
+        <p>
+          The fix is to stop treating coordinates as exact. Every point snaps to a ~10-metre grid, and on a miss we check the neighbouring squares before giving up and paying. Ten metres is smaller than the error in a phone's GPS and far smaller than the gaps between competing stops, so it can't change which stop you're sent to. It just stops us buying the same answer forever.
+        </p>
+        <p>
+          The bus feed is solved from the other end. Instead of every request reaching out to the campus system, the server keeps <strong>one shared live copy</strong> of every bus, refreshed continuously in the background; route shapes and stop lists, which hardly ever change, refresh every ten minutes. A hundred people searching at once is still one conversation with the campus feed — and because the map, the search, the arrival times and the stall check all read that same snapshot, they can't contradict each other.
+        </p>
+
+        <h2>Ads that are worth looking at</h2>
+        <p>
+          There's a banner along the bottom of the map, and it is deliberately not an ad network. The posts come from Georgia Tech students and student organizations — club meetings, campus events, auditions — submitted through a small portal, and <strong>every single one is read by a person before it can appear</strong>. Nothing publishes itself.
+        </p>
+        <p>
+          It works because it's local by construction. Everyone who sees it is on the same campus, looking at it in the exact moment they're deciding where to go. An ad for something two thousand miles away is noise. A flyer for something happening in the building you're currently riding toward isn't really an ad at all.
         </p>
 
         <h2>What I took from it</h2>
         <p>
-          The pain point was never "students cannot see the buses." It was "students cannot turn where the buses are into a decision." Almost every hard problem in RideGT — the stop-selection objective, the alert that survives a locked phone, the map that must not churn — came from taking that distinction seriously and then refusing to trust my own intuition about the fix.
-        </p>
-        <p>
-          The pattern that kept working: build the measurement harness before the fix, let it kill the plausible answers, and keep the number that survives. Weighting walking harder <em>felt</em> obviously right, and 540 searches said it left two-thirds of results broken. That is worth more to me than the download count.
+          The pain point was never "students can't see the buses." It was that seeing the buses doesn't tell you what to do. Almost every hard problem in this app — the stop that scored zero, the straight line that lied about a crosswalk, the bus that was parked the whole time — came from taking that difference seriously.
         </p>
       </div>
     </article>
