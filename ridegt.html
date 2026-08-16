@@ -531,6 +531,21 @@
     }
 
     /* Inline explainer diagrams. Centred, full column width. */
+    /* Narrow diagram parked in the right gutter beside the prose. */
+    figure.fig-gutter {
+      margin: 1.6rem auto;
+      width: min(72%, 17rem);
+    }
+
+    @media (min-width: 1280px) {
+      .content figure.fig-gutter {
+        position: absolute;
+        left: calc(100% + 1.25rem);
+        width: 16rem;
+        margin: 0.3rem 0 0;
+      }
+    }
+
     figure.diagram {
       margin: 1.9rem 0 0.25rem;
     }
@@ -1041,6 +1056,55 @@
         <p>
           <strong>Asking for less.</strong> The expensive call was the one that priced walking distances, and it charged per pair of points. One search was asking about 52 pairs at once when it only ever needed 15 of them. Narrowing the question was free and cut two thirds of the cost before any caching existed.
         </p>
+
+        <figure class="diagram fig-gutter">
+          <svg class="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 560" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="The first time a walking distance is needed, memory misses, the shared store misses, and Google is called and billed. Every time after, memory answers immediately and Google is never called.">
+            <rect class="dg-bg" width="380" height="560"/>
+
+            <text class="t-b" x="24" y="34" font-size="19">First time</text>
+
+            <rect class="dg-line" x="24" y="52" width="332" height="62" rx="9" fill="none" stroke-width="2"/>
+            <text class="t" x="44" y="80">Memory</text>
+            <text class="t-sm" x="44" y="102">this server</text>
+            <text class="t-sm" x="336" y="90" text-anchor="end">miss</text>
+
+            <path class="dg-line" stroke-width="2" d="M60 114 L60 140"/>
+            <path class="dg-line" stroke-width="2" fill="var(--dg-line)" d="M56 140 l4 8 4 -8z"/>
+
+            <rect class="dg-line" x="24" y="148" width="332" height="62" rx="9" fill="none" stroke-width="2"/>
+            <text class="t" x="44" y="176">Shared store</text>
+            <text class="t-sm" x="44" y="198">every server</text>
+            <text class="t-sm" x="336" y="186" text-anchor="end">miss</text>
+
+            <path class="dg-line" stroke-width="2" d="M60 210 L60 236"/>
+            <path class="dg-line" stroke-width="2" fill="var(--dg-line)" d="M56 236 l4 8 4 -8z"/>
+
+            <rect class="dg-bad-soft" x="24" y="244" width="332" height="62" rx="9"/>
+            <rect class="dg-bad" x="24" y="244" width="332" height="62" rx="9" fill="none" stroke-width="2"/>
+            <text class="t" x="44" y="272">Google</text>
+            <text class="t-sm" x="44" y="294">the paid call</text>
+            <text class="t-bad" x="336" y="282" text-anchor="end">billed</text>
+
+            <path class="dg-good" stroke-width="2" stroke-dasharray="6 5" d="M356 275 L370 275 L370 83 L356 83"/>
+            <path class="dg-good-fill" d="M360 79 l-8 4 8 4z"/>
+            <text class="t-sm" x="336" y="336" text-anchor="end">answer kept on the way back</text>
+
+            <line class="dg-line" x1="24" y1="374" x2="356" y2="374" stroke-width="1"/>
+
+            <text class="t-b" x="24" y="416" font-size="19">Every time after</text>
+
+            <rect class="dg-good-soft" x="24" y="434" width="332" height="62" rx="9"/>
+            <rect class="dg-good" x="24" y="434" width="332" height="62" rx="9" fill="none" stroke-width="2"/>
+            <text class="t" x="44" y="462">Memory</text>
+            <text class="t-sm" x="44" y="484">this server</text>
+            <text class="t-good" x="336" y="472" text-anchor="end">hit</text>
+
+            <text class="t-good" x="24" y="534" font-size="18">Google is never called.</text>
+          </svg>
+          <figcaption>
+            The same walking leg, asked for twice.
+          </figcaption>
+        </figure>
         <p>
           <strong>Remembering the answers.</strong> The walking distance between two fixed points does not change, so once we have paid for a walk we keep it and reuse it forever. It sits in the server's own memory for instant reads, and behind that in a shared store that every copy of the server can read, so a second server never re-buys something the first one already paid for. Once those answers are warm, a repeated search costs nothing at all.
         </p>
