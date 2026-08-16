@@ -398,39 +398,63 @@
       background: var(--figure-bg);
     }
 
-    /* Phone screenshots. Narrow viewports: normal in-flow blocks, centred.
-       Wide viewports: lifted out of the flow entirely and parked in the empty
-       gutters either side of the text column (see the media query below), so
-       the prose keeps its full measure. */
-    .content .fig-side {
-      width: min(74%, 17rem);
-      margin: 1.75rem auto;
+    /* Before/after strip: three shots in one row, matched heights.
+       Setting a height and letting width follow keeps them aligned even
+       though the map and the phone shots have different aspect ratios. */
+    .content .compare {
+      margin: 1.9rem 0 0.25rem;
     }
 
-    .content .fig-side img {
-      border-radius: 12px;
+    .content .compare .row {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: center;
+      align-items: flex-start;
     }
 
-    .content .fig-side figcaption {
-      margin-top: 0.55rem;
+    .content .compare .row img {
+      display: block;
+      height: clamp(230px, 44vw, 430px);
+      width: auto;
+      max-width: none;
+      border-radius: 10px;
+      border: 1px solid var(--rule);
+      background: var(--figure-bg);
     }
 
-    @media (min-width: 1280px) {
-      .content .fig-side {
-        /* No `top`, so each figure keeps the vertical position it would have
-           had in flow, while taking up no horizontal space in the column.
-           The containing block is .layout, which is position: relative. */
-        position: absolute;
-        width: 14.5rem;
-        margin: 0;
+    /* Break out of the text column once there is gutter to spare. */
+    @media (min-width: 1100px) {
+      .content .compare {
+        /* Centre a 52rem block inside the 39rem content box without using
+           transform, which the page-entrance animation overwrites. */
+        width: 52rem;
+        margin-left: -6.5rem;
       }
 
-      .content .fig-side.left {
-        right: calc(100% + 0.5rem);
+      .content .compare .row img {
+        height: 30rem;
       }
 
-      .content .fig-side.right {
-        left: calc(100% + 0.5rem);
+      .content .compare figcaption {
+        width: 44rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* Too narrow for three across: map on its own line, shots paired below. */
+    @media (max-width: 700px) {
+      .content .compare .row {
+        flex-wrap: wrap;
+      }
+
+      .content .compare .row img {
+        height: auto;
+        width: calc(50% - 0.35rem);
+      }
+
+      .content .compare .row img.before {
+        width: 100%;
       }
     }
 
@@ -606,24 +630,14 @@
           Answering that yourself meant knowing the routes by heart, guessing which stop was closest to where you were going, and then watching a dot to work out whether it was coming toward you or driving away. Most people gave up and walked.
         </p>
 
-        <figure>
-          <img src="assets/ridegt/transloc-map.jpg" alt="The existing campus transit map: coloured route loops and dozens of identical stop dots covering Georgia Tech, with no way to enter a destination." />
+        <figure class="compare">
+          <div class="row">
+            <img class="before" src="assets/ridegt/transloc-map.jpg" alt="The existing campus transit map: coloured route loops and dozens of identical stop dots covering Georgia Tech, with no way to enter a destination." />
+            <img src="assets/ridegt/route-options.jpg" alt="RideGT showing three route options to the Campus Recreation Center: Blue as an 11 minute trip, Red 18 minutes, Gold 15 minutes, each with an arrival time." />
+            <img src="assets/ridegt/directions.jpg" alt="RideGT step-by-step directions: walk 1 minute to North Avenue Apts, board Blue Bus #7, ride 3 stops, get off at Exhibition Hall, walk 1 minute to the Campus Recreation Center." />
+          </div>
           <figcaption>
-            The whole problem in one screenshot. Every route, every stop, every bus, and nowhere to type where you're going.
-          </figcaption>
-        </figure>
-
-        <figure class="fig-side left">
-          <img src="assets/ridegt/route-options.jpg" alt="RideGT showing three route options to the Campus Recreation Center: Blue as an 11 minute trip, Red 18 minutes, Gold 15 minutes, each with an arrival time." />
-          <figcaption>
-            Every option, ranked: Blue gets you there in 11 minutes, Red in 18, Gold in 15, with the walk on each end counted in the total.
-          </figcaption>
-        </figure>
-
-        <figure class="fig-side right">
-          <img src="assets/ridegt/directions.jpg" alt="RideGT step-by-step directions: walk 1 minute to North Avenue Apts, board Blue Bus #7, ride 3 stops, get off at Exhibition Hall, walk 1 minute to the Campus Recreation Center." />
-          <figcaption>
-            Walk 1 min, Blue Bus #7, ride 3 stops, off at Exhibition Hall, walk 1 min. That last stop is not the closest one to the Rec Center, and picking it anyway is the interesting part.
+            <strong>Before (left):</strong> the only thing students had was a map with every route stacked on top of it, so you could see where the buses were but had no way to work out how to get anywhere from a place name. <strong>Now (right):</strong> you type a destination and get ranked options with real trip times, then the trip itself, which bus to board, how many stops to sit through, where to get off, walking directions at both ends, and an alert when your stop is coming up.
           </figcaption>
         </figure>
 
