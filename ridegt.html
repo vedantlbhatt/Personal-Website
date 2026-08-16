@@ -46,6 +46,18 @@
       --topbar-bg: rgba(25, 25, 25, 0.92);
       --avatar-bg: #2a2a2a;
       --figure-bg: #1f1f1f;
+      --dg-panel: #1f1f1f;
+      --dg-line: #4a4a4a;
+      --dg-faint: #333333;
+      --dg-label: #b9b9b9;
+      --dg-dim: #8a8a8a;
+      --dg-accent: #4691eb;
+      --dg-accent-soft: rgba(70, 145, 235, 0.18);
+      --dg-good: #3fb950;
+      --dg-good-soft: rgba(63, 185, 80, 0.16);
+      --dg-bad: #e0454a;
+      --dg-bad-soft: rgba(224, 69, 74, 0.15);
+      --dg-warn: #d9a13b;
       --pad-x: max(1.25rem, min(4vw, 2.5rem));
       --article: 44rem;
       --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
@@ -64,6 +76,18 @@
       --topbar-bg: rgba(255, 255, 255, 0.92);
       --avatar-bg: #f1f1ef;
       --figure-bg: #f7f7f5;
+      --dg-panel: #fbfbfa;
+      --dg-line: #b6b6b3;
+      --dg-faint: #e4e4e1;
+      --dg-label: #45443f;
+      --dg-dim: #85847f;
+      --dg-accent: #2e78d2;
+      --dg-accent-soft: rgba(46, 120, 210, 0.14);
+      --dg-good: #1a7f37;
+      --dg-good-soft: rgba(26, 127, 55, 0.12);
+      --dg-bad: #d13438;
+      --dg-bad-soft: rgba(209, 52, 56, 0.10);
+      --dg-warn: #a9762a;
     }
 
     * {
@@ -398,28 +422,68 @@
       background: var(--figure-bg);
     }
 
-    /* Before/after strip: three shots in one row, matched heights.
-       Setting a height and letting width follow keeps them aligned even
-       though the map and the phone shots have different aspect ratios. */
+    /* Before/after: two labelled halves split by a rule. Left half holds the
+       old map, right half the two app shots, all matched in height. */
     .content .compare {
       margin: 1.9rem 0 0.25rem;
     }
 
-    .content .compare .row {
+    .content .compare .cmp {
       display: flex;
-      gap: 0.7rem;
-      justify-content: center;
-      align-items: flex-start;
+      align-items: stretch;
+      gap: 1.5rem;
     }
 
-    .content .compare .row img {
+    .content .compare .cmp-side {
+      display: flex;
+      flex-direction: column;
+      flex: 0 1 auto;
+    }
+
+    .content .compare .cmp-rule {
+      flex: 0 0 1px;
+      background: var(--rule);
+    }
+
+    .content .compare .cmp-label {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--strong);
+      margin-bottom: 0.6rem;
+    }
+
+    .content .compare .cmp-label span {
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: -0.01em;
+      color: var(--meta);
+    }
+
+    .content .compare .cmp-shots {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .content .compare .cmp-shots img {
       display: block;
-      height: clamp(230px, 44vw, 430px);
+      height: clamp(215px, 40vw, 400px);
       width: auto;
       max-width: none;
       border-radius: 10px;
       border: 1px solid var(--rule);
       background: var(--figure-bg);
+    }
+
+    .content .compare .cmp-note {
+      font-family: var(--sans);
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      color: var(--meta);
+      letter-spacing: -0.01em;
+      margin-top: 0.7rem;
     }
 
     /* Break out of the text column once there is gutter to spare. */
@@ -431,45 +495,93 @@
         margin-left: -6.5rem;
       }
 
-      .content .compare .row img {
-        height: 30rem;
-      }
-
-      .content .compare figcaption {
-        width: 44rem;
-        margin-left: auto;
-        margin-right: auto;
+      .content .compare .cmp-shots img {
+        height: 27rem;
       }
     }
 
-    /* Too narrow for three across: map on its own line, shots paired below. */
-    @media (max-width: 700px) {
-      .content .compare .row {
-        flex-wrap: wrap;
+    /* Too narrow to sit side by side: stack the halves, drop the rule. */
+    @media (max-width: 760px) {
+      .content .compare .cmp {
+        flex-direction: column;
+        gap: 1.6rem;
       }
 
-      .content .compare .row img {
-        height: auto;
-        width: calc(50% - 0.35rem);
-      }
-
-      .content .compare .row img.before {
+      .content .compare .cmp-rule {
+        flex-basis: 1px;
         width: 100%;
       }
+
+      .content .compare .cmp-shots img {
+        height: auto;
+        width: 100%;
+      }
+
+      .content .compare .cmp-side:last-child .cmp-shots img {
+        width: calc(50% - 0.3rem);
+      }
     }
 
-    /* Expandable deep-dive */
+    /* Inline explainer diagrams. Centred, full column width. */
+    figure.diagram {
+      margin: 1.9rem 0 0.25rem;
+    }
+
+    figure.diagram .dg {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--rule);
+      background: var(--dg-panel);
+      overflow: hidden;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .dg .dg-bg { fill: var(--dg-panel); transition: fill 180ms ease; }
+    .dg .dg-grid { stroke: var(--dg-faint); fill: none; }
+    .dg .dg-line { stroke: var(--dg-line); fill: none; }
+    .dg .dg-accent { stroke: var(--dg-accent); fill: none; }
+    .dg .dg-accent-fill { fill: var(--dg-accent); }
+    .dg .dg-accent-soft { fill: var(--dg-accent-soft); }
+    .dg .dg-good { stroke: var(--dg-good); fill: none; }
+    .dg .dg-good-fill { fill: var(--dg-good); }
+    .dg .dg-good-soft { fill: var(--dg-good-soft); }
+    .dg .dg-bad { stroke: var(--dg-bad); fill: none; }
+    .dg .dg-bad-fill { fill: var(--dg-bad); }
+    .dg .dg-bad-soft { fill: var(--dg-bad-soft); }
+    .dg .dg-panel-fill { fill: var(--dg-panel); }
+
+    .dg text {
+      font-family: var(--sans);
+      letter-spacing: -0.01em;
+    }
+
+    .dg .t { fill: var(--dg-label); font-size: 20px; font-weight: 500; }
+    .dg .t-sm { fill: var(--dg-dim); font-size: 17px; font-weight: 400; }
+    .dg .t-b { fill: var(--strong); font-size: 21px; font-weight: 700; }
+    .dg .t-acc { fill: var(--dg-accent); font-size: 19px; font-weight: 600; }
+    .dg .t-good { fill: var(--dg-good); font-size: 19px; font-weight: 600; }
+    .dg .t-bad { fill: var(--dg-bad); font-size: 19px; font-weight: 600; }
+
+    /* Deep-dive trigger: right-aligned, opens a slide-in view. */
+    .content .reveal-row {
+      text-align: right;
+    }
+
     .content .reveal {
       font: inherit;
+      font-size: 0.95rem;
       color: var(--strong);
       font-weight: 600;
       background: none;
       border: 0;
       padding: 0;
       cursor: pointer;
+      text-align: right;
       text-decoration: underline;
       text-decoration-color: var(--meta);
-      text-underline-offset: 0.15em;
+      text-underline-offset: 0.18em;
       transition: text-decoration-color 160ms ease;
     }
 
@@ -485,56 +597,124 @@
 
     .content .reveal .chev {
       display: inline-block;
-      margin-left: 0.3em;
-      transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+      margin-left: 0.35em;
+      transform: rotate(-90deg);
     }
 
-    .content .reveal[aria-expanded="true"] .chev {
-      transform: rotate(180deg);
-    }
-
-    .content .panel {
-      display: grid;
-      grid-template-rows: 0fr;
+    .drawer-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0, 0, 0, 0.5);
       opacity: 0;
-      /* Keep collapsed copy out of the accessibility tree, but only after it
-         has finished animating shut. */
-      visibility: hidden;
-      transition:
-        grid-template-rows 460ms cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 260ms ease,
-        margin-top 460ms cubic-bezier(0.22, 1, 0.36, 1),
-        visibility 0s linear 460ms;
+      transition: opacity 300ms ease;
     }
 
-    .content .panel > .panel-clip {
-      overflow: hidden;
-      min-height: 0;
-    }
-
-    .content .panel.is-open {
-      grid-template-rows: 1fr;
+    .drawer-scrim.is-open {
       opacity: 1;
-      margin-top: 1.4rem;
-      visibility: visible;
-      transition:
-        grid-template-rows 460ms cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 260ms ease,
-        margin-top 460ms cubic-bezier(0.22, 1, 0.36, 1),
-        visibility 0s linear 0s;
     }
 
-    .content .panel .panel-body {
-      border-left: 2px solid var(--rule);
-      padding-left: 1.2rem;
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      width: min(38rem, 100vw);
+      height: 100%;
+      background: var(--bg);
+      border-left: 1px solid var(--rule);
+      box-shadow: -24px 0 60px rgba(0, 0, 0, 0.28);
+      transform: translateX(100%);
+      transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .content .panel .panel-body > :first-child {
-      margin-top: 0;
+    .drawer.is-open {
+      transform: translateX(0);
     }
 
-    .content .panel .panel-body h3 {
-      margin: 1.3rem 0 0.5rem;
+    @media (prefers-reduced-motion: reduce) {
+      .drawer,
+      .drawer-scrim {
+        transition: none;
+      }
+    }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex: 0 0 auto;
+      padding: 1.1rem 1.75rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .drawer-eyebrow {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--meta);
+    }
+
+    .drawer-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.15rem;
+      height: 2.15rem;
+      flex: 0 0 auto;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 160ms ease, border-color 160ms ease;
+    }
+
+    .drawer-close:hover {
+      color: var(--strong);
+      border-color: var(--muted);
+    }
+
+    .drawer-close:focus-visible {
+      outline: 2px solid var(--strong);
+      outline-offset: 2px;
+    }
+
+    .drawer-close svg {
+      width: 1.05rem;
+      height: 1.05rem;
+      display: block;
+    }
+
+    .drawer-body {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 1.9rem 1.75rem 3.5rem;
+      font-family: var(--serif);
+      font-size: 1.0625rem;
+      line-height: 1.7;
+      color: var(--text);
+      font-optical-sizing: auto;
+    }
+
+    .drawer-body h2 {
+      margin-bottom: 1.35rem;
+      font-family: var(--sans);
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      color: var(--strong);
+    }
+
+    .drawer-body h3 {
+      margin: 1.9rem 0 0.55rem;
       font-family: var(--sans);
       font-size: 1.02rem;
       font-weight: 700;
@@ -542,15 +722,26 @@
       color: var(--strong);
     }
 
-    .content .panel .panel-body > h3:first-child {
-      margin-top: 0;
+    .drawer-body p + p {
+      margin-top: 1.1em;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .content .panel,
-      .content .reveal .chev {
-        transition: none;
-      }
+    .drawer-body strong {
+      font-weight: 700;
+      color: var(--strong);
+    }
+
+    .drawer-body em {
+      font-style: italic;
+    }
+
+    .drawer-body figcaption {
+      margin-top: 0.65rem;
+      font-family: var(--sans);
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      color: var(--meta);
+      letter-spacing: -0.01em;
     }
 
     .content figcaption {
@@ -631,14 +822,28 @@
         </p>
 
         <figure class="compare">
-          <div class="row">
-            <img class="before" src="assets/ridegt/transloc-map.jpg" alt="The existing campus transit map: coloured route loops and dozens of identical stop dots covering Georgia Tech, with no way to enter a destination." />
-            <img src="assets/ridegt/route-options.jpg" alt="RideGT showing three route options to the Campus Recreation Center: Blue as an 11 minute trip, Red 18 minutes, Gold 15 minutes, each with an arrival time." />
-            <img src="assets/ridegt/directions.jpg" alt="RideGT step-by-step directions: walk 1 minute to North Avenue Apts, board Blue Bus #7, ride 3 stops, get off at Exhibition Hall, walk 1 minute to the Campus Recreation Center." />
+          <div class="cmp">
+            <div class="cmp-side">
+              <p class="cmp-label">Before</p>
+              <div class="cmp-shots">
+                <img class="before" src="assets/ridegt/transloc-map.jpg" alt="The existing campus transit map: coloured route loops and dozens of identical stop dots covering Georgia Tech, with no way to enter a destination." />
+              </div>
+              <p class="cmp-note">
+                The only thing students had was a map with every route stacked on top of it. You could see where the buses were, but there was no way to turn a place name into a trip.
+              </p>
+            </div>
+            <div class="cmp-rule" aria-hidden="true"></div>
+            <div class="cmp-side">
+              <p class="cmp-label">After <span>(my app)</span></p>
+              <div class="cmp-shots">
+                <img src="assets/ridegt/route-options.jpg" alt="RideGT showing three route options to the Campus Recreation Center: Blue as an 11 minute trip, Red 18 minutes, Gold 15 minutes, each with an arrival time." />
+                <img src="assets/ridegt/directions.jpg" alt="RideGT step-by-step directions: walk 1 minute to North Avenue Apts, board Blue Bus #7, ride 3 stops, get off at Exhibition Hall, walk 1 minute to the Campus Recreation Center." />
+              </div>
+              <p class="cmp-note">
+                You type a destination and get ranked options with real trip times, then the trip itself: which bus to board, how many stops to sit through, where to get off, walking directions at both ends, and an alert when your stop is coming up.
+              </p>
+            </div>
           </div>
-          <figcaption>
-            <strong>Before (left):</strong> the only thing students had was a map with every route stacked on top of it, so you could see where the buses were but had no way to work out how to get anywhere from a place name. <strong>Now (right):</strong> you type a destination and get ranked options with real trip times, then the trip itself, which bus to board, how many stops to sit through, where to get off, walking directions at both ends, and an alert when your stop is coming up.
-          </figcaption>
         </figure>
 
         <p>
@@ -662,54 +867,79 @@
         </p>
 
 
+
+        <figure class="diagram">
+          <svg class="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 330" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Anatomy of one trip: you walk to the nearest stop, ride the bus past several stops, and the app compares three possible exit stops by their real walking distance to your destination before choosing one.">
+            <rect class="dg-bg" width="1024" height="330"/>
+
+            <!-- destination -->
+            <g>
+              <path class="dg-bad-fill" d="M567 42c-13 0-23 10-23 23 0 17 23 38 23 38s23-21 23-38c0-13-10-23-23-23z"/>
+              <circle class="dg-panel-fill" cx="567" cy="64" r="8"/>
+              <text class="t-b" x="605" y="72">Your destination</text>
+            </g>
+
+            <!-- walk legs from the three candidates up to the destination -->
+            <path class="dg-good" stroke-width="2.5" stroke-dasharray="7 6" d="M567 190 L567 108"/>
+            <path class="dg-line" stroke-width="2" stroke-dasharray="5 7" opacity="0.75" d="M712 190 C 690 150, 620 120, 574 106"/>
+            <path class="dg-line" stroke-width="2" stroke-dasharray="5 7" opacity="0.75" d="M857 190 C 800 140, 660 112, 576 104"/>
+
+            <!-- the bus line -->
+            <path class="dg-accent" stroke-width="7" stroke-linecap="round" d="M277 190 L857 190"/>
+
+            <!-- walk from you to the board stop -->
+            <path class="dg-line" stroke-width="2.5" stroke-dasharray="7 6" d="M130 190 L277 190"/>
+
+            <!-- you -->
+            <circle class="dg-accent-soft" cx="118" cy="190" r="19"/>
+            <circle class="dg-accent-fill" cx="118" cy="190" r="8.5"/>
+            <text class="t" x="118" y="240" text-anchor="middle">You</text>
+
+            <!-- board stop -->
+            <circle class="dg-panel-fill" cx="277" cy="190" r="11"/>
+            <circle class="dg-accent" cx="277" cy="190" r="11" stroke-width="3.5"/>
+            <text class="t-acc" x="277" y="240" text-anchor="middle">Board</text>
+            <text class="t-sm" x="277" y="263" text-anchor="middle">nearest stop</text>
+
+            <!-- intermediate stops -->
+            <circle class="dg-panel-fill" cx="422" cy="190" r="7"/>
+            <circle class="dg-accent" cx="422" cy="190" r="7" stroke-width="3"/>
+
+            <!-- candidate 1 (chosen) -->
+            <circle class="dg-good-soft" cx="567" cy="190" r="20"/>
+            <circle class="dg-panel-fill" cx="567" cy="190" r="11"/>
+            <circle class="dg-good" cx="567" cy="190" r="11" stroke-width="3.5"/>
+            <text class="t-good" x="567" y="240" text-anchor="middle">Get off here</text>
+            <text class="t-sm" x="567" y="263" text-anchor="middle">shortest real walk</text>
+
+            <!-- candidates 2 and 3 -->
+            <circle class="dg-panel-fill" cx="712" cy="190" r="9"/>
+            <circle class="dg-line" cx="712" cy="190" r="9" stroke-width="3"/>
+            <text class="t-sm" x="712" y="240" text-anchor="middle">candidate</text>
+            <circle class="dg-panel-fill" cx="857" cy="190" r="9"/>
+            <circle class="dg-line" cx="857" cy="190" r="9" stroke-width="3"/>
+            <text class="t-sm" x="857" y="240" text-anchor="middle">candidate</text>
+
+            <!-- bracket over the three candidates -->
+            <path class="dg-line" stroke-width="1.5" d="M549 292 L549 300 L875 300 L875 292"/>
+            <text class="t-sm" x="712" y="322" text-anchor="middle">all three checked against real walking routes, not straight lines</text>
+
+            <!-- leg labels -->
+            <text class="t-sm" x="203" y="176" text-anchor="middle">walk</text>
+            <text class="t-sm" x="350" y="176" text-anchor="middle">ride</text>
+            <text class="t-sm" x="590" y="150">walk</text>
+          </svg>
+          <figcaption>
+            One trip, end to end. Steps one to three are cheap; step four is the whole problem, because the stop that looks closest on a map is often not the one that gets you there soonest.
+          </figcaption>
+        </figure>
         <p>
           Step four is where nearly all the difficulty is. Getting it wrong is subtle enough that it shipped, looked fine, and quietly sent people walking in the wrong direction for weeks.
         </p>
-        <p>
-          <button type="button" class="reveal" id="routing-reveal" aria-expanded="false" aria-controls="routing-panel">Click me to learn how checking three stops instead of one made trips up to 25 minutes faster<span class="chev" aria-hidden="true">⌄</span></button>
+        <p class="reveal-row">
+          <button type="button" class="reveal" id="routing-reveal" aria-expanded="false" aria-controls="routing-drawer" aria-haspopup="dialog">Click me to learn how checking three stops instead of one made trips up to 25 minutes faster<span class="chev" aria-hidden="true">⌄</span></button>
         </p>
 
-        <div class="panel" id="routing-panel" role="region" aria-labelledby="routing-reveal">
-          <div class="panel-clip">
-            <div class="panel-body">
-              <h3>The stop that looked closest and wasn't</h3>
-              <p>
-                The first version scored every possible stop as <em>time on the bus + time walking at the end</em>, then picked the smallest. That sounds correct. It isn't, and the reason is almost funny: <strong>the stop you're standing at is in that list, and riding from a stop to itself takes zero seconds.</strong> So the stop you were already at usually won, and the app would tell you to get off exactly where you got on.
-              </p>
-              <p>
-                The quieter version of that bug was worse. Stops genuinely closer to your destination got skipped, because walking there scored as free while riding there cost time. The app kept choosing to stand still.
-              </p>
-              <p>
-                The mistake underneath was the goal itself. Optimizing total travel time treats a twenty-minute walk as fine as long as it's quick. But nobody gets on a campus bus to arrive sooner. On a campus this small the bus is often slower than walking and people ride it anyway. <strong>They ride so they don't have to walk.</strong>
-              </p>
-
-              <h3>The fix</h3>
-              <p>
-                Walking decides. Get off at whichever stop leaves you the shortest walk, with two guards: the stop you got on at is removed from the running entirely, and a slightly farther stop can only steal the pick if it genuinely saves you time: at least a minute and a half, after paying for the extra steps. Without that second guard you'd be sent around the whole loop to save twenty feet.
-              </p>
-              <p>
-                Then there's a second, separate lie to deal with: <strong>a straight line doesn't know about streets.</strong> A stop can sit forty metres from your destination on a map and be a five-minute detour in reality, because it's across a road where the nearest crosswalk is a block away, or across the rail cut that splits campus. So we never commit to one stop. We shortlist the <strong>three</strong> best candidates, look up the real walking route for all three, actual sidewalks and actual crossings, then pick again using those.
-              </p>
-
-              <h3>Where the number comes from</h3>
-              <p>
-                I built a harness that replays real searches against live bus data: 10 campus buildings, every ordered pair between them, across all six routes running that day. <strong>540 searches.</strong> For each one it records the stop a plain closest-stop rule would pick, the stop the three-candidate rule actually picks, and the difference in riding time between them.
-              </p>
-              <p>
-                Picking from three candidates instead of one changes the answer in <strong>132 of those 540 searches</strong>, about one in four. Every one of them is a case where the closest-looking stop sat on the wrong side of the loop.
-              </p>
-              <p>
-                The largest is <strong>North Avenue East to the Campus Rec Center</strong> on the Gold route. The closest stop to the Rec Center is CRC &amp; Stamps Health, 84 metres away, and riding there takes <strong>30.1 minutes</strong>, because the bus has to travel all the way around the loop to reach it. Exhibition Hall is 105 metres away, a difference of 21 metres on foot, and riding there takes <strong>5.3 minutes</strong>.
-              </p>
-              <p>
-                So 21 extra metres of walking, roughly fifteen seconds, buys back <strong>24.9 minutes</strong> of sitting on a bus. Checking only the closest stop misses that completely. The same pattern on the Blue route is worth 10.2 minutes.
-              </p>
-              <p>
-                It cuts the other way too. <strong>Glenn Hall to the Campus Rec Center</strong> used to put you on a bus for one minute and then walk you <strong>1,264 metres</strong>, three quarters of a mile, straight past the Rec Center on a route that <em>stops at</em> the Rec Center. Now it walks you 84 metres, which is about fourteen minutes of walking removed from a single search.
-              </p>
-            </div>
-          </div>
-        </div>
 
         <h2>The biggest problem I am still solving</h2>
         <p>
@@ -718,6 +948,51 @@
         <p>
           We watch every bus continuously, and if one hasn't left a 25-metre circle for longer than that stop should take, we mark it stalled instead of counting it down. Most of the work is separating three things that look identical from outside: a bus genuinely parked, a bus idling nowhere near a stop, and a bus whose transponder just stopped reporting. That last one <em>looks</em> parked, but the data is simply stale, and calling it a stall would be wrong in a different way.
         </p>
+
+        <figure class="diagram">
+          <svg class="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 300" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A moving bus reports positions spread along the route. A stalled bus reports positions that stay clustered inside a 25 metre circle, and once that lasts longer than the stop should take it is marked stalled instead of counted down.">
+            <rect class="dg-bg" width="1024" height="300"/>
+
+            <text class="t-b" x="40" y="52">Moving</text>
+            <path class="dg-accent" stroke-width="4" stroke-linecap="round" d="M40 108 L440 108"/>
+            <g class="dg-accent-fill">
+              <circle cx="60" cy="108" r="7"/><circle cx="135" cy="108" r="7"/>
+              <circle cx="210" cy="108" r="7"/><circle cx="285" cy="108" r="7"/>
+              <circle cx="360" cy="108" r="7"/><circle cx="430" cy="108" r="7"/>
+            </g>
+            <text class="t-sm" x="40" y="148">each dot is one report, spread apart</text>
+
+            <text class="t-b" x="40" y="216">Stalled</text>
+            <circle class="dg-bad-soft" cx="235" cy="243" r="42"/>
+            <circle class="dg-bad" cx="235" cy="243" r="42" stroke-width="2" stroke-dasharray="6 5"/>
+            <g class="dg-bad-fill">
+              <circle cx="225" cy="235" r="6"/><circle cx="243" cy="238" r="6"/>
+              <circle cx="232" cy="252" r="6"/><circle cx="248" cy="249" r="6"/>
+              <circle cx="236" cy="243" r="6"/><circle cx="222" cy="248" r="6"/>
+            </g>
+            <path class="dg-line" stroke-width="1.5" d="M277 243 L320 243"/>
+            <text class="t-sm" x="332" y="238">every report inside a</text>
+            <text class="t-sm" x="332" y="260">25-metre circle</text>
+
+            <line class="dg-line" x1="512" y1="30" x2="512" y2="270" stroke-width="1"/>
+
+            <text class="t-b" x="560" y="52">How long is too long?</text>
+            <line class="dg-line" x1="560" y1="120" x2="964" y2="120" stroke-width="2"/>
+            <rect class="dg-good-soft" x="560" y="96" width="150" height="24"/>
+            <rect class="dg-bad-soft" x="760" y="96" width="204" height="24"/>
+            <line class="dg-bad" x1="760" y1="86" x2="760" y2="130" stroke-width="2.5"/>
+            <text class="t-good" x="565" y="88">normal pickup</text>
+            <text class="t-bad" x="770" y="88">stalled</text>
+            <text class="t-sm" x="560" y="152">The line moves per stop: a ten-second pickup and a</text>
+            <text class="t-sm" x="560" y="176">routine layover cannot share one threshold, so each</text>
+            <text class="t-sm" x="560" y="200">stop learns its own normal from its own history.</text>
+            <text class="t-sm" x="560" y="244" opacity="0.85">A third case: reports stop arriving at all. That looks</text>
+            <text class="t-sm" x="560" y="266" opacity="0.85">parked, but it is only stale data, and is not a stall.</text>
+          </svg>
+          <figcaption>
+            Telling a parked bus from a moving one is the easy half. The hard half is deciding how long is too long, when every stop is different.
+          </figcaption>
+        </figure>
         <p>
           What's still wrong: the "how long is too long" number leans on the single generic dwell time the feed claims for each stop. But some stops are a ten-second pickup and others are a routine layover, and one number cannot be right for both. We're recording real dwell times now so each stop can learn its own normal from its own history instead of borrowing someone else's.
         </p>
@@ -741,6 +1016,67 @@
         <p>
           That last part nearly did not work, for a reason worth knowing. Bus stops are always in exactly the same place, so those lookups matched every time. But <em>your</em> end of the walk is live GPS, which never reports the same position twice. Two readings a metre apart looked like two completely different questions, so the walk from you to your bus stop was re-bought on almost every search. The fix was to stop treating your location as an exact point: everything snaps to a rough 10-metre grid, and near misses check the neighbouring squares before paying. Ten metres is smaller than the error in a phone's GPS and far smaller than the distance between competing stops, so it cannot change which bus you are told to take.
         </p>
+
+        <figure class="diagram">
+          <svg class="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 400" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Two GPS readings one metre apart fall into different grid squares, so they become two different cache keys and get billed twice. After snapping both to the same square, they share one key and the second search is free.">
+            <rect class="dg-bg" width="1024" height="400"/>
+
+            <text class="t-b" x="40" y="46">Before</text>
+            <text class="t-sm" x="130" y="46">two readings, two questions</text>
+            <text class="t-b" x="560" y="46">After</text>
+            <text class="t-sm" x="646" y="46">two readings, one question</text>
+
+            <line class="dg-line" x1="512" y1="20" x2="512" y2="380" stroke-width="1"/>
+
+            <!-- LEFT grid -->
+            <g class="dg-grid" stroke-width="1.5">
+              <rect x="60" y="80" width="380" height="190" fill="none"/>
+              <line x1="155" y1="80" x2="155" y2="270"/>
+              <line x1="250" y1="80" x2="250" y2="270"/>
+              <line x1="345" y1="80" x2="345" y2="270"/>
+              <line x1="60" y1="143" x2="440" y2="143"/>
+              <line x1="60" y1="206" x2="440" y2="206"/>
+            </g>
+            <rect class="dg-bad-soft" x="155" y="143" width="95" height="63"/>
+            <rect class="dg-bad-soft" x="250" y="143" width="95" height="63"/>
+            <line class="dg-bad" x1="250" y1="143" x2="250" y2="206" stroke-width="3"/>
+
+            <circle class="dg-accent-fill" cx="243" cy="176" r="8"/>
+            <circle class="dg-accent-fill" cx="258" cy="176" r="8"/>
+            <text class="t-sm" x="250" y="235" text-anchor="middle">1 metre apart</text>
+
+            <path class="dg-line" stroke-width="1.5" d="M243 190 L200 300"/>
+            <path class="dg-line" stroke-width="1.5" d="M258 190 L300 300"/>
+            <text class="t-bad" x="200" y="322" text-anchor="middle">key A</text>
+            <text class="t-bad" x="300" y="322" text-anchor="middle">key B</text>
+            <text class="t-bad" x="250" y="362" text-anchor="middle">2 lookups, both billed</text>
+
+            <!-- RIGHT grid -->
+            <g class="dg-grid" stroke-width="1.5">
+              <rect x="584" y="80" width="380" height="190" fill="none"/>
+              <line x1="679" y1="80" x2="679" y2="270"/>
+              <line x1="774" y1="80" x2="774" y2="270"/>
+              <line x1="869" y1="80" x2="869" y2="270"/>
+              <line x1="584" y1="143" x2="964" y2="143"/>
+              <line x1="584" y1="206" x2="964" y2="206"/>
+            </g>
+            <rect class="dg-good-soft" x="679" y="143" width="95" height="63"/>
+
+            <circle class="dg-line" cx="700" cy="176" r="7" stroke-width="2" opacity="0.55"/>
+            <circle class="dg-line" cx="752" cy="176" r="7" stroke-width="2" opacity="0.55"/>
+            <path class="dg-good" stroke-width="2" stroke-dasharray="4 4" d="M707 176 L719 176"/>
+            <path class="dg-good" stroke-width="2" stroke-dasharray="4 4" d="M745 176 L733 176"/>
+            <circle class="dg-good-fill" cx="726" cy="176" r="9"/>
+            <text class="t-sm" x="726" y="235" text-anchor="middle">both snap to one square</text>
+
+            <path class="dg-line" stroke-width="1.5" d="M726 190 L726 300"/>
+            <text class="t-good" x="726" y="322" text-anchor="middle">key A</text>
+            <text class="t-good" x="726" y="362" text-anchor="middle">1 lookup, then free forever</text>
+          </svg>
+          <figcaption>
+            A grid square is about 10 metres across, which is smaller than the error in a phone's GPS and far smaller than the distance between competing bus stops. Rounding to it cannot change the answer, but it turns a permanent stream of new questions into a handful of repeats.
+          </figcaption>
+        </figure>
         <p>
           <strong>Not asking at all until it matters.</strong> The search box used to look up suggestions on the first letter you typed. It now waits for three, which is the difference between paying for "a" and paying for "arc".
         </p>
@@ -763,7 +1099,19 @@
 
         <h2>What I learned</h2>
         <p>
-          The problem was never that students couldn't see the buses. It was that seeing the buses doesn't tell you what to do. The stop that scored zero, the straight line that lied about a crosswalk, the bus that was parked the whole time: every hard problem here came out of that one gap.
+          The problem was never that students couldn't see the buses. It was that seeing the buses doesn't tell you what to do. Everything hard here came out of that one gap.
+        </p>
+        <p>
+          <strong>Building for other people is a different job.</strong> Code that works for me can guess, hard-code and assume. Code that two thousand people rely on has to survive a dead transponder, a semester break, a denied location prompt and a bus that never comes. Most of what I wrote after launch was not features, it was the app behaving sensibly when something upstream was broken.
+        </p>
+        <p>
+          <strong>Feedback is only useful if you make it easy to give.</strong> There's a feedback button in the app and I read everything that comes through it. Some of the sharpest fixes in this article started as one annoyed sentence from a student, including the search that sent people walking the wrong way. Complaints are cheap to collect and expensive to ignore.
+        </p>
+        <p>
+          <strong>Measure before you fix, and let the measurement veto you.</strong> Weighting walking more heavily felt obviously right and the harness showed it left most results broken. I would have shipped the wrong fix with total confidence, and the only reason I didn't is that I built the thing that could tell me no.
+        </p>
+        <p>
+          <strong>AI made the loop faster, not the thinking optional.</strong> I won six months of Claude Code Max as a prize, and I've leaned on it hard: reading unfamiliar native crash logs, writing the analysis harnesses, and grinding through the map bug where the fix was measurable but invisible in the code. What it changed was iteration speed. I could test five bad ideas in the time one used to take, which is exactly why the measurement mattered so much, because a faster loop also means faster ways to be wrong.
         </p>
       </div>
     </article>
@@ -839,11 +1187,52 @@
     });
 
     const reveal = document.getElementById("routing-reveal");
-    const panel = document.getElementById("routing-panel");
-    if (reveal && panel) {
-      reveal.addEventListener("click", () => {
-        const open = panel.classList.toggle("is-open");
-        reveal.setAttribute("aria-expanded", String(open));
+    const drawer = document.getElementById("routing-drawer");
+    const scrim = document.getElementById("drawer-scrim");
+    const drawerClose = document.getElementById("drawer-close");
+    if (reveal && drawer && scrim && drawerClose) {
+      let lastFocus = null;
+
+      const openDrawer = () => {
+        lastFocus = document.activeElement;
+        drawer.hidden = false;
+        scrim.hidden = false;
+        // Next frame, so the transition runs from the off-screen start state.
+        requestAnimationFrame(() => {
+          drawer.classList.add("is-open");
+          scrim.classList.add("is-open");
+        });
+        reveal.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+        drawerClose.focus();
+      };
+
+      const closeDrawer = () => {
+        drawer.classList.remove("is-open");
+        scrim.classList.remove("is-open");
+        reveal.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+        const finish = () => {
+          drawer.hidden = true;
+          scrim.hidden = true;
+        };
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          finish();
+        } else {
+          drawer.addEventListener("transitionend", function once(e) {
+            if (e.target !== drawer || e.propertyName !== "transform") return;
+            drawer.removeEventListener("transitionend", once);
+            finish();
+          });
+        }
+        if (lastFocus) lastFocus.focus();
+      };
+
+      reveal.addEventListener("click", openDrawer);
+      drawerClose.addEventListener("click", closeDrawer);
+      scrim.addEventListener("click", closeDrawer);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !drawer.hidden) closeDrawer();
       });
     }
 
@@ -871,6 +1260,96 @@
       });
     }
   </script>
+  <div class="drawer-scrim" id="drawer-scrim" hidden></div>
+  <aside class="drawer" id="routing-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+    <div class="drawer-head">
+      <p class="drawer-eyebrow">Deep dive</p>
+      <button type="button" class="drawer-close" id="drawer-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <h2 id="drawer-title">Why three stops, not one</h2>
+        <h3>The stop that looked closest and wasn't</h3>
+        <p>
+        The first version scored every possible stop as <em>time on the bus + time walking at the end</em>, then picked the smallest. That sounds correct. It isn't, and the reason is almost funny: <strong>the stop you're standing at is in that list, and riding from a stop to itself takes zero seconds.</strong> So the stop you were already at usually won, and the app would tell you to get off exactly where you got on.
+        </p>
+        <p>
+        The quieter version of that bug was worse. Stops genuinely closer to your destination got skipped, because walking there scored as free while riding there cost time. The app kept choosing to stand still.
+        </p>
+        <p>
+        The mistake underneath was the goal itself. Optimizing total travel time treats a twenty-minute walk as fine as long as it's quick. But nobody gets on a campus bus to arrive sooner. On a campus this small the bus is often slower than walking and people ride it anyway. <strong>They ride so they don't have to walk.</strong>
+        </p>
+
+        <h3>The fix</h3>
+        <p>
+        Walking decides. Get off at whichever stop leaves you the shortest walk, with two guards: the stop you got on at is removed from the running entirely, and a slightly farther stop can only steal the pick if it genuinely saves you time: at least a minute and a half, after paying for the extra steps. Without that second guard you'd be sent around the whole loop to save twenty feet.
+        </p>
+        <p>
+        Then there's a second, separate lie to deal with: <strong>a straight line doesn't know about streets.</strong> A stop can sit forty metres from your destination on a map and be a five-minute detour in reality, because it's across a road where the nearest crosswalk is a block away, or across the rail cut that splits campus. So we never commit to one stop. We shortlist the <strong>three</strong> best candidates, look up the real walking route for all three, actual sidewalks and actual crossings, then pick again using those.
+        </p>
+
+        <figure class="diagram">
+        <svg class="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 470" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A bus loop with the boarding stop at the bottom. Exhibition Hall comes early in the direction of travel and is 105 metres from the destination, a 5.3 minute ride. CRC and Stamps Health is 84 metres away but sits almost a full loop later, a 30.1 minute ride.">
+          <rect class="dg-bg" width="1024" height="470"/>
+
+          <ellipse class="dg-accent" cx="512" cy="240" rx="300" ry="160" stroke-width="6" opacity="0.5" fill="none"/>
+
+          <path class="dg-accent-fill" d="M742 168 l26 12 -26 12 6 -12z"/>
+          <path class="dg-accent-fill" d="M512 78 l0 0 -14 -22 28 0z" transform="translate(-6,0)"/>
+          <text class="t-sm" x="792" y="196">direction of travel</text>
+
+          <path class="dg-bad-fill" d="M512 196c-14 0-25 11-25 25 0 18 25 41 25 41s25-23 25-41c0-14-11-25-25-25z"/>
+          <circle class="dg-panel-fill" cx="512" cy="220" r="8.5"/>
+          <text class="t-b" x="512" y="180" text-anchor="middle">Campus Rec Center</text>
+
+          <circle class="dg-panel-fill" cx="512" cy="400" r="12"/>
+          <circle class="dg-line" cx="512" cy="400" r="12" stroke-width="4"/>
+          <text class="t" x="512" y="438" text-anchor="middle">You board here</text>
+
+          <circle class="dg-good-soft" cx="757" cy="330" r="22"/>
+          <circle class="dg-panel-fill" cx="757" cy="330" r="12"/>
+          <circle class="dg-good" cx="757" cy="330" r="12" stroke-width="4"/>
+          <path class="dg-good" stroke-width="2.5" stroke-dasharray="7 6" d="M745 320 L537 240"/>
+          <text class="t-good" x="790" y="326">Exhibition Hall</text>
+          <text class="t-sm" x="790" y="350">105 m walk</text>
+          <text class="t-good" x="790" y="378">5.3 min ride</text>
+
+          <circle class="dg-panel-fill" cx="300" cy="345" r="12"/>
+          <circle class="dg-bad" cx="300" cy="345" r="12" stroke-width="4"/>
+          <path class="dg-bad" stroke-width="2.5" stroke-dasharray="7 6" d="M312 336 L488 243"/>
+          <text class="t-bad" x="264" y="341" text-anchor="end">CRC &amp; Stamps Health</text>
+          <text class="t-sm" x="264" y="365" text-anchor="end">84 m walk, the closest</text>
+          <text class="t-bad" x="264" y="393" text-anchor="end">30.1 min ride</text>
+
+          <text class="t-sm" x="512" y="42" text-anchor="middle">Both stops are a short walk away. One of them is almost a full loop later.</text>
+        </svg>
+        <figcaption>
+          21 extra metres on foot, about fifteen seconds, against 24.9 minutes on a bus. Only comparing several candidates surfaces the trade at all.
+        </figcaption>
+      </figure>
+
+      <h3>Where the number comes from</h3>
+        <p>
+        I built a harness that replays real searches against live bus data: 10 campus buildings, every ordered pair between them, across all six routes running that day. <strong>540 searches.</strong> For each one it records the stop a plain closest-stop rule would pick, the stop the three-candidate rule actually picks, and the difference in riding time between them.
+        </p>
+        <p>
+        Picking from three candidates instead of one changes the answer in <strong>132 of those 540 searches</strong>, about one in four. Every one of them is a case where the closest-looking stop sat on the wrong side of the loop.
+        </p>
+        <p>
+        The largest is <strong>North Avenue East to the Campus Rec Center</strong> on the Gold route. The closest stop to the Rec Center is CRC &amp; Stamps Health, 84 metres away, and riding there takes <strong>30.1 minutes</strong>, because the bus has to travel all the way around the loop to reach it. Exhibition Hall is 105 metres away, a difference of 21 metres on foot, and riding there takes <strong>5.3 minutes</strong>.
+        </p>
+        <p>
+        So 21 extra metres of walking, roughly fifteen seconds, buys back <strong>24.9 minutes</strong> of sitting on a bus. Checking only the closest stop misses that completely. The same pattern on the Blue route is worth 10.2 minutes.
+        </p>
+        <p>
+        It cuts the other way too. <strong>Glenn Hall to the Campus Rec Center</strong> used to put you on a bus for one minute and then walk you <strong>1,264 metres</strong>, three quarters of a mile, straight past the Rec Center on a route that <em>stops at</em> the Rec Center. Now it walks you 84 metres, which is about fourteen minutes of walking removed from a single search.
+        </p>
+    </div>
+  </aside>
+
 </body>
 
 </html>
