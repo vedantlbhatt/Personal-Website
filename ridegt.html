@@ -1099,19 +1099,7 @@
 
         <h2>What I learned</h2>
         <p>
-          The problem was never that students couldn't see the buses. It was that seeing the buses doesn't tell you what to do. Everything hard here came out of that one gap.
-        </p>
-        <p>
-          <strong>Building for other people is a different job.</strong> Code that works for me can guess, hard-code and assume. Code that two thousand people rely on has to survive a dead transponder, a semester break, a denied location prompt and a bus that never comes. Most of what I wrote after launch was not features, it was the app behaving sensibly when something upstream was broken.
-        </p>
-        <p>
-          <strong>Feedback is only useful if you make it easy to give.</strong> There's a feedback button in the app and I read everything that comes through it. Some of the sharpest fixes in this article started as one annoyed sentence from a student, including the search that sent people walking the wrong way. Complaints are cheap to collect and expensive to ignore.
-        </p>
-        <p>
-          <strong>Measure before you fix, and let the measurement veto you.</strong> Weighting walking more heavily felt obviously right and the harness showed it left most results broken. I would have shipped the wrong fix with total confidence, and the only reason I didn't is that I built the thing that could tell me no.
-        </p>
-        <p>
-          <strong>AI made the loop faster, not the thinking optional.</strong> I won six months of Claude Code Max as a prize, and I've leaned on it hard: reading unfamiliar native crash logs, writing the analysis harnesses, and grinding through the map bug where the fix was measurable but invisible in the code. What it changed was iteration speed. I could test five bad ideas in the time one used to take, which is exactly why the measurement mattered so much, because a faster loop also means faster ways to be wrong.
+          Building for two thousand people is a different job than building for myself: most of the work after launch went into the app behaving sensibly when a transponder died or a semester ended. The best fixes here started as one annoyed sentence through the feedback button. And the harness that told me my obvious fix was wrong saved me from shipping it, which mattered more once I had six months of Claude Code Max and could try five bad ideas in the time one used to take.
         </p>
       </div>
     </article>
