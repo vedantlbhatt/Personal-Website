@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Building RideGT | Vedant Bhatt</title>
+  <title>Building RideGT - a campus app serving 2,000+ users | Vedant Bhatt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
@@ -395,9 +395,16 @@
       border-radius: 2px;
     }
 
-    .content ul {
+    .content ul,
+    .content ol {
       margin: 1rem 0 0;
-      padding-left: 1.35rem;
+      padding-left: 1.6rem;
+    }
+
+    .content ol li::marker {
+      font-family: var(--sans);
+      font-weight: 700;
+      color: var(--muted);
     }
 
     .content li {
@@ -570,6 +577,22 @@
       text-align: right;
     }
 
+    @media (min-width: 1280px) {
+      .content .reveal-row {
+        /* Out into the right gutter, same trick as the figures: no `top`, so
+           it keeps the vertical position it would have had in flow. */
+        position: absolute;
+        left: calc(100% + 1.25rem);
+        width: 13.5rem;
+        margin: 0;
+        text-align: left;
+      }
+
+      .content .reveal-row .reveal {
+        text-align: left;
+      }
+    }
+
     .content .reveal {
       font: inherit;
       font-size: 0.95rem;
@@ -633,6 +656,12 @@
 
     .drawer.is-open {
       transform: translateX(0);
+    }
+
+    /* display:flex above would otherwise defeat the hidden attribute. */
+    .drawer[hidden],
+    .drawer-scrim[hidden] {
+      display: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -857,13 +886,13 @@
         <p>
           Every search runs the same five steps:
         </p>
-        <ul>
+        <ol>
           <li>Work out where you are and where you're going.</li>
           <li>Throw away every route that has no bus actually moving on it. A perfect route with no bus is not an option.</li>
           <li>Pick where you <strong>get on</strong>, the closest stop to you.</li>
           <li>Pick where you <strong>get off</strong>. This is the hard one.</li>
           <li>Rank whatever survived and show you the best few.</li>
-        </ul>
+        </ol>
         <p>
           The result is a list you can choose from, and then a trip you can follow: which bus, which stop, how many stops to sit through, and how long you'll be walking at either end.
         </p>
@@ -1106,6 +1135,96 @@
     </article>
   </div>
 
+  <div class="drawer-scrim" id="drawer-scrim" hidden></div>
+  <aside class="drawer" id="routing-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+    <div class="drawer-head">
+      <p class="drawer-eyebrow">Deep dive</p>
+      <button type="button" class="drawer-close" id="drawer-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <h2 id="drawer-title">Why three stops, not one</h2>
+        <h3>The stop that looked closest and wasn't</h3>
+        <p>
+        The first version scored every possible stop as <em>time on the bus + time walking at the end</em>, then picked the smallest. That sounds correct. It isn't, and the reason is almost funny: <strong>the stop you're standing at is in that list, and riding from a stop to itself takes zero seconds.</strong> So the stop you were already at usually won, and the app would tell you to get off exactly where you got on.
+        </p>
+        <p>
+        The quieter version of that bug was worse. Stops genuinely closer to your destination got skipped, because walking there scored as free while riding there cost time. The app kept choosing to stand still.
+        </p>
+        <p>
+        The mistake underneath was the goal itself. Optimizing total travel time treats a twenty-minute walk as fine as long as it's quick. But nobody gets on a campus bus to arrive sooner. On a campus this small the bus is often slower than walking and people ride it anyway. <strong>They ride so they don't have to walk.</strong>
+        </p>
+
+        <h3>The fix</h3>
+        <p>
+        Walking decides. Get off at whichever stop leaves you the shortest walk, with two guards: the stop you got on at is removed from the running entirely, and a slightly farther stop can only steal the pick if it genuinely saves you time: at least a minute and a half, after paying for the extra steps. Without that second guard you'd be sent around the whole loop to save twenty feet.
+        </p>
+        <p>
+        Then there's a second, separate lie to deal with: <strong>a straight line doesn't know about streets.</strong> A stop can sit forty metres from your destination on a map and be a five-minute detour in reality, because it's across a road where the nearest crosswalk is a block away, or across the rail cut that splits campus. So we never commit to one stop. We shortlist the <strong>three</strong> best candidates, look up the real walking route for all three, actual sidewalks and actual crossings, then pick again using those.
+        </p>
+
+        <figure class="diagram">
+        <svg class="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 470" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A bus loop with the boarding stop at the bottom. Exhibition Hall comes early in the direction of travel and is 105 metres from the destination, a 5.3 minute ride. CRC and Stamps Health is 84 metres away but sits almost a full loop later, a 30.1 minute ride.">
+          <rect class="dg-bg" width="1024" height="470"/>
+
+          <ellipse class="dg-accent" cx="512" cy="240" rx="300" ry="160" stroke-width="6" opacity="0.5" fill="none"/>
+
+          <path class="dg-accent-fill" d="M742 168 l26 12 -26 12 6 -12z"/>
+          <path class="dg-accent-fill" d="M512 78 l0 0 -14 -22 28 0z" transform="translate(-6,0)"/>
+          <text class="t-sm" x="792" y="196">direction of travel</text>
+
+          <path class="dg-bad-fill" d="M512 196c-14 0-25 11-25 25 0 18 25 41 25 41s25-23 25-41c0-14-11-25-25-25z"/>
+          <circle class="dg-panel-fill" cx="512" cy="220" r="8.5"/>
+          <text class="t-b" x="512" y="180" text-anchor="middle">Campus Rec Center</text>
+
+          <circle class="dg-panel-fill" cx="512" cy="400" r="12"/>
+          <circle class="dg-line" cx="512" cy="400" r="12" stroke-width="4"/>
+          <text class="t" x="512" y="438" text-anchor="middle">You board here</text>
+
+          <circle class="dg-good-soft" cx="757" cy="330" r="22"/>
+          <circle class="dg-panel-fill" cx="757" cy="330" r="12"/>
+          <circle class="dg-good" cx="757" cy="330" r="12" stroke-width="4"/>
+          <path class="dg-good" stroke-width="2.5" stroke-dasharray="7 6" d="M745 320 L537 240"/>
+          <text class="t-good" x="790" y="326">Exhibition Hall</text>
+          <text class="t-sm" x="790" y="350">105 m walk</text>
+          <text class="t-good" x="790" y="378">5.3 min ride</text>
+
+          <circle class="dg-panel-fill" cx="300" cy="345" r="12"/>
+          <circle class="dg-bad" cx="300" cy="345" r="12" stroke-width="4"/>
+          <path class="dg-bad" stroke-width="2.5" stroke-dasharray="7 6" d="M312 336 L488 243"/>
+          <text class="t-bad" x="264" y="341" text-anchor="end">CRC &amp; Stamps Health</text>
+          <text class="t-sm" x="264" y="365" text-anchor="end">84 m walk, the closest</text>
+          <text class="t-bad" x="264" y="393" text-anchor="end">30.1 min ride</text>
+
+          <text class="t-sm" x="512" y="42" text-anchor="middle">Both stops are a short walk away. One of them is almost a full loop later.</text>
+        </svg>
+        <figcaption>
+          21 extra metres on foot, about fifteen seconds, against 24.9 minutes on a bus. Only comparing several candidates surfaces the trade at all.
+        </figcaption>
+      </figure>
+
+      <h3>Where the number comes from</h3>
+        <p>
+        I built a harness that replays real searches against live bus data: 10 campus buildings, every ordered pair between them, across all six routes running that day. <strong>540 searches.</strong> For each one it records the stop a plain closest-stop rule would pick, the stop the three-candidate rule actually picks, and the difference in riding time between them.
+        </p>
+        <p>
+        Picking from three candidates instead of one changes the answer in <strong>132 of those 540 searches</strong>, about one in four. Every one of them is a case where the closest-looking stop sat on the wrong side of the loop.
+        </p>
+        <p>
+        The largest is <strong>North Avenue East to the Campus Rec Center</strong> on the Gold route. The closest stop to the Rec Center is CRC &amp; Stamps Health, 84 metres away, and riding there takes <strong>30.1 minutes</strong>, because the bus has to travel all the way around the loop to reach it. Exhibition Hall is 105 metres away, a difference of 21 metres on foot, and riding there takes <strong>5.3 minutes</strong>.
+        </p>
+        <p>
+        So 21 extra metres of walking, roughly fifteen seconds, buys back <strong>24.9 minutes</strong> of sitting on a bus. Checking only the closest stop misses that completely. The same pattern on the Blue route is worth 10.2 minutes.
+        </p>
+        <p>
+        It cuts the other way too. <strong>Glenn Hall to the Campus Rec Center</strong> used to put you on a bus for one minute and then walk you <strong>1,264 metres</strong>, three quarters of a mile, straight past the Rec Center on a route that <em>stops at</em> the Rec Center. Now it walks you 84 metres, which is about fourteen minutes of walking removed from a single search.
+        </p>
+    </div>
+  </aside>
+
   <script>
     (function () {
       const entering = document.documentElement.classList.contains("is-page-entering");
@@ -1249,95 +1368,6 @@
       });
     }
   </script>
-  <div class="drawer-scrim" id="drawer-scrim" hidden></div>
-  <aside class="drawer" id="routing-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
-    <div class="drawer-head">
-      <p class="drawer-eyebrow">Deep dive</p>
-      <button type="button" class="drawer-close" id="drawer-close" aria-label="Close">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M18 6 6 18M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-    <div class="drawer-body">
-      <h2 id="drawer-title">Why three stops, not one</h2>
-        <h3>The stop that looked closest and wasn't</h3>
-        <p>
-        The first version scored every possible stop as <em>time on the bus + time walking at the end</em>, then picked the smallest. That sounds correct. It isn't, and the reason is almost funny: <strong>the stop you're standing at is in that list, and riding from a stop to itself takes zero seconds.</strong> So the stop you were already at usually won, and the app would tell you to get off exactly where you got on.
-        </p>
-        <p>
-        The quieter version of that bug was worse. Stops genuinely closer to your destination got skipped, because walking there scored as free while riding there cost time. The app kept choosing to stand still.
-        </p>
-        <p>
-        The mistake underneath was the goal itself. Optimizing total travel time treats a twenty-minute walk as fine as long as it's quick. But nobody gets on a campus bus to arrive sooner. On a campus this small the bus is often slower than walking and people ride it anyway. <strong>They ride so they don't have to walk.</strong>
-        </p>
-
-        <h3>The fix</h3>
-        <p>
-        Walking decides. Get off at whichever stop leaves you the shortest walk, with two guards: the stop you got on at is removed from the running entirely, and a slightly farther stop can only steal the pick if it genuinely saves you time: at least a minute and a half, after paying for the extra steps. Without that second guard you'd be sent around the whole loop to save twenty feet.
-        </p>
-        <p>
-        Then there's a second, separate lie to deal with: <strong>a straight line doesn't know about streets.</strong> A stop can sit forty metres from your destination on a map and be a five-minute detour in reality, because it's across a road where the nearest crosswalk is a block away, or across the rail cut that splits campus. So we never commit to one stop. We shortlist the <strong>three</strong> best candidates, look up the real walking route for all three, actual sidewalks and actual crossings, then pick again using those.
-        </p>
-
-        <figure class="diagram">
-        <svg class="dg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 470" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A bus loop with the boarding stop at the bottom. Exhibition Hall comes early in the direction of travel and is 105 metres from the destination, a 5.3 minute ride. CRC and Stamps Health is 84 metres away but sits almost a full loop later, a 30.1 minute ride.">
-          <rect class="dg-bg" width="1024" height="470"/>
-
-          <ellipse class="dg-accent" cx="512" cy="240" rx="300" ry="160" stroke-width="6" opacity="0.5" fill="none"/>
-
-          <path class="dg-accent-fill" d="M742 168 l26 12 -26 12 6 -12z"/>
-          <path class="dg-accent-fill" d="M512 78 l0 0 -14 -22 28 0z" transform="translate(-6,0)"/>
-          <text class="t-sm" x="792" y="196">direction of travel</text>
-
-          <path class="dg-bad-fill" d="M512 196c-14 0-25 11-25 25 0 18 25 41 25 41s25-23 25-41c0-14-11-25-25-25z"/>
-          <circle class="dg-panel-fill" cx="512" cy="220" r="8.5"/>
-          <text class="t-b" x="512" y="180" text-anchor="middle">Campus Rec Center</text>
-
-          <circle class="dg-panel-fill" cx="512" cy="400" r="12"/>
-          <circle class="dg-line" cx="512" cy="400" r="12" stroke-width="4"/>
-          <text class="t" x="512" y="438" text-anchor="middle">You board here</text>
-
-          <circle class="dg-good-soft" cx="757" cy="330" r="22"/>
-          <circle class="dg-panel-fill" cx="757" cy="330" r="12"/>
-          <circle class="dg-good" cx="757" cy="330" r="12" stroke-width="4"/>
-          <path class="dg-good" stroke-width="2.5" stroke-dasharray="7 6" d="M745 320 L537 240"/>
-          <text class="t-good" x="790" y="326">Exhibition Hall</text>
-          <text class="t-sm" x="790" y="350">105 m walk</text>
-          <text class="t-good" x="790" y="378">5.3 min ride</text>
-
-          <circle class="dg-panel-fill" cx="300" cy="345" r="12"/>
-          <circle class="dg-bad" cx="300" cy="345" r="12" stroke-width="4"/>
-          <path class="dg-bad" stroke-width="2.5" stroke-dasharray="7 6" d="M312 336 L488 243"/>
-          <text class="t-bad" x="264" y="341" text-anchor="end">CRC &amp; Stamps Health</text>
-          <text class="t-sm" x="264" y="365" text-anchor="end">84 m walk, the closest</text>
-          <text class="t-bad" x="264" y="393" text-anchor="end">30.1 min ride</text>
-
-          <text class="t-sm" x="512" y="42" text-anchor="middle">Both stops are a short walk away. One of them is almost a full loop later.</text>
-        </svg>
-        <figcaption>
-          21 extra metres on foot, about fifteen seconds, against 24.9 minutes on a bus. Only comparing several candidates surfaces the trade at all.
-        </figcaption>
-      </figure>
-
-      <h3>Where the number comes from</h3>
-        <p>
-        I built a harness that replays real searches against live bus data: 10 campus buildings, every ordered pair between them, across all six routes running that day. <strong>540 searches.</strong> For each one it records the stop a plain closest-stop rule would pick, the stop the three-candidate rule actually picks, and the difference in riding time between them.
-        </p>
-        <p>
-        Picking from three candidates instead of one changes the answer in <strong>132 of those 540 searches</strong>, about one in four. Every one of them is a case where the closest-looking stop sat on the wrong side of the loop.
-        </p>
-        <p>
-        The largest is <strong>North Avenue East to the Campus Rec Center</strong> on the Gold route. The closest stop to the Rec Center is CRC &amp; Stamps Health, 84 metres away, and riding there takes <strong>30.1 minutes</strong>, because the bus has to travel all the way around the loop to reach it. Exhibition Hall is 105 metres away, a difference of 21 metres on foot, and riding there takes <strong>5.3 minutes</strong>.
-        </p>
-        <p>
-        So 21 extra metres of walking, roughly fifteen seconds, buys back <strong>24.9 minutes</strong> of sitting on a bus. Checking only the closest stop misses that completely. The same pattern on the Blue route is worth 10.2 minutes.
-        </p>
-        <p>
-        It cuts the other way too. <strong>Glenn Hall to the Campus Rec Center</strong> used to put you on a bus for one minute and then walk you <strong>1,264 metres</strong>, three quarters of a mile, straight past the Rec Center on a route that <em>stops at</em> the Rec Center. Now it walks you 84 metres, which is about fourteen minutes of walking removed from a single search.
-        </p>
-    </div>
-  </aside>
 
 </body>
 
