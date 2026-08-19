@@ -656,18 +656,20 @@
       color: var(--muted);
     }
 
+    /* square icon marks only — no wordmarks */
     .post-logo {
-      height: 1.5rem;
-      width: auto;
-      max-width: 7rem;
+      width: 1.75rem;
+      height: 1.75rem;
       object-fit: contain;
       opacity: 0.9;
       filter: var(--logo-filter);
     }
 
-    /* single-line wordmark, so it needs less height to read the same size */
-    .post-logo.is-ridegt {
-      height: 0.85rem;
+    /* the bus sits inside an app-icon frame, so it needs a bigger box to
+       read at the same size as the marks that fill their own bounds */
+    .post-logo.is-framed {
+      width: 2.1rem;
+      height: 2.1rem;
     }
 
     .post-copy {
@@ -2069,7 +2071,7 @@
           <a class="post-card" href="expedia.html">
             <div class="post-head">
               <span class="post-date">July 31, 2026</span>
-              <img class="post-logo" src="assets/rehaul/expedia-white.png" alt="Expedia Group" />
+              <img class="post-logo" src="assets/rehaul/expedia-mark-white.png" alt="Expedia Group" />
             </div>
             <div class="post-copy">
               <h3>Building real-time observability into Expedia&rsquo;s air booking funnel</h3>
@@ -2094,7 +2096,7 @@
           <a class="post-card" href="ridegt.html">
             <div class="post-head">
               <span class="post-date">August 15, 2026</span>
-              <img class="post-logo is-ridegt" src="assets/rehaul/ridegt-white.png" alt="RideGT" />
+              <img class="post-logo is-framed" src="assets/rehaul/bus-app-icon-white.png" alt="RideGT" />
             </div>
             <div class="post-copy">
               <h3>Building RideGT</h3>
