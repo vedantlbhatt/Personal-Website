@@ -712,6 +712,21 @@
       }, clearAfter);
     })();
 
+
+    // A back/forward navigation can restore this page from the bfcache with the
+    // outgoing zoom still applied, leaving a blank screen. Clear it on show.
+    window.addEventListener("pageshow", (event) => {
+      document.body.classList.remove("is-page-leaving");
+      document.body.style.overflow = "";
+      if (event.persisted) {
+        document.documentElement.classList.remove("is-page-entering", "is-page-ready");
+        document.querySelectorAll(".page-enter").forEach((el) => {
+          el.classList.remove("page-enter");
+          el.style.removeProperty("--enter-delay");
+        });
+      }
+    });
+
     const topbar = document.getElementById("topbar");
     const onScroll = () => {
       topbar.classList.toggle("is-scrolled", window.scrollY > 8);

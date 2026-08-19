@@ -606,6 +606,194 @@
       margin-top: clamp(2rem, 4vw, 2.75rem);
     }
 
+    /* ---------- Blog ---------- */
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(0.85rem, 1.8vw, 1.15rem);
+    }
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+      padding: 1.5rem 1.45rem 1.25rem;
+      border-radius: clamp(1.25rem, 2.2vw, 1.75rem);
+      border: 1px solid var(--face-border);
+      background: linear-gradient(180deg, var(--face-from) 0%, var(--face-to) 100%);
+      box-shadow: 0 8px 24px var(--face-shadow);
+      color: inherit;
+      text-decoration: none;
+      transition:
+        transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 300ms ease,
+        border-color 180ms ease,
+        background 180ms ease;
+    }
+
+    .post-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px var(--face-shadow-hover);
+    }
+
+    .post-card:focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
+
+    .post-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .post-date {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .post-logo {
+      height: 1.5rem;
+      width: auto;
+      max-width: 7rem;
+      object-fit: contain;
+      opacity: 0.9;
+      filter: var(--logo-filter);
+    }
+
+    /* single-line wordmark, so it needs less height to read the same size */
+    .post-logo.is-ridegt {
+      height: 0.85rem;
+    }
+
+    .post-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .post-copy h3 {
+      font-size: 1.12rem;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      color: var(--card-title);
+      transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .post-card:hover .post-copy h3 {
+      transform: translateY(-2px);
+    }
+
+    .post-copy p {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+      color: var(--card-body);
+    }
+
+    .post-copy strong {
+      font-weight: 700;
+      color: var(--card-title);
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      list-style: none;
+    }
+
+    .post-tags li {
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--cta-rule);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: var(--card-feature);
+    }
+
+    .post-foot {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--cta-rule);
+      transition: border-color 180ms ease;
+    }
+
+    .post-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      width: 100%;
+      min-height: 2.75rem;
+      padding: 0 0.85rem;
+      border: 1px solid var(--cta-border);
+      border-radius: 0.85rem;
+      background: var(--cta-bg);
+      color: var(--cta-text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1;
+      transition: transform 300ms ease, background 300ms ease, border-color 180ms ease;
+    }
+
+    .post-cta > span:first-child {
+      display: flex;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .post-card:hover .post-cta {
+      background: var(--cta-hover);
+      transform: scale(1.02);
+    }
+
+    .post-card:active .post-cta {
+      transform: scale(0.98);
+    }
+
+    .post-cta .flip-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      flex-shrink: 0;
+    }
+
+    .post-cta .flip-icon::before {
+      inset: 0;
+      opacity: 0;
+      transform: scale(0.9);
+      background: var(--cta-icon-wash);
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+
+    .post-card:hover .post-cta .flip-icon::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .post-card:hover .post-cta .flip-icon svg {
+      color: var(--cta-text);
+      transform: translateX(2px) scale(1.1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .post-card,
+      .post-card:hover,
+      .post-copy h3,
+      .post-card:hover .post-copy h3,
+      .post-cta,
+      .post-card:hover .post-cta {
+        transform: none;
+        transition: none;
+      }
+    }
+
     .site-note {
       margin-top: clamp(2.5rem, 5vw, 3.5rem);
       padding-bottom: 0.5rem;
@@ -1097,6 +1285,10 @@
         grid-template-columns: 1fr;
       }
 
+      .post-grid {
+        grid-template-columns: 1fr;
+      }
+
       .card {
         aspect-ratio: 16 / 14;
         min-height: 420px;
@@ -1182,6 +1374,7 @@
         <a href="#about" data-section="about">About Me</a>
         <a href="#experiences" data-section="experiences">Experiences</a>
         <a href="#projects" data-section="projects">Projects</a>
+        <a href="#blog" data-section="blog">Blog</a>
       </nav>
     </aside>
 
@@ -1869,6 +2062,62 @@
         </div>
       </section>
 
+
+      <section class="block" id="blog" aria-labelledby="blog-label">
+        <h2 class="section-label" id="blog-label">Blog</h2>
+        <div class="post-grid">
+          <a class="post-card" href="expedia.html">
+            <div class="post-head">
+              <span class="post-date">July 31, 2026</span>
+              <img class="post-logo" src="assets/rehaul/expedia-white.png" alt="Expedia Group" />
+            </div>
+            <div class="post-copy">
+              <h3>Building real-time observability into Expedia&rsquo;s air booking funnel</h3>
+              <p>Root-causing a dip in Purchase Success Rate used to mean one to four hours of hunting through service logs. A write-up of the Trino + Kafka ETL pipeline, the anomaly detection over <strong>4.8M+</strong> failed bookings, and the triage dashboard that replaced that hunt.</p>
+            </div>
+            <ul class="post-tags">
+              <li>Trino</li>
+              <li>Kafka</li>
+              <li>Anomaly detection</li>
+              <li>Data platform</li>
+            </ul>
+            <div class="post-foot">
+              <span class="post-cta">
+                <span>Read post</span>
+                <span class="flip-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                </span>
+              </span>
+            </div>
+          </a>
+
+          <a class="post-card" href="ridegt.html">
+            <div class="post-head">
+              <span class="post-date">August 15, 2026</span>
+              <img class="post-logo is-ridegt" src="assets/rehaul/ridegt-white.png" alt="RideGT" />
+            </div>
+            <div class="post-copy">
+              <h3>Building RideGT</h3>
+              <p>Georgia Tech&rsquo;s transit map could tell you where every bus was, but not how to get anywhere. How a heuristic in one Python file became a campus routing system on iOS, Android and the web, serving <strong>2,000+</strong> users.</p>
+            </div>
+            <ul class="post-tags">
+              <li>React Native</li>
+              <li>Routing</li>
+              <li>Transit data</li>
+              <li>Product</li>
+            </ul>
+            <div class="post-foot">
+              <span class="post-cta">
+                <span>Read post</span>
+                <span class="flip-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                </span>
+              </span>
+            </div>
+          </a>
+        </div>
+      </section>
+
       <p class="site-note">
         Note: This site is still growing! I’m adding more experiences and projects over time, and for now have only included a selection of my most recent and notable work. I'm working to add more!
       </p>
@@ -1893,6 +2142,79 @@
       }
     })();
 
+    // A back-swipe or browser Back restores this page from the bfcache with the
+    // outgoing zoom still applied, which leaves nothing but the leave-colour on
+    // screen. Clear the transition state every time the page is shown.
+    function resetPageTransitionState(persisted) {
+      document.body.classList.remove("is-page-leaving");
+      document.body.style.removeProperty("--leave-bg");
+      document.body.style.removeProperty("--zoom-ox");
+      document.body.style.removeProperty("--zoom-oy");
+      document.body.style.overflow = "";
+      if (persisted) {
+        document.documentElement.classList.remove("is-page-entering", "is-page-ready");
+      }
+    }
+
+    window.addEventListener("pageshow", (event) => {
+      resetPageTransitionState(event.persisted);
+    });
+
+    // Zoom out of the home page and into an article. Returns false when the
+    // caller should just follow the link normally.
+    function zoomToArticle(href, absoluteHref, event) {
+      const articleMatch = href.match(/(expedia|ridegt)\.html/);
+      if (!articleMatch) return false;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+      if (document.body.classList.contains("is-page-leaving")) return true;
+
+      const articleKey = articleMatch[1];
+
+      const rect = (event.currentTarget || document.body).getBoundingClientRect();
+      const zoomX = event.clientX || rect.left + rect.width / 2;
+      const zoomY = event.clientY || rect.top + rect.height / 2;
+      const ox = `${(zoomX / window.innerWidth) * 100}%`;
+      const oy = `${(zoomY / window.innerHeight) * 100}%`;
+
+      let leaveBg = "#191919";
+      try {
+        leaveBg =
+          localStorage.getItem("expedia-theme") === "light" ? "#ffffff" : "#191919";
+      } catch (e) {}
+
+      document.body.style.setProperty("--leave-bg", leaveBg);
+      document.body.style.setProperty("--zoom-ox", ox);
+      document.body.style.setProperty("--zoom-oy", oy);
+
+      try {
+        sessionStorage.setItem(
+          "vb-page-transition",
+          JSON.stringify({ to: articleKey, ox, oy, bg: leaveBg })
+        );
+      } catch (e) {
+        try {
+          sessionStorage.setItem("vb-page-transition", articleKey);
+        } catch (err) {}
+      }
+
+      document.body.classList.add("is-page-leaving");
+
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        window.location.href = absoluteHref;
+      };
+      const shell = document.querySelector(".shell");
+      shell?.addEventListener("transitionend", (e) => {
+        if (e.target === shell && (e.propertyName === "transform" || e.propertyName === "opacity")) {
+          finish();
+        }
+      });
+      setTimeout(finish, 460);
+      return true;
+    }
+
     document.querySelectorAll(".flip-card").forEach((card) => {
       card.addEventListener("click", (event) => {
         const cta = event.target.closest("a.flip-cta");
@@ -1906,62 +2228,25 @@
             return;
           }
 
-          const articleMatch = href.match(/(expedia|ridegt)\.html/);
-          if (articleMatch && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-            if (document.body.classList.contains("is-page-leaving")) return;
-
-            const articleKey = articleMatch[1];
-
-            const rect = cta.getBoundingClientRect();
-            const zoomX = event.clientX || rect.left + rect.width / 2;
-            const zoomY = event.clientY || rect.top + rect.height / 2;
-            const ox = `${(zoomX / window.innerWidth) * 100}%`;
-            const oy = `${(zoomY / window.innerHeight) * 100}%`;
-
-            let leaveBg = "#191919";
-            try {
-              leaveBg =
-                localStorage.getItem("expedia-theme") === "light" ? "#ffffff" : "#191919";
-            } catch (e) {}
-
-            document.body.style.setProperty("--leave-bg", leaveBg);
-            document.body.style.setProperty("--zoom-ox", ox);
-            document.body.style.setProperty("--zoom-oy", oy);
-
-            try {
-              sessionStorage.setItem(
-                "vb-page-transition",
-                JSON.stringify({ to: articleKey, ox, oy, bg: leaveBg })
-              );
-            } catch (e) {
-              try {
-                sessionStorage.setItem("vb-page-transition", articleKey);
-              } catch (err) {}
-            }
-
-            document.body.classList.add("is-page-leaving");
-
-            let done = false;
-            const finish = () => {
-              if (done) return;
-              done = true;
-              window.location.href = cta.href;
-            };
-            const shell = document.querySelector(".shell");
-            shell?.addEventListener("transitionend", (e) => {
-              if (e.target === shell && (e.propertyName === "transform" || e.propertyName === "opacity")) {
-                finish();
-              }
-            });
-            setTimeout(finish, 460);
-            return;
-          }
+          if (zoomToArticle(href, cta.href, event)) return;
 
           window.location.href = cta.href;
           return;
         }
         const flipped = card.classList.toggle("is-flipped");
         card.setAttribute("aria-pressed", String(flipped));
+      });
+    });
+
+    document.querySelectorAll("a.post-card").forEach((card) => {
+      card.addEventListener("click", (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (event.button && event.button !== 0) return;
+        const href = card.getAttribute("href") || "";
+        if (/^https?:\/\//i.test(href)) return;
+        event.preventDefault();
+        if (zoomToArticle(href, card.href, event)) return;
+        window.location.href = card.href;
       });
     });
 
@@ -2035,7 +2320,9 @@
 
       const scrollBottom = window.scrollY + window.innerHeight;
       const docHeight = document.documentElement.scrollHeight;
-      if (scrollBottom >= docHeight - 120) return "projects";
+      if (scrollBottom >= docHeight - 120) {
+        return sections[sections.length - 1]?.id || "about";
+      }
 
       const marker = window.innerHeight * 0.42;
       let current = sections[0]?.id || "about";
