@@ -820,6 +820,28 @@
       gap: clamp(0.85rem, 1.8vw, 1.15rem);
     }
 
+    .grid.slider {
+      --slider-gap: clamp(0.85rem, 1.8vw, 1.15rem);
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((100% - 2 * var(--slider-gap)) / 3);
+      gap: var(--slider-gap);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding-block: 0.5rem 2.25rem;
+      margin-block: -0.5rem -2.25rem;
+    }
+
+    .grid.slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .grid.slider > .card {
+      scroll-snap-align: start;
+    }
+
     .grid[hidden] {
       display: none !important;
     }
@@ -925,6 +947,11 @@
     .flip-front-visual img.logo-expedia {
       max-width: 78%;
       max-height: 48%;
+    }
+
+    .flip-front-visual img.logo-shopify {
+      max-width: 76%;
+      max-height: 30%;
     }
 
     .flip-front-visual img.logo-gt {
@@ -1287,6 +1314,11 @@
         grid-template-columns: 1fr;
       }
 
+      .grid.slider {
+        grid-template-columns: none;
+        grid-auto-columns: 85%;
+      }
+
       .post-grid {
         grid-template-columns: 1fr;
       }
@@ -1497,7 +1529,45 @@
 
       <section class="block" id="experiences" aria-labelledby="experiences-label">
         <h2 class="section-label" id="experiences-label">Experiences</h2>
-        <div class="grid">
+        <div class="grid slider">
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="Shopify — click to flip"
+            data-title="Shopify"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="logo-shopify" src="assets/rehaul/shopify-white.svg" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <div class="flip-front-copy">
+                    <h3>Shopify</h3>
+                    <p>Machine Learning Infrastructure</p>
+                  </div>
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>Shopify</h3>
+                    <p>Incoming Spring 2027, NYC.<br />Cloud &amp; distributed systems for the training, testing, and serving of models on Merlin, Shopify's machine learning platform.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </button>
+
           <button
             type="button"
             class="card flip-card"
