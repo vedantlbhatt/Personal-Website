@@ -949,6 +949,11 @@
       max-height: 48%;
     }
 
+    .flip-front-visual img.logo-palantir {
+      max-width: 70%;
+      max-height: 26%;
+    }
+
     .flip-front-visual img.logo-gt {
       max-width: 68%;
       max-height: 30%;
@@ -998,6 +1003,10 @@
       height: clamp(1.5rem, 3.2vw, 2.1rem);
       max-width: none;
       max-height: none;
+    }
+
+    #experiences .flip-front-meta {
+      justify-content: flex-end;
     }
 
     .flip-front-meta {
@@ -1521,6 +1530,59 @@
       <section class="block" id="experiences" aria-labelledby="experiences-label">
         <h2 class="section-label" id="experiences-label">Experiences</h2>
         <div class="grid slider">
+
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
+            aria-label="Palantir — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="logo-palantir" src="assets/rehaul/palantir-white.svg" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>Palantir</h3>
+                    <p>Incoming Software Engineering Intern on Infrastructure in New York City for Summer 2027.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Joining the infrastructure org in NYC, Summer 2027</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <a
+                    class="flip-cta"
+                    href="https://www.palantir.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabindex="-1"
+                  >
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </button>
           <button
             type="button"
             class="card flip-card"
@@ -1534,9 +1596,6 @@
                   <img class="logo-expedia" src="assets/rehaul/expedia-white.png" alt="" />
                 </div>
                 <div class="flip-front-meta">
-                  <div class="flip-front-copy">
-                    <h3>Expedia Group</h3>
-                    <p>Scalable data pipelines for failure analysis</p>                </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="m2 9 3-3 3 3" />
@@ -1584,6 +1643,67 @@
             type="button"
             class="card flip-card"
             aria-pressed="false"
+            aria-label="Georgia Institute of Technology — click to flip"
+          >
+            <div class="flip-card-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-front-visual">
+                  <img class="logo-gt" src="assets/rehaul/georgia-tech-white.png" alt="" />
+                </div>
+                <div class="flip-front-meta">
+                  <span class="flip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m2 9 3-3 3 3" />
+                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
+                      <path d="m22 15-3 3-3-3" />
+                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="flip-back-body">
+                  <div class="flip-back-copy">
+                    <h3>Georgia Institute of Technology</h3>
+                    <p>Undergraduate researcher in the Distributed Data Intensive Systems Lab (DiSL), working on performance bottlenecks in multi-GPU training on GT's Phoenix cluster.</p>
+                  </div>
+                  <ul class="flip-features">
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Profiled multi-GPU GNN training with PyTorch and Nsight to pinpoint step time lost to synchronization overhead and workload imbalance</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Overlapped gradient communication with compute using separate CUDA streams to cut GPU idle time during distributed training</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                      <span>Benchmarked training scaling across GPU counts on SLURM-managed Phoenix nodes to find where and why throughput stops scaling</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flip-cta-wrap">
+                  <a
+                    class="flip-cta"
+                    href="https://sites.gatech.edu/disl/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabindex="-1"
+                  >
+                    <span>Learn more</span>
+                    <span class="flip-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            class="card flip-card"
+            aria-pressed="false"
             aria-label="AskTailr — click to flip"
           >
             <div class="flip-card-inner">
@@ -1595,10 +1715,6 @@
                   </div>
                 </div>
                 <div class="flip-front-meta">
-                  <div class="flip-front-copy">
-                    <h3>AskTailr</h3>
-                    <p>Recommendation &amp; interactive experiences</p>
-                  </div>
                   <span class="flip-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="m2 9 3-3 3 3" />
@@ -1630,71 +1746,6 @@
                   <a
                     class="flip-cta"
                     href="https://www.linkedin.com/posts/asktailr_we-had-the-opportunity-to-work-with-vedant-activity-7485649880263118848-qRgz?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEFTysUBw3-lHzTsjag4u5Xm5btBMiq2rJs"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    tabindex="-1"
-                  >
-                    <span>Learn more</span>
-                    <span class="flip-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            class="card flip-card"
-            aria-pressed="false"
-            aria-label="Georgia Institute of Technology — click to flip"
-          >
-            <div class="flip-card-inner">
-              <div class="flip-face flip-front">
-                <div class="flip-front-visual">
-                  <img class="logo-gt" src="assets/rehaul/georgia-tech-white.png" alt="" />
-                </div>
-                <div class="flip-front-meta">
-                  <div class="flip-front-copy">
-                    <h3>Georgia Institute of Technology</h3>
-                    <p>Advanced Database Systems Lab research</p>
-                  </div>
-                  <span class="flip-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="m2 9 3-3 3 3" />
-                      <path d="M13 18H7a2 2 0 0 1-2-2V6" />
-                      <path d="m22 15-3 3-3-3" />
-                      <path d="M11 6h6a2 2 0 0 1 2 2v10" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <div class="flip-face flip-back">
-                <div class="flip-back-body">
-                  <div class="flip-back-copy">
-                    <h3>Georgia Institute of Technology</h3>
-                    <p>I research under Professor Joy Arulraj in the Advanced Database Systems Lab. Worked on TokenSmith, a chatbot tool to chat with textbooks.</p>
-                  </div>
-                  <ul class="flip-features">
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Designed ingestion pipeline to parse, chunk, embed, and index textbooks for an open-source RAG chatbot for students at GT</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Implemented semantic search via FAISS and BM25, enabling NLP query understanding and candidate ranking over textbooks</span>
-                    </li>
-                    <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      <span>Developed NLI-based confidence scoring pipeline, cutting hallucination rates by <strong>50%</strong> via threshold-tuned text classifiers</span>
-                    </li>
-                  </ul>
-                </div>
-                <div class="flip-cta-wrap">
-                  <a
-                    class="flip-cta"
-                    href="https://db.cc.gatech.edu/"
                     target="_blank"
                     rel="noopener noreferrer"
                     tabindex="-1"
