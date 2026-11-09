@@ -483,6 +483,45 @@
       filter: var(--cue-arrow-filter);
     }
 
+
+    #experiences {
+      position: relative;
+    }
+
+    .exp-click-cue {
+      position: absolute;
+      top: -1.6rem;
+      left: 0;
+      z-index: 6;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.2rem;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.95;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+    }
+
+    .exp-click-cue-label {
+      font-family: "Caveat", cursive;
+      font-weight: 700;
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      line-height: 1;
+      color: var(--cue);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      margin-top: 0.15rem;
+    }
+
+    .exp-click-cue-arrow {
+      width: 1.9rem;
+      height: auto;
+      display: block;
+      margin-top: 0.55rem;
+      transform: rotate(0deg);
+      filter: var(--cue-arrow-filter);
+    }
+
     .portrait-toggle:hover {
       background: rgba(0, 0, 0, 0.65);
       border-color: rgba(255, 255, 255, 0.4);
@@ -1428,41 +1467,7 @@
                 src="assets/rehaul/vedant-portrait.png"
                 alt="Vedant Bhatt, stylized portrait"
               />
-              <img
-                class="portrait-real"
-                src="assets/rehaul/vedant-headshot.png"
-                alt="Vedant Bhatt"
-              />
             </div>
-            <button
-              type="button"
-              class="portrait-toggle"
-              aria-label="Show real photo"
-              aria-pressed="false"
-              title="Show real photo"
-            >
-              <!-- camera: art → real -->
-              <svg class="icon-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-                <circle cx="12" cy="13" r="3" />
-              </svg>
-              <!-- sparkles: real → art -->
-              <svg class="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-                <path d="M20 3v4" />
-                <path d="M22 5h-4" />
-                <path d="M4 17v2" />
-                <path d="M5 18H3" />
-              </svg>
-            </button>
-          </div>
-          <div class="portrait-click-cue" aria-hidden="true">
-            <img
-              class="portrait-click-cue-arrow"
-              src="assets/rehaul/click-me-arrow-white.svg?v=2"
-              alt=""
-            />
-            <span class="portrait-click-cue-label">CLICK ME</span>
           </div>
         </div>
         <div class="intro-copy">
@@ -1535,6 +1540,10 @@
 
       <section class="block" id="experiences" aria-labelledby="experiences-label">
         <h2 class="section-label" id="experiences-label">Experiences</h2>
+        <div class="exp-click-cue" aria-hidden="true">
+          <span class="exp-click-cue-label">CLICK ME</span>
+          <img class="exp-click-cue-arrow" src="assets/rehaul/click-me-arrow-white.svg?v=2" alt="" />
+        </div>
         <div class="grid slider">
 
           <button
@@ -2354,20 +2363,27 @@
       syncThemeToggle();
     });
 
-    const portrait = document.querySelector(".portrait");
-    const portraitToggle = document.querySelector(".portrait-toggle");
-    if (portrait && portraitToggle) {
-      portraitToggle.addEventListener("click", () => {
-        const showingReal = portrait.classList.toggle("is-real");
-        portrait.dataset.mode = showingReal ? "real" : "art";
-        portraitToggle.setAttribute("aria-pressed", String(showingReal));
-        portraitToggle.setAttribute(
-          "aria-label",
-          showingReal ? "Show stylized portrait" : "Show real photo"
-        );
-        portraitToggle.title = showingReal ? "Show stylized portrait" : "Show real photo";
-      });
-    }
+
+    const expCue = document.querySelector(".exp-click-cue");
+    const expSection = document.getElementById("experiences");
+    const placeExpCue = () => {
+      if (!expCue || !expSection) return;
+      const target = expSection.querySelectorAll(".flip-card")[2];
+      if (!target) return;
+      const sr = expSection.getBoundingClientRect();
+      const tr = target.getBoundingClientRect();
+      const visible = tr.left >= sr.left - 1 && tr.right <= sr.right + 1;
+      expCue.style.visibility = visible ? "visible" : "hidden";
+      const cw = expCue.offsetWidth;
+      expCue.style.left = (tr.left - sr.left + tr.width * 0.42 - cw) + "px";
+      expCue.style.top = (tr.top - sr.top - expCue.offsetHeight + 14) + "px";
+    };
+    window.addEventListener("resize", placeExpCue);
+    window.addEventListener("load", placeExpCue);
+    document.fonts && document.fonts.ready.then(placeExpCue);
+    const expSlider = expSection && expSection.querySelector(".grid.slider");
+    expSlider && expSlider.addEventListener("scroll", placeExpCue, { passive: true });
+    placeExpCue();
 
     const sideNav = document.querySelector(".side-nav");
     const navLinks = sideNav
