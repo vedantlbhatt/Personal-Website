@@ -2376,7 +2376,7 @@
       expCue.style.visibility = visible ? "visible" : "hidden";
       const cw = expCue.offsetWidth;
       expCue.style.left = (tr.left - sr.left + tr.width * 0.42 - cw) + "px";
-      expCue.style.top = (tr.top - sr.top - expCue.offsetHeight + 14) + "px";
+      expCue.style.top = (tr.top - sr.top - expCue.offsetHeight - 6) + "px";
     };
     window.addEventListener("resize", placeExpCue);
     window.addEventListener("load", placeExpCue);
